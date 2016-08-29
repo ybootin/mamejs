@@ -1,0 +1,15 @@
+{
+  "name": "mamejs-loader",
+  "description": "Provide a simple js loader for emscripten mame js compiled emulator",
+  "version": "0.0.1",
+  "dependencies": {
+    "browserfs": "^0.5.13"
+  },
+  "devDependencies": {
+    "typescript": "^1.8.10"
+  },
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "node_modules/typescript/bin/tsc -d  --sourceMap --outFile dist/mame-emscripten-loader.js src/MAMELoader.ts"
+  }
+}
