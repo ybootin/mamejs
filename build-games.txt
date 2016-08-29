@@ -1,2 +1,0 @@
-#bubble booble arcade
-emmake make SUBTARGET=bubblebobble SOURCES=src/mame/drivers/bublbobl.cpp

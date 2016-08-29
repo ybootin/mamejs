@@ -5,27 +5,38 @@ At the final stage, this project should provide build configuration for each emu
 
 see http://docs.mamedev.org/initialsetup/compilingmame.html#emscripten-javascript-and-html for more infos about mame compilation with emscripten
 
+All of this is absolutly experimental ! Browsers are still à little bit slow to run everything correctly, and generated js file is big (about 20M not gz), but it works : 
+https://archive.org/details/arcade_outrun
+
+
 ## Build image
 
-The docker image is not actually available on dockerhub, you must build it yourself 
+The docker image is actually not available on dockerhub, you must build it by yourself 
 
-	./build-docker.sh
+    ./build-docker.sh
 
-This can take a while, emscripten compilation is more than one our
+This can take a while, emscripten compilation take more than one our
 
 ## Usage
 
-the base idea is to provide the docker image as a binary, to be used like this : 
-	
-	docker run -i -v $(pwd):/mame -w /mame --rm mame-compiler make SOURCES=src/mame/drivers/pacman.cpp
+The Docker image provide all tools, and can directly be used as a command, like this : 
 
-But this don't work for the moment. To make it work, you must laucn a shell inside the docker, and launch the command inside
+    docker run --rm \
+               -v $(pwd)/mame:/mame \
+               -v /etc/localtime:/etc/localtime:ro \ # share localtime to avoid clock screw # http://stackoverflow.com/questions/24551592/how-to-make-sure-dockers-time-syncs-with-that-of-the-host
+               -w /mame mame-compiler \
+               /emsdk_portable/emscripten/master/emmake make SUBTARGET=bublbobl SOURCES=src/mame/drivers/bublbobl.cpp
 
-	docker run -i -v $(pwd):/mame -w /mame --rm mame-compiler sh -c "/bin/bash"
+The `./build-game.sh` script build mame for running Bubble Bobble in `emulators/mamebublbobl.js` (UNTESTED - loader still in dev)
 
-and than, compile your game inside the shell : 
-	
-	emmake make SUBTARGET=bubblebobble SOURCES=src/mame/drivers/bublbobl.cpp
+you can clean the mame build using `./clean.sh` script
 
+## Next step
+
+Provide a script for compile each game, such as
+
+    ./build.sh bublbobl
+
+your help is greatly appreciated !
 
 
