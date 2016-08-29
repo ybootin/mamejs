@@ -5,17 +5,19 @@ At the final stage, this project should provide build configuration for each emu
 
 see http://docs.mamedev.org/initialsetup/compilingmame.html#emscripten-javascript-and-html for more infos about mame compilation with emscripten
 
-All of this is absolutly experimental ! Browsers are still à little bit slow to run everything correctly, and generated js file is big (about 20M not gz), but it works : 
+All of this is absolutly experimental ! Browsers are still à little bit slow to run everything correctly, and generated js file is big (about 20M not gz), but it works, as Internet Archive prove it : 
 https://archive.org/details/arcade_outrun
 
 
 ## Build image
 
-The docker image is actually not available on dockerhub, you must build it by yourself 
+You must have Docker installed on your system https://www.docker.com/
+
+The Docker image is actually not available on dockerhub, you must build it by yourself. 
 
     ./build-docker.sh
 
-This can take a while, emscripten compilation take more than one our
+This can take a while, emscripten compilation take more then an hour
 
 ## Usage
 
@@ -27,7 +29,7 @@ The Docker image provide all tools, and can directly be used as a command, like 
                -w /mame mame-compiler \
                /emsdk_portable/emscripten/master/emmake make SUBTARGET=bublbobl SOURCES=src/mame/drivers/bublbobl.cpp
 
-The `./build-game.sh` script build mame for running Bubble Bobble in `emulators/mamebublbobl.js` (UNTESTED - loader still in dev)
+The `./build-emulator.sh` script build mame for running Bubble Bobble rom only in `emulators/mamebublbobl.js` (UNTESTED - loader still in dev)
 
 you can clean the mame build using `./clean.sh` script
 
