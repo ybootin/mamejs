@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t mame-compiler .
+docker build -t mamejs-compiler:latest .
