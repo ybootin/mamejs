@@ -7,7 +7,6 @@ MAME_PATH="$(pwd)/mame"
 emmake() {
   docker run --rm \
          -v $MAME_PATH:/mame \
-         -v /etc/localtime:/etc/localtime:ro \
          -w /mame $DOCKER_IMAGE \
          $EMMAKE_PATH make SUBTARGET=$2 SOURCES=$1
 }
@@ -15,7 +14,6 @@ emmake() {
 clean() {
   docker run --rm \
      -v $MAME_PATH:/mame \
-     -v /etc/localtime:/etc/localtime:ro \
      -w /mame $DOCKER_IMAGE \
      $EMMAKE_PATH make clean
 }
