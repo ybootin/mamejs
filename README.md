@@ -9,7 +9,7 @@ First, clone the module with recursion (this can take a while as it will clone M
 
     git clone --recursive git@github.com:mamejs/mamejs-compiler.git
 
-Then go to the `mamejs-compiler` folder, you can start build your first emulator. for example, we can build Capcom cps1 emulator for running Street Fighters 2 and others super cool games :
+Then go to the `mamejs-compiler` folder, and you can start build your first emulator. For example, you can build Capcom cps1 emulator for running Street Fighters 2 and others super cool games :
 
     ./build-emulator.sh cps1
 
@@ -59,6 +59,12 @@ This command will build the file
 
 if you ommit subtarget, it will build under `mame/mamemulti.js`
 
+## Testing your emulator
+
+Upload your emulator here : 
+http://rawgit.com/mamejs/mamejs-compiler/master/gamelist-generator.html
+
+It will output all embed drivers into a json file.
 
 ## Build image
 
