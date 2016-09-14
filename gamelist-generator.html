@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      }
+      pre {
+        background-color:#CCCCCC;
+        color:red;
+        border:1px solid black;
+        padding: 4px;
+        font-family: Monaco;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MAME JS - Game list generator</h1>
+    <p>Output the available game list for mame js emulator</p>
+    <div id="input-container"><input style="width:500px" type="text" id="emulatorUrl" name="emulator" placeholder="emulator url"/> <input type="button" id="generate" value="generate"></div>
+    <hr />
+    <div id="output-container" style="display:none">
+      <input type="button" value="download" id="download" style="display:none"/>
+      <pre id="json-output"></pre>
+    </div>
+    <script>
+      var output = document.getElementById('json-output')
+      var downloadButton = document.getElementById('download')
+      var generateButton = document.getElementById('generate')
+      var urlInput = document.getElementById('emulatorUrl')
+
+      function generateGameList(emulatorUrl) {
+        return new Promise(function(resolve, reject) {
+          var listfull = {
+            url: emulatorUrl,
+            drivers: {}
+          }
+          // MAME Module for emscripten
+          window.Module = {
+            arguments: ['-listfull'],
+            print: function (text) {
+              // construct ouput
+              if (text.indexOf('Name:') === -1) {
+                content = text.split('"')
+                listfull.drivers[content[0].trim()] = content[1]
+              }
+            },
+            preInit: function() {
+              Module.addOnExit(function() {
+                downloadButton.style.display = 'block'
+                downloadButton.addEventListener('click', function(evt) {
+                  var content = JSON.stringify(listfull.drivers, null, 2).replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                  download('gamelist.json', content)
+                })
+
+                var output = JSON.stringify(listfull, null, 4).replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                document.getElementById('json-output').innerHTML = output
+
+                generateButton.removeAttribute('disabled')
+              })
+            },
+            noInitialRun: false,
+          }
+
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+
+          script.onload = function() {
+            resolve(listfull)
+          }
+
+          script.onerror = reject
+
+          script.src = emulatorUrl;
+          document.getElementsByTagName('head')[0].appendChild(script);
+
+          urlInput.value = emulatorUrl
+        })
+      }
+
+      function download(filename, text) {
+        var pom = document.createElement('a');
+        pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        pom.setAttribute('download', filename);
+
+        if (document.createEvent) {
+          var event = document.createEvent('MouseEvents');
+          event.initEvent('click', true, true);
+          pom.dispatchEvent(event);
+        }
+        else {
+          pom.click();
+        }
+      }
+
+      function start(url) {
+        if (!url) {
+          // this is just a simple app, no need a complicated modal window
+          alert('you must specify a valid URL')
+        } else {
+          generateButton.setAttribute('disabled', 'true')
+          var cnt = document.getElementById('output-container')
+          cnt.style.display = "block"
+
+          output.innerHTML = 'loading emulator ...' + '\n' + url
+          generateGameList(url).then(function() {
+            // nothing for the moment, all is ready
+          }).catch(function(err) {
+            output.innerHTML = 'Error : unable to load emulator ' + url + '\n' + err
+          })
+        }
+      }
+
+      generateButton.addEventListener('click', function() {
+        var wl = window.location
+        wl.href = wl.protocol + '//' + wl.host + wl.pathname + '?url=' + encodeURIComponent(urlInput.value)
+      })
+
+      // handle parameter in url and start parsing
+      document.location.search.substr(1).split('&').forEach(function(item) {
+        if (item.split('=')[0] === 'url') {
+          start(decodeURIComponent(item.split('=')[1]))
+        }
+      })
+    </script>
+  </body>
+</html>
