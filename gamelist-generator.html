@@ -66,6 +66,11 @@
                 document.getElementById('json-output').innerHTML = output
 
                 loadUrlButton.removeAttribute('disabled')
+
+                // also send data to postmessage to be use as a simple API when loaded into an iframe
+                // window.addEventListener('message', data, function(lisfull) {...})
+                // iframe.src = "http://rawgit.com/mamejs/mamejs-compiler/master/gamelist-generator.html?url=" + emulatorUrl
+                window.parent.postMessage(listfull, '*')
               })
             },
             noInitialRun: false,
