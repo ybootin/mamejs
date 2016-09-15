@@ -1,24 +1,43 @@
 <!doctype html>
 <html>
   <head>
-    <script src="../node_modules/browserfs/dist/browserfs.js"></script>
+    <script src="../dist/mamejs-loader.js"></script>
   </head>
   <body>
-    <h1>Standalone test - MAME Rom just with BrowserFS</h1>
+    <h1>MAMEJS - sample page</h1>
+    <p>Controls : <br />
+    Credit: 6 <br />
+    Start: 1 <br />
+    button 1: Crtl <br />
+    button 2: alt <br />
+    button 3: space <br />
+    left/right : <- -> <br />
+    </p>
     <div class="container">
-      <canvas id="display"></canvas>
+      <div id="loading">Loading roms and emulator</div>
+      <canvas id="display" style="width:320px;height:224px" width="320" height="224"></canvas>
     </div>
     <script>
-      // Holds gamefiles to be loaded
-      var gamefiles = [
-
-      ]
-      // Holds emulator url
-      var emulatorUrl = ''
-
-      // Emscripten module definition
-      // must be attached to the global scope
-      var Module;
+      var game = {
+        files : {
+          'shinobi.zip': 'https://cors.archive.org/cors/arcade_shinobi/shinobi.zip',
+          //'snowbros.zip': '../emulators/roms/snowbros.zip',
+          //'twincobr.zip': '../emulators/roms/twincobr.zip',
+          //'bublbobl.zip': '../emulators/bublbobl.zip',
+          //'shinobi.zip': '../emulators/roms/shinobi.zip',
+          //'sf2.zip' : '../emulators/roms/sf2.zip',
+          //'ghouls.zip' : '../emulators/cps1/ghouls.zip',
+          //'outrun.zip' : '../emulators/outrun/outrun.zip',
+          //'outrun.cfg' : '../emulators/outrun/outrun.cfg',
+          //'outrun.zip': 'https://cors.archive.org/cors/arcade_outrun/outrun.zip',
+        },
+        driver: 'shinobi',
+        emulator: 'https://rawgit.com/mamejs/mamejs-emulators/master/mamejs-serie1.js',
+        resolution: {
+          width: 320,
+          height: 224
+        }
+      }
 
       var canvas = document.getElementById('display')
 
@@ -26,218 +45,12 @@
       // so let's map the prefixed versions to the correct function.
       canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
 
-      var flag_w = {
-        isReadable: function() { return false; },
-        isWriteable: function() { return true; },
-        isTruncating: function() { return false; },
-        isAppendable: function() { return false; },
-        isSynchronous: function() { return false; },
-        isExclusive: function() { return false; },
-        pathExistsAction: function() { return 0; },
-        pathNotExistsAction: function() { return 3; }
-      };
+      mamejs.MAMELoader.loadGame(game, canvas).then(function(MAMEJS) {
+        console.log('MAME launched', MAMEJS)
 
-      // Global error callback
-      var onError = function(error) {
-        console.error('Got an error', error);
-      }
-
-      // XHR file loader
-      var fetchFile = function (url, rt, optional) {
-        return new Promise(function (resolve, reject) {
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', url, true);
-          xhr.responseType = rt || 'arraybuffer';
-
-          xhr.onload = function (e) {
-            if (xhr.status === 200) {
-              resolve(xhr.response);
-            } else if (optional) {
-              resolve(null);
-            } else {
-              reject();
-            }
-          }
-          xhr.onerror = function (e) {
-            if (optional) {
-              resolve(null);
-            } else {
-              reject();
-            }
-          };
-          xhr.send();
-        });
-      }
-
-      // append a script to the DOM
-      var loadScript = function(url) {
-        return new Promise(function (resolve, reject) {
-          var head = document.getElementsByTagName('head')[0];
-
-          var script = document.createElement('script');
-          script.addEventListener("load", function(evt) {
-            resolve()
-          });
-          script.addEventListener("error", function(evt) {
-            reject()
-          });
-          script.type = 'text/javascript';
-          script.src = url;
-          head.appendChild(script);
-        })
-      }
-
-      // init base file system
-      new Promise(function(onFSInit, reject) {
-        var inMemoryFS = new BrowserFS.FileSystem.InMemory();
-        // If the browser supports IndexedDB storage, mirror writes to that storage
-        // for persistence purposes.
-        if (BrowserFS.FileSystem.IndexedDB.isAvailable()) {
-          var deltaFS
-          deltaFS = new BrowserFS.FileSystem.AsyncMirror(inMemoryFS,
-            new BrowserFS.FileSystem.IndexedDB(function(error, fs) {
-              if (error) {
-                // we probably weren't given access; private window for example.
-                // don't fail completely, just don't use indexeddb
-                console.warn('failed to instanciate IndexedDB', error)
-                onFSInit(inMemoryFS)
-              } else {
-                // Initialize deltaFS by copying files from async storage to sync storage.
-                deltaFS.initialize(function (error) {
-                  if (error) {
-                    reject(error);
-                  } else {
-                    onFSInit(deltaFS);
-                  }
-                });
-              }
-            }, "mame"));
-        } else {
-          onFSInit(inMemoryFS)
-        }
+      }).catch(function(error) {
+        console.error('error launching MAME', error)
       })
-
-      // Load all required files into BFS file system
-      .then(function(fs) {
-        fs = new BrowserFS.FileSystem.OverlayFS(fs, new BrowserFS.FileSystem.MountableFileSystem());
-        fs.initialize(function (error) {
-          if (error) {
-            return onError(error);
-          }
-
-          var Buffer = BrowserFS.BFSRequire('buffer').Buffer;
-
-          function fetch(file) {
-            if ('data' in file && file.data !== null && typeof file.data !== 'undefined') {
-              return Promise.resolve(file.data);
-            }
-            return fetchFile(file.url, 'arraybuffer', file.optional);
-          }
-
-          function mountat(drive) {
-            return function (data) {
-              if (data !== null) {
-                // Mount into RO MFS.
-                fs.getOverlayedFileSystems().readable.mount('/'+ drive.toLowerCase(), new BrowserFS.FileSystem.ZipFS(new Buffer(data)));
-              }
-            };
-          }
-
-          function saveat(filename) {
-            return function (data) {
-              if (data !== null) {
-                fs.writeFileSync('/'+ filename, new Buffer(data), null, flag_w, 0x1a4);
-              }
-            };
-          }
-
-          // Load all gamefiles
-          Promise.all(gamefiles.map(function (f) {
-            if (f && f.file) {
-              if (f.drive) {
-                return fetch(f.file).then(mountat(f.drive));
-              } else if (f.mountpoint) {
-                return fetch(f.file).then(saveat(f.mountpoint));
-              }
-            }
-            return null;
-          }))
-          // When all files are loaded, goto next step !
-          .then(function() {
-            return Promise.resolve(fs)
-          }, onError)
-        })
-      }, onError)
-
-      // init Emscriten Emulator
-      .then(function(fs) {
-        Module = {
-          arguments: (function (muted, driver, native_resolution, sample_rate, peripheral, extra_args) {
-            var args = [driver,
-                        '-verbose',
-                        '-rompath',
-                        'emulator',
-                        '-window',
-                        '-nokeepaspect'];
-
-            if (native_resolution && "width" in native_resolution && "height" in native_resolution) {
-              args.push('-resolution', [native_resolution.width, native_resolution.height].join('x'));
-            }
-
-            if (muted) {
-              args.push('-sound', 'none');
-            } else if (sample_rate) {
-              args.push('-samplerate', sample_rate);
-            }
-
-            if (peripheral) {
-              for (var p in peripheral) {
-                if (Object.prototype.propertyIsEnumerable.call(peripheral, p)) {
-                  args.push('-' + p,
-                            '/emulator/'+ (peripheral[p][0].replace(/\//g,'_')))
-                }
-              }
-            }
-
-            if (extra_args) {
-              args = args.concat(extra_args);
-            }
-
-            return args;
-          })(),
-          screenIsReadOnly: true,
-          print: function (text) {
-            console.log(text);
-          },
-          canvas: canvas,
-          noInitialRun: false,
-          locateFile: function() {
-            // TODO, see if needed
-          },
-          preInit: function () {
-            // Re-initialize BFS to just use the writable in-memory storage.
-            BrowserFS.initialize(fs);
-            var BFS = new BrowserFS.EmscriptenFS();
-            // Mount the file system into Emscripten.
-            FS.mkdir('/emulator');
-            FS.mount(BFS, {root: '/'}, '/emulator');
-          }
-        }
-
-        // Load emulator
-        return loadScript(emulatorUrl);
-      }, onError)
-
-      // everything should be OK
-      .then(function() {
-        console.log('emulator should display')
-      })
-
-      // Not OK
-      .catch(function(error) {
-        onError(error)
-      })
-
     </script>
   </body>
 </html>
