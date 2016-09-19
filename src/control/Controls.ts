@@ -2,6 +2,7 @@
 /// <reference path="../constant/MAMEButton.ts" />
 /// <reference path="Arcade6Buttons.ts" />
 /// <reference path="Button.ts" />
+/// <reference path="GamePad.ts" />
 
 namespace mamejs.control {
   export class Controls {
@@ -16,6 +17,9 @@ namespace mamejs.control {
       this._player2 = new Arcade6Buttons(constant.player2Controls, module)
 
       this.pauseButton = new Button(constant.MAMEButton.PAUSE, module._SDL_SendKeyboardKey)
+
+      //let gamepad = new control.GamePad(navigator.getGamepads()[0], this._player1)
+      //gamepad.connect()
     }
 
     public get player1(): Arcade6Buttons {
