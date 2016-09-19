@@ -1,9 +1,9 @@
 /// <reference path="../model/IModule.ts" />
-/// <reference path="../model/IPlayerControl.ts" />
+/// <reference path="../model/IControl.ts" />
 /// <reference path="Button.ts" />
 
 namespace mamejs.control {
-  export class Arcade6Buttons {
+  export class Arcade6Buttons implements IControl {
 
     private _start: Button
     private _coin: Button
@@ -20,7 +20,7 @@ namespace mamejs.control {
     private _down: Button
     private _left: Button
 
-    constructor(control: IPlayerControl, module: IModule) {
+    constructor(control: IControlMapping, module: IModule) {
       this._start = new Button(control.start, module._SDL_SendKeyboardKey)
       this._coin = new Button(control.coin, module._SDL_SendKeyboardKey)
       this._button1 = new Button(control.button1, module._SDL_SendKeyboardKey)

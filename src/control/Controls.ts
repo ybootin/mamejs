@@ -1,32 +1,29 @@
 /// <reference path="../model/IModule.ts" />
-/// <reference path="../constant/MAMEButton.ts" />
+/// <reference path="../model/IControl.ts" />
+/// <reference path="MAMEControllers.ts" />
 /// <reference path="Arcade6Buttons.ts" />
 /// <reference path="Button.ts" />
-/// <reference path="GamePad.ts" />
 
 namespace mamejs.control {
   export class Controls {
 
-    private _player1: Arcade6Buttons
-    private _player2: Arcade6Buttons
+    private _player1: IControl
+    private _player2: IControl
 
-    private pauseButton: Button
+    private pauseButton: IButton
 
     constructor(module: IModule) {
-      this._player1 = new Arcade6Buttons(constant.player1Controls, module)
-      this._player2 = new Arcade6Buttons(constant.player2Controls, module)
+      this._player1 = new Arcade6Buttons(player1Controller, module)
+      this._player2 = new Arcade6Buttons(player1Controller, module)
 
-      this.pauseButton = new Button(constant.MAMEButton.PAUSE, module._SDL_SendKeyboardKey)
-
-      //let gamepad = new control.GamePad(navigator.getGamepads()[0], this._player1)
-      //gamepad.connect()
+      this.pauseButton = new Button(PAUSE, module._SDL_SendKeyboardKey)
     }
 
-    public get player1(): Arcade6Buttons {
+    public get player1(): IControl {
       return this._player1
     }
 
-    public get player2(): Arcade6Buttons {
+    public get player2(): IControl {
       return this._player2
     }
 
