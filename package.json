@@ -9,6 +9,6 @@
   },
   "scripts": {
     "prepublish": "npm run build",
-    "build": "node_modules/typescript/bin/tsc -d  --sourceMap --outFile dist/mamejs-loader.js node_modules/typescript/lib/lib.es6.d.ts src/MAMELoader.ts"
+    "build": "node_modules/typescript/bin/tsc -d  --target es6 --sourceMap --outFile dist/mamejs-loader.js node_modules/typescript/lib/lib.es6.d.ts src/MAMELoader.ts"
   }
 }

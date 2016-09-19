@@ -7,5 +7,11 @@ namespace mamejs {
     noInitialRun: boolean
     preInit: Function
     requestFullScreen: Function
+
+    _SDL_SendKeyboardKey?: IModule_SDL_SendKeyboardKey
+  }
+
+  export interface IModule_SDL_SendKeyboardKey {
+    (state: number, scancode: number): void
   }
 }

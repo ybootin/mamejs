@@ -46,6 +46,7 @@
       canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
 
       mamejs.MAMELoader.loadGame(game, canvas).then(function(MAMEJS) {
+        window.MAMEJS = MAMEJS
         console.log('MAME launched', MAMEJS)
 
       }).catch(function(error) {

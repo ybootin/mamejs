@@ -1,4 +1,5 @@
 /// <reference path="IModule.ts" />
+
 interface Window {
   Module: mamejs.IModule
   JSMESS: JSMESS
