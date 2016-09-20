@@ -1,11 +1,22 @@
+/// <reference path="model/IModule.ts" />
+/// <reference path="control/Controls.ts" />
+
 interface CSSStyleDeclaration {
   imageRendering: string
 }
 namespace mamejs {
   export class MAMEJS {
 
+    private _controls: control.Controls
+
     constructor(private module: IModule, private game: IGame) {
       this.resize(game.resolution.width, game.resolution.height)
+
+      this._controls = new control.Controls(module)
+    }
+
+    public get controls(): control.Controls {
+      return this._controls
     }
 
     public resize(width: number, height: number): void {

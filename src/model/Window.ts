@@ -1,7 +1,19 @@
 /// <reference path="IModule.ts" />
+
 interface Window {
   Module: mamejs.IModule
   JSMESS: JSMESS
+  mozRequestAnimationFrame: any
+  webkitRequestAnimationFrame: any
+  mozCancelRequestAnimationFrame: any
+  webkitCancelRequestAnimationFrame: any
+  cancelRequestAnimationFrame: any
+}
+
+// shortcut for requestAnimationFrame
+namespace mamejs {
+  export var raf = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.requestAnimationFrame;
+  export var craf = window.mozCancelRequestAnimationFrame || window.webkitCancelRequestAnimationFrame || window.cancelRequestAnimationFrame;
 }
 
 interface JSMESS {
