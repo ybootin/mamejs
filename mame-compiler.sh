@@ -28,14 +28,14 @@ error() {
 
 usage() {
     echo "-------------------------------------------------"
-    echo "mamejs emulator build tool"
+    echo "mame-compiler  - Emscripten build tool for JS target"
     echo ""
-    echo "Usage: ./mamejs-compiler.sh drivers outputname"
+    echo "Usage: ./mame-compiler.sh drivers outputname"
     echo ""
-    echo "  ex : ./mamejs-compiler.sh cps1 mamecps1"
+    echo "  ex : ./mame-compiler.sh cps1 mamecps1"
     echo ""
     echo "you can also specify multiple drivers"
-    echo "  ex : ./mamejs-compiler.sh cps1,cps2 cps"
+    echo "  ex : ./mame-compiler.sh cps1,cps2 cps"
     echo " will compile mamejs with cps1 & cps2 emulators"
     echo "-------------------------------------------------"
 }
