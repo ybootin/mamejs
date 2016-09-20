@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <script src="../dist/mamejs-loader.js"></script>
+    <script src="../dist/mamejs.js"></script>
   </head>
   <body>
     <h1>MAMEJS - sample page</h1>
@@ -45,7 +45,7 @@
       // so let's map the prefixed versions to the correct function.
       canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
 
-      mamejs.MAMELoader.loadGame(game, canvas).then(function(MAMEJS) {
+      mamejs.loadGame(game, canvas).then(function(MAMEJS) {
         window.MAMEJS = MAMEJS
         console.log('MAME launched', MAMEJS)
 

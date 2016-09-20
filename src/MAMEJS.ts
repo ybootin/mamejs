@@ -1,4 +1,5 @@
 /// <reference path="model/IModule.ts" />
+/// <reference path="model/IGame.ts" />
 /// <reference path="control/Controls.ts" />
 
 interface CSSStyleDeclaration {
@@ -6,7 +7,6 @@ interface CSSStyleDeclaration {
 }
 namespace mamejs {
   export class MAMEJS {
-
     private _controls: control.Controls
 
     constructor(private module: IModule, private game: IGame) {
