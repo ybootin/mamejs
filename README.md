@@ -1,32 +1,31 @@
-# mamejs - Run classics arcade into your Browser
+# mamejs - Run classics arcade games in your Browser
 
-
+Work In Progress, Demo coming soon !
 
 ## mamejs compiler
-Provide a simple tool to build MAME for javascript in one command line.
+Provide a simple tool to build MAME for javascript with Emscripten in one command line.
 
-This tool is build upon docker, so you should have docker installed on your system.
-Go to http://docker.com to install Docker
+The Emscripten compiler is provide by a docker image, Go to http://docker.com to install Docker if you don't have it on your system
 
 ### Usage
 First, clone the module with recursion (this can take a while as it will clone MAME github repository):
 
-    git clone --recursive git@github.com:mamejs/mamejs-compiler.git
+    git clone --recursive git@github.com:ybootin/mamejs.git
 
 Then go to the `mamejs-compiler` folder, and you can start build your first emulator. For example, you can build Capcom cps1 emulator for running Street Fighters 2 and others super cool games :
 
-    ./build-emulator.sh cps1
+    ./mamejs-compiler.sh cps1
 
 First build will take a long time, because it will fetch docker image `ybootin/mamejs-compiler` from docker hub.
-When everything is finished, it should have build 3 files in the `build/` folder
+When everything is finished, it should have build 3 files in the `dist/` folder
 
     cps1.js     --> the main emulator, uncompressed
-    cps1.js.gz  --> the emulator gzip, can be directly use as this
+    cps1.js.gz  --> the emulator gzip
     cps1.json   --> json Array containing drivers list of the build
 
 You can also build an emulator with multiple drivers. For example, you can build MAME with cps1, cps2 and system16
 
-    ./build-emulator.sh cps1,cps2,segas16a,segas16b
+    ./mamejs-compiler.sh cps1,cps2,segas16a,segas16b
 
 will build
 
@@ -36,7 +35,7 @@ will build
 
 You can specified the build name as a second argument
 
-    ./build-emulator.sh cps1,cps2,segas16a,segas16b multi
+    ./mamejs-compiler.sh cps1,cps2,segas16a,segas16b multi
 
 will build
 
@@ -44,29 +43,13 @@ will build
     multi.js.gz
     multi.json
 
-Now you can use the mame emulator with the mamejs-loader app !
+Now you can use the mame emulator with the mamejs app !
 
-## Using the `./emmake.sh` build tools
-
-This script is a shorcut for the Emscripten `emmake make` tool.
-You can use it simply as this:
-
-    ./emmake.sh sourcesfiles subtargetname
-
-For example, to build cps1, here the command
-
-    ./emmake.sh src/mame/drivers/cps1.cpp cps1
-
-This command will build the file 
-
-    mame/mamecps1.js
-
-if you ommit subtarget, it will build under `mame/mamemulti.js`
 
 ### Testing your emulator
 
 Upload your emulator here : 
-http://rawgit.com/mamejs/mamejs-compiler/master/gamelist-generator.html
+http://rawgit.com/ybootin/mamejs/master/tools/gamelist-generator.html
 
 It will output all embed drivers into a json file.
 
@@ -74,7 +57,7 @@ It will output all embed drivers into a json file.
 
 You can build your own docker by yourself. 
 
-    ./build-docker.sh
+    ./mamejs-compiler.sh --builddocker
 
 This can take a while, emscripten compilation take a long time
 
