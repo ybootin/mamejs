@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      }
+      pre {
+        background-color:#CCCCCC;
+        color:red;
+        border:1px solid black;
+        padding: 4px;
+        font-family: Monaco;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>MAME JS - Game list generator</h1>
+    <p>Launch Mamejs emulator with command <code>mame -listfull</code>, and output the result into a json file.
+    <p>Upload a mamejs emulator from your disk or set an emulator url</p>
+    <div id="input-container"><input style="width:500px" type="text" id="emulatorUrl" name="emulator" placeholder="https://rawgit.com/mamejs/mamejs-emulators/master/mamejs-serie1.js"/> <input type="button" id="loadEmulatorButton" value="load emulator"> - OR - upload emulator file<input accept="text/javascript,text/x-javascript" type='file' multiple="" id='fileinput' onchange="onUpload()" /></div>
+
+    <hr />
+    <div id="output-container" style="display:none">
+      <input type="button" value="download the json file" id="download" style="display:none"/>  <input type="button" value="reset" id="reset" onclick="reset()"/>
+      <pre id="json-output"></pre>
+    </div>
+    <script>
+      /**
+      KISS MAME drivers list generator
+
+      no dependency to keep as simple an portable as possible
+      **/
+      var output = document.getElementById('json-output')
+      var downloadButton = document.getElementById('download')
+      var loadUrlButton = document.getElementById('loadEmulatorButton')
+      var urlInput = document.getElementById('emulatorUrl')
+
+      function generateGameList(emulatorUrl) {
+        return new Promise(function(resolve, reject) {
+          var listfull = {
+            // Prevent to write url when it's a file upload (data:text/javascript)
+            url: emulatorUrl.length > 2048 ? null : emulatorUrl,
+            drivers: {}
+          }
+          // MAME Module for emscripten
+          window.Module = {
+            arguments: ['-listfull'],
+            print: function (text) {
+              // construct ouput
+              if (text.indexOf('Name:') === -1) {
+                content = text.split('"')
+                listfull.drivers[content[0].trim()] = content[1]
+              }
+            },
+            preInit: function() {
+              Module.addOnExit(function() {
+                var output = JSON.stringify(listfull, null, 4).replace(/</g, "&lt;").replace(/>/g, "&gt;")
+
+                downloadButton.style.display = 'inline'
+                downloadButton.addEventListener('click', function(evt) {
+                  download('gamelist.json', output)
+                })
+
+                document.getElementById('json-output').innerHTML = output
+
+                loadUrlButton.removeAttribute('disabled')
+
+                // also send data to postmessage to be use as a simple API when loaded into an iframe
+                // window.addEventListener('message', data, function(lisfull) {...})
+                // iframe.src = "http://rawgit.com/mamejs/mamejs-compiler/master/gamelist-generator.html?url=" + emulatorUrl
+                window.parent.postMessage(listfull, '*')
+              })
+            },
+            noInitialRun: false,
+          }
+
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+
+          script.onload = function() {
+            resolve(listfull)
+          }
+
+          script.onerror = function(error) {
+            reject(error)
+          }
+
+          script.src = emulatorUrl;
+          document.getElementsByTagName('head')[0].appendChild(script);
+
+          urlInput.value = listfull.url
+        })
+      }
+
+      function download(filename, text) {
+        var pom = document.createElement('a');
+        pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        pom.setAttribute('download', filename);
+
+        if (document.createEvent) {
+          var event = document.createEvent('MouseEvents');
+          event.initEvent('click', true, true);
+          pom.dispatchEvent(event);
+        }
+        else {
+          pom.click();
+        }
+      }
+
+      function reset() {
+        var wl = window.location
+        wl.href = wl.protocol + '//' + wl.host + wl.pathname
+      }
+
+      function loadUrl(url) {
+        if (!url) {
+          // this is just a simple app, no need a complicated modal window
+          alert('you must specify a valid URL')
+        } else {
+          loadUrlButton.setAttribute('disabled', 'true')
+          var cnt = document.getElementById('output-container')
+          cnt.style.display = "block"
+
+          output.innerHTML = 'loading emulator ...' + '\n' + url
+          generateGameList(url).catch(function(err) {
+            output.innerHTML = 'Error : unable to load emulator ' + url + '\n' + err
+          })
+        }
+      }
+
+      function fetchFile(file) {
+        return new Promise(function(resolve, reject) {
+          if (!file) {
+            reject('missing file')
+          }
+          var reader = new FileReader()
+          reader.onloadend = function(e) {
+            resolve(e.target.result)
+          }
+          reader.readAsText(file)
+        })
+      }
+
+      loadUrlButton.addEventListener('click', function() {
+        var url = urlInput.value
+        if (!url) {
+          alert('you must specify a valid URL')
+        }
+        var wl = window.location
+        wl.href = wl.protocol + '//' + wl.host + wl.pathname + '?url=' + encodeURIComponent(url)
+      })
+
+      // Handle uploaded emulator, the simple way :)
+      function onUpload() {
+        var cnt = document.getElementById('output-container')
+        cnt.style.display = "block"
+
+        output.innerHTML = 'uploading emulator ...'
+        // Load the first file of the element
+        fetchFile(document.getElementById('fileinput').files[0]).then(function(data) {
+          // transform data as url to keep one behavior between url/upload
+          return generateGameList('data:text/javascript;base64,' + btoa(data))
+        }).catch(function(error) {
+          output.innerHTML = 'error : ' + error
+        })
+      }
+
+      // handle parameter in url and start parsing
+      document.location.search.substr(1).split('&').forEach(function(item) {
+        if (item.split('=')[0] === 'url') {
+          var url = decodeURIComponent(item.split('=')[1])
+          if (url) {
+            loadUrlButton.setAttribute('disabled', 'true')
+            var cnt = document.getElementById('output-container')
+            cnt.style.display = "block"
+
+            output.innerHTML = 'loading emulator ...' + '\n' + url
+            generateGameList(url).catch(function(err) {
+              output.innerHTML = 'Error : unable to load emulator ' + url + '\n' + err
+            })
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
