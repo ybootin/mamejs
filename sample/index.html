@@ -15,7 +15,7 @@
     </p>
     <div class="container">
       <div id="loading">Loading roms and emulator</div>
-      <canvas id="display" style="width:320px;height:224px" width="320" height="224"></canvas>
+      <div id="mame-container"></div>
     </div>
     <script>
       var game = {
@@ -39,16 +39,10 @@
         }
       }
 
-      var canvas = document.getElementById('display')
-
-      // Emscripten doesn't use the proper prefixed functions for fullscreen requests,
-      // so let's map the prefixed versions to the correct function.
-      canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
-
-      mamejs.loadGame(game, canvas).then(function(MAMEJS) {
-        window.MAMEJS = MAMEJS
+      mamejs.runMame(game, document.getElementById('mame-container')).then(function(MAMEJS) {
+        // expose for debugging
+        window.MAMEJS_DEBUG = MAMEJS
         console.log('MAME launched', MAMEJS)
-
       }).catch(function(error) {
         console.error('error launching MAME', error)
       })

@@ -17,27 +17,19 @@ namespace mamejs.helper {
       })
     }
 
-    // XHR file loader
-    static fetchFile(url: string): Promise<ArrayBuffer> {
-      return new Promise(function (resolve, reject): void {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'arraybuffer';
+    static resizeCanvas(canvas: HTMLCanvasElement, width: number, height: number): void {
+      canvas.style.imageRendering = '-moz-crisp-edges'
+      canvas.style.imageRendering = '-o-crisp-edges'
+      canvas.style.imageRendering = '-webkit-optimize-contrast'
+      canvas.style.imageRendering = 'optimize-contrast'
+      canvas.style.imageRendering = 'crisp-edges'
+      canvas.style.imageRendering = 'pixelated'
+      canvas.style.imageRendering = 'optimizeSpeed'
 
-        let errorMsg: string = 'error loading ' + url
-
-        xhr.onload = function (e) {
-          if (xhr.status === 200) {
-            resolve(<ArrayBuffer>xhr.response);
-          } else {
-            reject(errorMsg + ' : status code ' + xhr.status);
-          }
-        }
-        xhr.onerror = function (e) {
-          reject(errorMsg + ' : ' + e.toString());
-        };
-        xhr.send();
-      });
+      canvas.style.width = width + 'px'
+      canvas.style.height = height + 'px'
+      canvas.width = width
+      canvas.height = height
     }
   }
 }

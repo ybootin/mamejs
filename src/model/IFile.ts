@@ -1,8 +1,10 @@
 namespace mamejs {
   export interface IFile {
+    // Origin of the file
     url: string,
-    mountpoint: string,
-    data?: ArrayBuffer
+    // filename (ex : shinobi.zip)
+    name: string,
+    data: Uint8Array
   }
 }
 
