@@ -4,20 +4,33 @@ trap "exit" INT
 
 ########## ENV VARS ##############
 
-DOCKER_IMAGE="ybootin/mamejs-compiler:latest"
-DOCKER_EMMAKE_PATH="/emsdk_portable/emscripten/master/emmake"
-
-DRIVERS_PATH="src/mame/drivers/"
-SEPARATOR=","
-EXTENSION=".cpp"
+OUTPUT_PATH="dist/"
+OUTPUT_FILENAME="mame.js"
 MAME_PATH="$(pwd)/mame"
-BUILD_PATH="dist/"
+
+# Docker env var (ybootin/mamejs-compiler:latest on dockerhub)
+DOCKER_IMAGE_NAME="mamejs-compiler:latest"
+DOCKER_IMAGE="ybootin/$DOCKER_IMAGE_NAME"
+
+# emmake command inside the docker machine
+EMMAKE_CMD="docker run --rm -v $MAME_PATH:/mame -w /mame $DOCKER_IMAGE /emsdk_portable/emscripten/master/emmake"
+
+# driver path inside the mame path
+DRIVERS_PATH="src/mame/drivers/"
 
 ####################################
 
-GAMES=$(echo $1 | tr "$SEPARATOR" " ")
-OUTPUT_NAME=$2
-
+usage() {
+  echo "-------------------------------------------------"
+  echo "mame-compiler  - Emscripten build tool for JS target"
+  echo ""
+  echo "Usage: ./mame-compiler.sh drivers"
+  echo ""
+  echo "  ex : ./mame-compiler.sh cps1,cps2,cp3"
+  echo ""
+  echo "build result > $BUILD_PATH$OUTPUT_FILENAME"
+  echo "-------------------------------------------------"
+}
 
 error() {
   printf "ERROR $1"
@@ -26,96 +39,50 @@ error() {
   exit
 }
 
-usage() {
-    echo "-------------------------------------------------"
-    echo "mame-compiler  - Emscripten build tool for JS target"
-    echo ""
-    echo "Usage: ./mame-compiler.sh drivers outputname"
-    echo ""
-    echo "  ex : ./mame-compiler.sh cps1 mamecps1"
-    echo ""
-    echo "you can also specify multiple drivers"
-    echo "  ex : ./mame-compiler.sh cps1,cps2 cps"
-    echo " will compile mamejs with cps1 & cps2 emulators"
-    echo "-------------------------------------------------"
-}
-
-
-emmake() {
-  docker run --rm \
-         -v $MAME_PATH:/mame \
-         -w /mame $DOCKER_IMAGE \
-         $DOCKER_EMMAKE_PATH make SUBTARGET=$2 SOURCES=$1
-}
-
-clean() {
-  docker run --rm \
-     -v $MAME_PATH:/mame \
-     -w /mame $DOCKER_IMAGE \
-     $DOCKER_EMMAKE_PATH make clean
-}
-
-builddocker() {
-  docker build -t mamejs-compiler:latest .
-}
-
 if [ "$1" = "--builddocker" ]; then
-  builddocker
+  docker build -t "$DOCKER_IMAGE_NAME" .
   exit
 fi
+
+if [ "$1" = "--clean" ]; then
+  $EMMAKE_CMD make clean
+  exit
+fi
+
+# split drivers name from $1
+GAMES=$(echo $1 | tr "," " ")
 
 if [ "$GAMES" = "" ]; then
   error "You must specify at least one game name"
 fi
 
+EXTENSION=".cpp"
 SOURCES=""
 CURRENT_SEPARATOR=""
-NB_SOURCES=0
 for game in $GAMES
 do
-    # check if driver file exists !
-    sourcefile="$DRIVERS_PATH$game$EXTENSION"
-    if [ ! -f "$MAME_PATH/$sourcefile" ]; then
-        error "driver source not exists for game $game!\n(file doesn't exists $MAME_PATH/$sourcefile)"
-    fi
-    SOURCES="$SOURCES$CURRENT_SEPARATOR$sourcefile"
-    CURRENT_SEPARATOR=","
-    NB_SOURCES=$((NB_SOURCES + 1))
+  # check if driver file exists !
+  sourcefile="$DRIVERS_PATH$game$EXTENSION"
+  if [ ! -f "$MAME_PATH/$sourcefile" ]; then
+      error "driver source not exists for game $game!\n(file doesn't exists $MAME_PATH/$sourcefile)"
+  fi
+  SOURCES="$SOURCES$CURRENT_SEPARATOR$sourcefile"
+  CURRENT_SEPARATOR=","
 done
 
-# default name if not specified
-if [ "$OUTPUT_NAME" = "" ]; then
-  if [ "$NB_SOURCES" = "1" ]; then
-    OUTPUT_NAME="$GAMES"
-  else
-    OUTPUT_NAME="mame"
-  fi
-fi
+# generate a build name for each build
+# better do this than a `make clean`, because many files are pre-compiled on first run
+SUBTARGET=$(date +%Y)$(date +%m)$(date +%d)$(date +%H)$(date +%M)
 
 # compiler
-emmake "$SOURCES" "$OUTPUT_NAME"
+$EMMAKE_CMD make SUBTARGET=$SUBTARGET SOURCES=$SOURCES
 
-if [ ! -d "$BUILD_PATH" ]; then
-  mkdir $BUILD_PATH
+if [ ! -d "$OUTPUT_PATH" ]; then
+  mkdir $OUTPUT_PATH
 fi
 
-JS_NAME="$OUTPUT_NAME.js"
-BUILD_PATH_FULL="$BUILD_PATH$JS_NAME"
-
-# copy builded file to build folder, and also gunzip the js file
-cp -f "$MAME_PATH""/mame""$JS_NAME" "$BUILD_PATH_FULL"
-gzip -c "$BUILD_PATH_FULL" > "$BUILD_PATH_FULL.gz"
-
-# generate json array with all included drivers
-# ex : ["m92", "segas16"]
-JSON="["
-JSON_SEPARATOR=""
-for game in $GAMES
-do
-  JSON="$JSON""$JSON_SEPARATOR""\n\t\"$game\""
-  JSON_SEPARATOR=","
-done
-JSON="$JSON""\n]"
-printf $JSON > "$BUILD_PATH""/$OUTPUT_NAME"".json"
-
-printf "All done !"
+# copy all & gzip
+BUILD_PATH_FULL="$OUTPUT_PATH$OUTPUT_FILENAME" && \
+cp -f "$MAME_PATH""/mame""$SUBTARGET"".js" "$BUILD_PATH_FULL" && \
+gzip -c "$BUILD_PATH_FULL" > "$BUILD_PATH_FULL.gz" && \
+printf "\n\nAll done $BUILD_PATH_FULL"

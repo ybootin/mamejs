@@ -2,6 +2,18 @@
 
 Work In Progress, Demo coming soon !
 
+## Install
+
+    npm i
+
+## Build
+  
+    npm run build
+
+## Test
+
+Look at the `sample/index.html` to see how you can test the emulator
+
 ## MAME compiler
 Provide a simple tool to build MAME for javascript with Emscripten in one command line.
 see https://github.com/mamedev/mame for more informations
@@ -15,37 +27,15 @@ First, clone the module with recursion (this can take a while as it will clone M
 
 Then go to the `mamejs` folder, and you can start build your first emulator. For example, you can build Capcom cps1 emulator for running Street Fighters 2 and others super cool games :
 
-    ./mame-compiler.sh cps1
-
-First build will take a long time, because it will fetch docker image `ybootin/mamejs-compiler` from docker hub.
-When everything is finished, it should have build 3 files in the `dist/` folder
-
-    cps1.js     --> the main emulator, uncompressed
-    cps1.js.gz  --> the emulator gzip
-    cps1.json   --> json Array containing drivers list of the build
-
-You can also build an emulator with multiple drivers. For example, you can build MAME with cps1, cps2 and system16
-
     ./mame-compiler.sh cps1,cps2,segas16a,segas16b
 
-will build
+First build will take a long time, due to the fetch of the docker image `ybootin/mamejs-compiler` from docker hub.
+When everything is finished, it should have build 2 files :
 
-    mame.js
-    mame.js.gz
-    mame.json
-
-You can specified the build name as a second argument
-
-    ./mame-compiler.sh cps1,cps2,segas16a,segas16b multi
-
-will build
-
-    multi.js
-    multi.js.gz
-    multi.json
+    dist/mame.js     --> the main emulator, uncompressed
+    dist/mame.js.gz  --> the emulator gzip
 
 Now you can use the mame emulator with the mamejs app !
-
 
 ### Testing your emulator
 

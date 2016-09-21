@@ -1,6 +1,10 @@
-# MAME compiler + emscripten compiler
-# usage :
-# docker run -i -v $(pwd):/mame -w /mame --rm mame-compiler make SOURCES=src/mame/drivers/pacman.cpp
+# Emscripten compiler
+#
+# Build :
+#   docker build -t mamejs-compiler:latest .
+#
+# Usage :
+#   docker run --rm -v $(pwd)/mame:/mame -w /mame mamejs-compiler:latest /emsdk_portable/emscripten/master/emmake make SUBTARGET="buildname" SOURCES=src/mame/drivers/cps1.cpp,src/mame/drivers/cps2.cpp
 #
 FROM debian:latest
 
