@@ -4,6 +4,11 @@
 namespace mamejs {
   export interface IGame {
     /**
+     * driver name
+     */
+    driver: string,
+
+    /**
      * Required files to be loaded in the Emscripten fs (rom, drivers ...)
      *
      * Usage : files = {
@@ -11,19 +16,11 @@ namespace mamejs {
      * }
      */
     files: {[romname: string]: string},
-    /**
-     * driver name
-     */
-    driver: string,
-    /**
-     * javascript emulator url
-     */
-    emulator: string,
+
     /**
      * native game resolution
      */
-    resolution: IResolution
+    resolution?: IResolution
 
-    data?: Array<IFile>
   }
 }

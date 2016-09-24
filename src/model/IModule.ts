@@ -6,7 +6,7 @@ namespace mamejs {
     canvas: HTMLCanvasElement
     noInitialRun: boolean
     preInit: Function
-    requestFullScreen: Function
+    callMain?: {(arguments: Array<string>): void}
 
     _SDL_SendKeyboardKey?: IModule_SDL_SendKeyboardKey
   }

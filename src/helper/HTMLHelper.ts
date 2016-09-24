@@ -31,5 +31,22 @@ namespace mamejs.helper {
       canvas.width = width
       canvas.height = height
     }
+
+    static createIframe(): HTMLIFrameElement {
+
+      var iframe: HTMLIFrameElement = <HTMLIFrameElement>document.createElement('iframe')
+      iframe.style.margin = '0px'
+      iframe.style.padding = '0px'
+      iframe.style.width = '0'
+      iframe.style.height = '0'
+      iframe.style.border = '0px'
+      iframe.style.overflow = 'hidden'
+
+      iframe.setAttribute('scrolling', 'no')
+
+      iframe.frameBorder = '0'
+
+      return iframe
+    }
   }
 }

@@ -2,7 +2,7 @@
 /// <reference path="model/IGame.ts" />
 /// <reference path="control/Controls.ts" />
 /// <reference path="helper/HTMLHelper.ts" />
-/// <reference path="helper/BinaryLoader.ts" />
+/// <reference path="helper/FileLoader.ts" />
 /// <reference path="helper/FileSystem.ts" />
 /// <reference path="model/Window.ts" />
 
@@ -10,10 +10,20 @@ interface CSSStyleDeclaration {
   imageRendering: string
 }
 namespace mamejs {
+  /**
+   * The default template will be inject after compilation, or override by mame config
+   */
+  declare var template: string
+
+  export function run(config: IConfig, container: HTMLElement): Promise<MAMEJS> {
+    let scope: Window = container.ownerDocument.defaultView || container.ownerDocument.parentWindow
+    return Mame.load(config.emulator)
+  }
 
   export function runMame(game: IGame,  container: HTMLElement): Promise<MAMEJS> {
     // Fetch game files, they are needed into the emscripten FS at runtime
-    return helper.BinaryLoader.loadFiles(game.files).then((files: Array<IFile>): Promise<HTMLScriptElement> => {
+    return helper.FileLoader.loadFiles(game.files).then((files: Array<IFile>): Promise<HTMLScriptElement> => {
+
       // Init Emscripten module
       window.Module = {
         arguments: [
@@ -47,22 +57,32 @@ namespace mamejs {
   }
 
   export class MAMEJS {
-    static ROM_PATH: string = '/roms'
+    private mameContainer: HTMLIFrameElement
 
-    private _controls: control.Controls
+    private mame: Mame
 
-    constructor(private module: IModule, private game: IGame) {
-      this.resize(game.resolution.width, game.resolution.height)
-
-      this._controls = new control.Controls(module)
+    constructor(private config: IConfig, private container: HTMLElement) {
+      if (config.autostart) {
+        this.start()
+      }
     }
 
-    public get controls(): control.Controls {
-      return this._controls
+    public start() {
+      // Build inject
+      this.mameContainer = helper.HTMLHelper.createIframe()
+      this.mameContainer.contentWindow.document.write(btoa(template))
+      this.mameContainer.contentWindow.document.close()
+
     }
 
-    public resize(width: number, height: number): void {
-      helper.HTMLHelper.resizeCanvas(this.module.canvas, width, height)
+    private showRunScreen() {
+
     }
+
+    private showProgressScreen() {
+
+    }
+
+
   }
 }
