@@ -1,10 +1,31 @@
 namespace mamejs.helper {
   export class FileLoader {
 
-    static loadFiles(files: {[filename: string]: string}): Promise<IFile[]> {
+    static loadFiles(files: {[filename: string]: string}, handler?: {(evt: ProgressEvent): void}): Promise<IFile[]> {
       return Promise.all(Object.keys(files).map((name: string): Promise<IFile> => {
-        return FileLoader.loadFile(files[name], name)
+        return FileLoader.loadFile(files[name], name, handler)
       }))
+    }
+
+    static loadFilesOneByOne(files: {[filename: string]: string}, handler?: {(evt: ProgressEvent): void}): Promise<IFile[]> {
+      return new Promise(function(resolve, reject): void {
+        let loadedFiles: Array<IFile> = []
+        let keys = Object.keys(files)
+        let index = 0
+        // load file per file
+        let uploadRecursive = () => {
+          if (keys[index]) {
+            helper.FileLoader.loadFile(files[keys[index]], keys[index], handler).then((file: IFile) => {
+              loadedFiles.push(file)
+              index++
+              uploadRecursive()
+            }).catch(reject)
+          } else {
+            resolve(loadedFiles)
+          }
+        }
+        uploadRecursive()
+      })
     }
 
     static loadFile(url: string, name: string, handler?: {(evt: ProgressEvent): void}): Promise<IFile> {

@@ -1,7 +1,7 @@
 /// <reference path="IModule.ts" />
 
 interface Window {
-  Module: mamejs.IModule
+  module: mamejs.IModule
   JSMESS: JSMESS
   mozRequestAnimationFrame: any
   webkitRequestAnimationFrame: any

@@ -1,3 +1,6 @@
+interface CSSStyleDeclaration {
+  imageRendering: string
+}
 namespace mamejs.helper {
   export class HTMLHelper {
 

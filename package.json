@@ -4,11 +4,12 @@
   "version": "0.0.1",
   "dependencies": {},
   "devDependencies": {
-    "typescript": "1.8.0",
-    "xml2js": "^0.4.17"
+    "typescript": "1.8.0"
   },
   "scripts": {
     "prepublish": "npm run build",
-    "build": "node_modules/typescript/bin/tsc -d  --target es6 --sourceMap --outFile dist/mamejs.js node_modules/typescript/lib/lib.es6.d.ts src/Main.ts"
+    "build": "npm run buildts && npm run buildtemplate",
+    "buildts": "node_modules/typescript/bin/tsc -d  --target es6 --sourceMap --outFile dist/mamejs.js node_modules/typescript/lib/lib.es6.d.ts src/App.ts",
+    "buildtemplate": "sed -i -e \"s/%MAMEJSTEMPLATE%/$(cat src/App.html | base64)/g\" dist/mamejs.js"
   }
 }

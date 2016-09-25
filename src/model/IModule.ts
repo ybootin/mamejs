@@ -7,6 +7,7 @@ namespace mamejs {
     noInitialRun: boolean
     preInit: Function
     callMain?: {(arguments: Array<string>): void}
+    addOnExit?: Function
 
     _SDL_SendKeyboardKey?: IModule_SDL_SendKeyboardKey
   }

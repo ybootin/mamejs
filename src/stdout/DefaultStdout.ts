@@ -1,4 +1,4 @@
-namspace mamejs.stdout {
+namespace mamejs.stdout {
   export class DefaultStdout implements IStdout {
     private _stdout: Array<string> = []
     private _stderr: Array<string> = []
@@ -17,11 +17,11 @@ namspace mamejs.stdout {
       return this._scope
     }
 
-    public get stdout(): Window {
+    public get stdout(): Array<string> {
       return this._stdout
     }
 
-    public get stderr(): Window {
+    public get stderr(): Array<string> {
       return this._stderr
     }
 

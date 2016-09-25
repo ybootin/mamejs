@@ -20,8 +20,7 @@
     <script>
       var game = {
         files : {
-          ''
-          //'shinobi.zip': 'https://cors.archive.org/cors/arcade_shinobi/shinobi.zip',
+          'shinobi.zip': 'https://cors.archive.org/cors/arcade_shinobi/shinobi.zip',
           //'snowbros.zip': '../emulators/roms/snowbros.zip',
           //'twincobr.zip': '../emulators/roms/twincobr.zip',
           //'bublbobl.zip': '../emulators/bublbobl.zip',
@@ -33,20 +32,24 @@
           //'outrun.zip': 'https://cors.archive.org/cors/arcade_outrun/outrun.zip',
         },
         driver: 'shinobi',
-        emulator: '../dist/mame.js',
         resolution: {
           width: 320,
           height: 224
         }
       }
 
-      mamejs.runMame(game, document.getElementById('mame-container')).then(function(MAMEJS) {
-        // expose for debugging
-        window.MAMEJS_DEBUG = MAMEJS
-        console.log('MAME launched', MAMEJS)
-      }).catch(function(error) {
-        console.error('error launching MAME', error)
-      })
+      var config = {
+        emulator: '../dist/mame.js',
+        game: game
+      }
+
+      mamejs.run(config, document.getElementById('mame-container')) //.then(function(MAMEJS) {
+      //   // expose for debugging
+      //   window.MAMEJS_DEBUG = MAMEJS
+      //   console.log('MAME launched', MAMEJS)
+      // }).catch(function(error) {
+      //   console.error('error launching MAME', error)
+      // })
     </script>
   </body>
 </html>

@@ -1,3 +1,6 @@
+/// <reference path="IResolution.ts" />
+/// <reference path="IGame.ts" />
+
 namespace mamejs {
   export interface IConfig {
     /**

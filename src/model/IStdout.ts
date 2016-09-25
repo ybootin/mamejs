@@ -4,7 +4,7 @@ namespace mamejs {
     canvas: HTMLCanvasElement
     stdout: Array<string>
     stderr: Array<string>
-    print: function(text: string): void
-    printErr: function(error: string): void
+    print: {(text: string): void}
+    printErr: {(error: string): void}
   }
 }
