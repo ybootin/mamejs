@@ -9,8 +9,15 @@ namespace mamejs {
   export function run(config: IConfig, container: HTMLElement) {
     let tmpl = config.template || atob(template)
 
+    let baseContainer = document.createElement('div')
+    baseContainer.style.width = (config.resolution ? config.resolution.width : Mame.DEFAULT_RESOLUTION.width) + 'px'
+    baseContainer.style.height = (config.resolution ? config.resolution.height : Mame.DEFAULT_RESOLUTION.height) + 'px'
+    container.appendChild(baseContainer)
+
     let mameContainer = helper.HTMLHelper.createIframe()
-    container.appendChild(mameContainer)
+    mameContainer.style.width = (config.resolution ? config.resolution.width : Mame.DEFAULT_RESOLUTION.width) + 'px'
+    mameContainer.style.height = (config.resolution ? config.resolution.height : Mame.DEFAULT_RESOLUTION.height) + 'px'
+    baseContainer.appendChild(mameContainer)
 
     let doc = mameContainer.contentWindow.document
     doc.write(tmpl)
@@ -60,7 +67,11 @@ namespace mamejs {
         return loadMame(files)
       }).then(function(mame: Mame) {
         mame.module.addOnExit(() => onError())
+
+        Mame.run(mame.module, Mame.getGameArgs(config.game.driver))
+
         showHideProgressScreen(false)
+        showHideGameScreen(true)
       })
     })
 

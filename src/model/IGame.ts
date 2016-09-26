@@ -6,7 +6,7 @@ namespace mamejs {
     /**
      * driver name
      */
-    driver: string,
+    driver: string
 
     /**
      * Required files to be loaded in the Emscripten fs (rom, drivers ...)
@@ -15,7 +15,7 @@ namespace mamejs {
      *   'romname.zip' : 'http://domain.com/url/romname.zip'
      * }
      */
-    files: {[romname: string]: string},
+    files: {[romname: string]: string}
 
     /**
      * native game resolution

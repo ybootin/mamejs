@@ -1,4 +1,5 @@
 /// <reference path="model/IModule.ts" />
+/// <reference path="model/IResolution.ts" />
 /// <reference path="model/IStdout.ts" />
 /// <reference path="helper/HTMLHelper.ts" />
 /// <reference path="helper/FileSystem.ts" />
@@ -9,12 +10,16 @@
 namespace mamejs {
   export class Mame {
     static ROM_PATH: string = '/roms'
+    static DEFAULT_RESOLUTION: IResolution = {
+      width: 320,
+      height: 224
+    }
 
     static load(url: string, stdout: IStdout, files: Array<IFile> = [], module: IModule = null): Promise<Mame> {
-      stdout.scope.module = module || Mame.getDefaultModule(stdout, files)
+      stdout.scope.Module = module || Mame.getDefaultModule(stdout, files)
 
       return helper.HTMLHelper.loadScript(stdout.scope.document, url).then((): Mame => {
-        return new Mame(stdout.scope.module)
+        return new Mame(stdout.scope.Module)
       })
     }
 
@@ -40,6 +45,21 @@ namespace mamejs {
         noInitialRun: true,
         preInit: () => helper.FileSystem.init(Mame.ROM_PATH, files),
       }
+    }
+
+    static getGameArgs(driver: string, resolution?: IResolution): Array<string> {
+      resolution = resolution || Mame.DEFAULT_RESOLUTION
+      return [
+        driver,
+        '-verbose',
+        '-window',
+        '-rompath',
+        Mame.ROM_PATH,
+        '-resolution',
+        [resolution.width, resolution.height].join('x'),
+        '-samplerate',
+        '48000',
+      ]
     }
 
     private _controls: control.Controls
