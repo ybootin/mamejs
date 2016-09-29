@@ -4,14 +4,12 @@
 /// <reference path="Mame.ts" />
 
 namespace mamejs {
-  export var template: string = '%MAMEJSTEMPLATE%'
+  export var template: string = '{{MAMEJSTEMPLATE}}'
 
   export function run(config: IConfig, container: HTMLElement) {
     let tmpl = config.template || atob(template)
 
     let baseContainer = document.createElement('div')
-    baseContainer.style.width = (config.resolution ? config.resolution.width : Mame.DEFAULT_RESOLUTION.width) + 'px'
-    baseContainer.style.height = (config.resolution ? config.resolution.height : Mame.DEFAULT_RESOLUTION.height) + 'px'
     container.appendChild(baseContainer)
 
     let mameContainer = helper.HTMLHelper.createIframe()
@@ -22,6 +20,10 @@ namespace mamejs {
     let doc = mameContainer.contentWindow.document
     doc.write(tmpl)
     doc.close()
+
+    let appContainer = doc.getElementById('container')
+    appContainer.style.width = mameContainer.style.width
+    appContainer.style.height = mameContainer.style.height
 
     let playScreen: HTMLElement = doc.getElementById('play-screen')
     let uploadScreen: HTMLElement = doc.getElementById('upload-screen')
