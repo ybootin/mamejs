@@ -40,7 +40,7 @@ error() {
 }
 
 if [ "$1" = "--builddocker" ]; then
-  docker build -t "$DOCKER_IMAGE_NAME" .
+  docker build -t "$DOCKER_IMAGE_NAME" - < Dockerfile
   exit
 fi
 
@@ -82,7 +82,9 @@ if [ ! -d "$OUTPUT_PATH" ]; then
 fi
 
 # copy all & gzip
-BUILD_PATH_FULL="$OUTPUT_PATH$OUTPUT_FILENAME" && \
+BUILD_PATH_FULL="$OUTPUT_PATH$OUTPUT_FILENAME"
+
 cp -f "$MAME_PATH""/mame""$SUBTARGET"".js" "$BUILD_PATH_FULL" && \
-gzip -c "$BUILD_PATH_FULL" > "$BUILD_PATH_FULL.gz" && \
-printf "\n\nAll done $BUILD_PATH_FULL"
+gzip -c "$BUILD_PATH_FULL" > "$BUILD_PATH_FULL.gz"
+
+printf "All done, open http://rawgit.com/ybootin/mamejs/master/tools/gamelist-generator.html to test your build"
