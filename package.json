@@ -12,6 +12,6 @@
     "build": "npm run buildts && npm run buildtemplate",
     "buildts": "node_modules/typescript/bin/tsc -d  --target es6 --sourceMap --outFile dist/mamejs.js node_modules/typescript/lib/lib.es6.d.ts src/App.ts",
     "buildtemplate": "sed -i -e \"s/{{MAMEJSTEMPLATE}}/$(template/build-template.sh | base64)/g\" dist/mamejs.js",
-    "buildmame": "./mame-compiler.sh cps1,cps2,segas16a,segas16b,bublbobl,segaorun,twinwcobr,snowbros"
+    "buildmame": "./mame-compiler.sh cps1,cps2,segas16a,segas16b,bublbobl,segaorun,twincobr,snowbros"
   }
 }

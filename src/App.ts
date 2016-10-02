@@ -53,6 +53,8 @@ namespace mamejs {
       // parse std error and catch error
       error = error || Mame.parseStderr(stdout)
 
+      errorScreen.innerHTML = stdout.stderr.join("\n") + "\n" + error
+
       showHideErrorScreen(true)
     }
 
