@@ -75,7 +75,7 @@ namespace mamejs {
       }).then(function(mame: Mame) {
         mame.module.addOnExit(() => handleError())
 
-        Mame.run(mame.module, Mame.getGameArgs(config.game.driver))
+        Mame.run(mame.module, Mame.getGameArgs(config.game.driver, config.resolution))
         setStatus(status.PLAYING)
       }).catch((error: string) => {
         handleError(error)

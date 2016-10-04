@@ -26,24 +26,24 @@
           //'shinobi.zip': 'https://cors.archive.org/cors/arcade_shinobi/shinobi.zip',
           //'snowbros.zip': '../emulators/roms/snowbros.zip',
           //'twincobr.zip': '../emulators/roms/twincobr.zip',
-          'bublbobl.zip': '../emulators/bublbobl.zip',
+          //'bublbobl.zip': '../emulators/bublbobl.zip',
           //'shinobi.zip': '../emulators/roms/shinobi.zip',
-          //'sf2.zip' : '../emulators/roms/sf2.zip',
+          'sf2.zip' : '../emulators/roms/sf2.zip',
           //'ghouls.zip' : '../emulators/cps1/ghouls.zip',
           //'outrun.zip' : '../emulators/outrun/outrun.zip',
           //'outrun.cfg' : '../emulators/outrun/outrun.cfg',
           //'outrun.zip': 'https://cors.archive.org/cors/arcade_outrun/outrun.zip',
         },
-        driver: 'bublbobl',
-        resolution: {
-          width: 720,
-          height: 480
-        }
+        driver: 'sf2'
       }
 
       var config = {
         emulator: '../dist/mame.js',
-        game: game
+        game: game,
+        resolution: {
+          width: 440,
+          height: 330
+        }
       }
 
       mamejs.run(config, document.getElementById('mame-container')) //.then(function(MAMEJS) {
