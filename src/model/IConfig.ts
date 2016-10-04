@@ -27,18 +27,17 @@ namespace mamejs {
     /**
      * autostart emulator, play button displayed if not setted
      */
-     autostart?: boolean
+    autostart?: boolean
 
-     /**
-      * override default template
-      * base64 string
-      */
-     template?: string
+    /**
+     * override default template
+     * base64 string
+     */
+    template?: string
 
-     /**
-      * mute sound at startup
-      */
-      muted?: string
-
+    /**
+     * mute sound at startup
+     */
+    muted?: string
   }
 }

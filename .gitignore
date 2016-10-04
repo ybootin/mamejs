@@ -2,3 +2,4 @@ emulators/
 node_modules/
 dist/
 build
+template/output.html
