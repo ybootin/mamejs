@@ -5,7 +5,7 @@ namespace mamejs {
     print: Function
     canvas: HTMLCanvasElement
     noInitialRun: boolean
-    preInit: Function
+    preInit?: Function
     callMain?: {(arguments: Array<string>): void}
     addOnExit?: Function
 

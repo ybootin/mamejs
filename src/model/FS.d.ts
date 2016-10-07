@@ -1,4 +1,3 @@
-
 declare var MEMFS: FS.IFileSystem
 declare namespace FS {
   function mkdir(path: string): void

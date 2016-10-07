@@ -1,12 +1,6 @@
 namespace mamejs.helper {
   export class FileLoader {
 
-    static loadFiles(files: {[filename: string]: string}, handler?: {(evt: ProgressEvent): void}): Promise<IFile[]> {
-      return Promise.all(Object.keys(files).map((name: string): Promise<IFile> => {
-        return FileLoader.loadFile(files[name], name, handler)
-      }))
-    }
-
     static loadFile(url: string, name: string, handler?: {(evt: ProgressEvent): void}): Promise<IFile> {
       // fetch file, and update game data
       return FileLoader.fetchFile(url, 'arraybuffer', handler).then(function(data: ArrayBuffer): IFile {

@@ -1,5 +1,5 @@
 /// <reference path="IModule.ts" />
-/// <reference path="../../typings/FS.d.ts" />
+/// <reference path="FS.d.ts" />
 
 interface Window {
   Module: mamejs.IModule
