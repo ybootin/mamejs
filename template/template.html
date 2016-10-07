@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {}
+
+      #container {
+        background-color: #000000;
+        background: url('data:image/jpeg;base64,{{SPLASHSCREEN}}') no-repeat center center;
+        background-size: cover;
+        min-width: 320px;
+        min-height: 224px;
+        overflow: hidden;
+        position: relative;
+        width: 320px;
+        height: 224px;
+      }
+
+      #play-button {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        display: none;
+        cursor: pointer;
+      }
+
+      #play-button svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 30%;
+        height: 30%;
+      }
+
+      #play-button svg path {
+        fill:white;
+      }
+      canvas {
+        width:100%;
+        height: 100%;
+      }
+
+      .progress-container {
+        display: none;
+        position: absolute;
+        bottom: 20px;
+        width: 60%;
+        margin-left: 20%;
+      }
+
+      #progress-bar {
+        width: 0%;
+        height: 6px;
+        background-color: white;
+      }
+
+      .progress-bar-container {
+        border: 1px solid #000000;
+      }
+
+      #container.unstarted #play-button {
+        display: block;
+      }
+      #container.loading .progress-container {
+        display: block;
+      }
+    </style>
+  </head>
+  <body style="margin:0;padding:0">
+    <div id="container">
+      <div id="error-content"></div>
+      <div id="play-button">
+        <svg width="31" height="31" viewbox="0 0 31 31" xmlns="http://www.w3.org/2000/svg">
+          <path id="svg_1" d="m5.042,0.787c-2.786,-1.598 -5.045,-0.289 -5.045,2.922l0,23.695c0,3.213 2.259,4.521 5.045,2.924l20.71,-11.877c2.787,-1.598 2.787,-4.189 0,-5.787l-20.71,-11.877z"/>
+        </svg>
+      </div>
+      <div class="progress-container">
+        <!-- <div id="progress-text" class="progress-text"></div> -->
+        <div class="progress-bar-container">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+      </div>
+      <canvas id="canvas" />
+    </div>
+  </body>
+</html>

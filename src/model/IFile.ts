@@ -2,7 +2,7 @@ namespace mamejs {
   export interface IFile {
     // Origin of the file
     url: string,
-    // filename (ex : shinobi.zip)
+    // filename related to driver (ex : shinobi.zip ==> driver shinobi)
     name: string,
     data: Uint8Array
   }

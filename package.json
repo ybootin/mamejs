@@ -4,11 +4,14 @@
   "version": "0.0.1",
   "dependencies": {},
   "devDependencies": {
-    "typescript": "1.8.0",
-    "xml2js": "^0.4.17"
+    "html-minifier": "^3.1.0",
+    "typescript": "1.8.0"
   },
   "scripts": {
     "prepublish": "npm run build",
-    "build": "node_modules/typescript/bin/tsc -d  --target es6 --sourceMap --outFile dist/mamejs.js node_modules/typescript/lib/lib.es6.d.ts src/MAMEJS.ts"
+    "build": "npm run buildts && npm run buildtemplate",
+    "buildts": "node_modules/typescript/bin/tsc -d  --target es6 --sourceMap --outFile dist/mamejs.js node_modules/typescript/lib/lib.es6.d.ts src/App.ts",
+    "buildtemplate": "sed -i -e \"s/{{MAMEJSTEMPLATE}}/$(template/build-template.sh | base64)/g\" dist/mamejs.js",
+    "buildmame": "./mame-compiler.sh cps1,cps2,segas16a,segas16b,bublbobl,segaorun,twincobr,snowbros"
   }
 }

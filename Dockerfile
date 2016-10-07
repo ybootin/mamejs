@@ -35,6 +35,10 @@ RUN emsdk_portable/emsdk install latest
 RUN emsdk_portable/emsdk activate latest
 
 # Linux/Mac OS X only: Set the current Emscripten path
+# seems not working
 RUN /bin/bash -c "source /emsdk_portable/emsdk_env.sh"
+
+# Precompile a mame emulator to prebuild all libs like sdl2, and avoid fetch and build them at each run
+RUN wget https://github.com/mamedev/mame/archive/mame0178.tar.gz && tar xzvf mame0178.tar.gz && cd mame-mame0178 && /emsdk_portable/emscripten/master/emmake make SUBTARGET=test SOURCES=src/mame/drivers/cps1.cpp && cd ../ && rm -Rf mame-mame0178*
 
 
