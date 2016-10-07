@@ -1,5 +1,6 @@
 /// <reference path="../model/IModule.ts" />
 /// <reference path="../model/IControl.ts" />
+/// <reference path="../model/IStdout.ts" />
 /// <reference path="MAMEControllers.ts" />
 /// <reference path="Arcade6Buttons.ts" />
 /// <reference path="Button.ts" />
@@ -12,11 +13,11 @@ namespace mamejs.control {
 
     private pauseButton: IButton
 
-    constructor(module: IModule) {
-      this._player1 = new Arcade6Buttons(player1Controller, module)
-      this._player2 = new Arcade6Buttons(player1Controller, module)
+    constructor(private _stdout: IStdout) {
+      this._player1 = new Arcade6Buttons(player1Controller, this._stdout.module)
+      this._player2 = new Arcade6Buttons(player1Controller, this._stdout.module)
 
-      this.pauseButton = new Button(PAUSE, module._SDL_SendKeyboardKey)
+      this.pauseButton = new Button(PAUSE, this._stdout.module._SDL_SendKeyboardKey)
     }
 
     public get player1(): IControl {

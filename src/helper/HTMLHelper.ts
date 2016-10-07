@@ -52,35 +52,8 @@ namespace mamejs.helper {
       return iframe
     }
 
-    static addClass(element: HTMLElement, className: string): void {
-      if (!HTMLHelper.hasClass(element, className)) {
-        element.className += ' ' + className
-        element.className = element.className.trim()
-      }
-    }
-
-    static removeClass(element: HTMLElement, className: string): void {
-      if (HTMLHelper.hasClass(element, className)) {
-        var classes = element.className.split(' ')
-        classes.splice(classes.indexOf(className), 1)
-
-        element.className = classes.join(' ').trim()
-      }
-    }
-
-    static hasClass(element: HTMLElement, className: string): boolean {
-      return element.className.split(' ').indexOf(className) !== -1
-    }
-
-    static toggleClass(element: HTMLElement, className: string): void {
-      HTMLHelper.hasClass(element, className) ? HTMLHelper.removeClass(element, className) : HTMLHelper.addClass(element, className)
-    }
-
-    static replaceClass(element: HTMLElement, newClassName: string, oldClassName: string): void {
-      if (!HTMLHelper.hasClass(element, newClassName) && HTMLHelper.hasClass(element, oldClassName)) {
-        HTMLHelper.removeClass(element, oldClassName)
-        HTMLHelper.addClass(element, newClassName)
-      }
+    static getWindow(element: HTMLElement): Window {
+      return element.ownerDocument.defaultView || (<any>element.ownerDocument).parentWindow
     }
   }
 }

@@ -1,4 +1,5 @@
 emulators/
+roms/
 node_modules/
 dist/
 build

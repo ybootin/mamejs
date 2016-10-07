@@ -23,35 +23,36 @@
           //'neogeo.zip': '../roms/neogeo.zip',
           //'lresort.zip': '../roms/lresort.zip',
           //'shinobi.zip': 'https://cors.archive.org/cors/arcade_shinobi/shinobi.zip',
-          //'snowbros.zip': '../emulators/roms/snowbros.zip',
+          'snowbros.zip': '../roms/snowbros.zip',
           //'twincobr.zip': '../emulators/roms/twincobr.zip',
           //'bublbobl.zip': '../emulators/bublbobl.zip',
           //'shinobi.zip': '../emulators/roms/shinobi.zip',
-          'sf2.zip' : '../emulators/roms/sf2.zip',
+          //'sf2.zip' : '../emulators/roms/sf2.zip',
           //'ghouls.zip' : '../emulators/cps1/ghouls.zip',
           //'outrun.zip' : '../emulators/outrun/outrun.zip',
           //'outrun.cfg' : '../emulators/outrun/outrun.cfg',
           //'outrun.zip': 'https://cors.archive.org/cors/arcade_outrun/outrun.zip',
         },
-        driver: 'sf2'
+        driver: 'snowbros'
       }
 
       var config = {
         emulator: '../dist/mame.js',
         game: game,
         resolution: {
-          width: 440,
-          height: 330
+          width: 400,
+          height: 300
         }
       }
 
-      mamejs.run(config, document.getElementById('mame-container')) //.then(function(MAMEJS) {
-      //   // expose for debugging
-      //   window.MAMEJS_DEBUG = MAMEJS
-      //   console.log('MAME launched', MAMEJS)
-      // }).catch(function(error) {
-      //   console.error('error launching MAME', error)
-      // })
+      var container = document.getElementById('mame-container')
+
+      mamejs.run(config, container).then(function(mame) {
+        console.log('Mame launched', mame, config)
+      }).catch(function(error) {
+        console.error('error running mame', error)
+      })
+
     </script>
   </body>
 </html>

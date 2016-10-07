@@ -7,27 +7,6 @@ namespace mamejs.helper {
       }))
     }
 
-    static loadFilesOneByOne(files: {[filename: string]: string}, handler?: {(evt: ProgressEvent): void}): Promise<IFile[]> {
-      return new Promise(function(resolve, reject): void {
-        let loadedFiles: Array<IFile> = []
-        let keys = Object.keys(files)
-        let index = 0
-        // load file per file
-        let uploadRecursive = () => {
-          if (keys[index]) {
-            helper.FileLoader.loadFile(files[keys[index]], keys[index], handler).then((file: IFile) => {
-              loadedFiles.push(file)
-              index++
-              uploadRecursive()
-            }).catch(reject)
-          } else {
-            resolve(loadedFiles)
-          }
-        }
-        uploadRecursive()
-      })
-    }
-
     static loadFile(url: string, name: string, handler?: {(evt: ProgressEvent): void}): Promise<IFile> {
       // fetch file, and update game data
       return FileLoader.fetchFile(url, 'arraybuffer', handler).then(function(data: ArrayBuffer): IFile {
