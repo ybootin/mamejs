@@ -28,7 +28,7 @@ namespace mamejs.control {
     }
 
     public pause(callback?: Function): void {
-      this.pauseButton.pressAndRelease(20, callback)
+      this.pauseButton.pressAndRelease(callback)
     }
   }
 }

@@ -1,5 +1,5 @@
 namespace mamejs.stdout {
-  export class DefaultStdout implements IStdout {
+  export class Stdout implements IStdout {
     private _stdout: Array<string> = []
     private _stderr: Array<string> = []
 

@@ -21,7 +21,7 @@ namespace mamejs {
   export interface IButton {
     press(): void
     release(): void
-    pressAndRelease(delay: number, callback?: Function): void
+    pressAndRelease(callback?: Function): void
   }
 
   /**
