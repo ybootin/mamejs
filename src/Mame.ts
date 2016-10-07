@@ -59,7 +59,6 @@ namespace mamejs {
 
     private _controls: control.Controls
     private _files: Array<IFile> = []
-    private _module: IModule
 
     /**
      * Mame emulator must be loaded before instanciate this class
@@ -72,7 +71,6 @@ namespace mamejs {
       FS.mount(MEMFS, {root: '/'}, Mame.ROM_PATH);
 
       this._controls = new control.Controls(this._stdout)
-      this._module = this._stdout.module
     }
 
     public get stdout(): IStdout {
@@ -83,20 +81,18 @@ namespace mamejs {
       return this._controls
     }
 
-    public get module(): IModule {
-      return this._module
-    }
-
     public get files(): Array<IFile> {
       return this._files
     }
 
     public run(args: Array<string>): Promise<void> {
-      return Promise.resolve(this.module.callMain(args))
+      return Promise.resolve(this.stdout.module.callMain(args))
     }
 
     public runGame(driver: string, resolution?: IResolution): Promise<void> {
       resolution = resolution || Mame.DEFAULT_RESOLUTION
+
+      helper.HTMLHelper.resizeCanvas(this.stdout.canvas, resolution.width, resolution.height)
 
       return this.run([
         driver,
