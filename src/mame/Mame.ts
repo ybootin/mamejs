@@ -3,11 +3,9 @@
 /// <reference path="model/IStdout.ts" />
 /// <reference path="helper/HTMLHelper.ts" />
 /// <reference path="helper/FileSystem.ts" />
-/// <reference path="stdout/DefaultStdout.ts" />
 /// <reference path="control/Controls.ts" />
 
-
-namespace mamejs {
+namespace mamejs.mame {
   export class Mame {
     static ROM_PATH: string = '/roms'
     static DEFAULT_RESOLUTION: IResolution = {

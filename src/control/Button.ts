@@ -4,19 +4,35 @@
 namespace mamejs.control {
   export class Button implements IButton {
 
+    private _pressed: boolean = false
+    private _rafId
+
     constructor(private scancode: number, private handler: IModule_SDL_SendKeyboardKey) {}
 
+    public get pressed(): boolean {
+      return this._pressed
+    }
+
     public press(): void {
-      this.handler(BUTTON_PRESS, this.scancode)
+      this._pressed = true
+      this._rafId = raf(() => this.handler(BUTTON_PRESS, this.scancode))
     }
 
     public release(): void {
+      craf(this._rafId)
       this.handler(BUTTON_RELEASE, this.scancode)
     }
 
-    public pressAndRelease(delay: number = 20, callback?: Function): void {
+    public pressAndRelease(callback?: Function): void {
       this.press()
-      setTimeout(() => this.release(), delay)
+      raf(() => {
+        this.release()
+        if (typeof callback === 'function') {
+          try {
+            callback()
+          } catch(e) {}
+        }
+      })
     }
   }
 }
