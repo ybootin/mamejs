@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+  <head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="../dist/mamejs.js"></script>
+
+    <script>
+      var gamelist = [
+        {
+          "name": "Twin Cobra",
+          "screenshot": "http://www.hardcoregaming101.net/toaplan/Twin%20Cobra/Twin%20Cobra%2032.png",
+          "files" : {
+            "twincobr.zip": "../roms/twincobr.zip",
+          },
+          "driver": "twincobr",
+          "ratio": 0.75
+        },
+        {
+          "name": "Shinobi",
+          "screenshot": "http://img2.game-oldies.com/sites/default/files/titles/coin-op-arcade/shinobi.png",
+          "files" : {
+            "shinobi.zip": "../roms/shinobi.zip",
+          },
+          "driver": "shinobi",
+        }
+      ]
+      var config = {
+        emulator: '../dist/mame.js',
+        resolution: {
+          width: 320,
+          height: 240
+        }
+      }
+
+      // Holds the loaded mame instance
+      var mame
+    </script>
+    <style>
+      .game-item {
+        display: inline-block;
+        width: 120px;
+        height: 120px;
+        background-size: cover;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+
+      .game-title {
+        background-color: grey;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 20px;
+        font-size: 12px;
+        font-family: Monaco;
+        text-align: center;
+        padding: 2px;
+        color: white;
+        opacity: 0.8;
+      }
+      .play-button {
+        margin-top:20px;
+        width: 100%;
+        height: 100px;
+        color: white;
+        font-size: 60px;
+        background-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>mamejs - Demo page</h1>
+      <div id="mame-container"></div>
+      <div id="gamelist-container"></div>
+    </div>
+    <script type="text/x-tmpl" id="game-template">
+      <button type="button" class="play-button btn btn-lg">
+        <div class="glyphicon glyphicon-play-circle" aria-label="play"></div>
+      </button>
+      <div class="game-title"></div>
+    </script>
+    <script type="text/x-tmpl" id="main-buttons">
+      <div class="main-buttons">
+        <a class="btn btn-default btn-xs button-insertcoin" onclick="mame.controls.player1.coin.pressAndRelease()">Insert Coin</a>
+        <a class="btn btn-default btn-xs button-p1start" onclick="mame.controls.player1.start.pressAndRelease()">Player 1 Start</a>
+        <a class="btn btn-default btn-xs button-p2start" onclick="mame.controls.player2.start.pressAndRelease()">Player 2 Start</a>
+      </div>
+    </script>
+    <script>
+      var mameContainer = document.getElementById('mame-container')
+      var gamelistContainer = document.getElementById('gamelist-container')
+      var gameTemplate = document.getElementById('game-template').innerHTML
+      var buttonTemplate = document.getElementById('main-buttons').innerHTML
+
+      function runGame(game) {
+        // clone config
+        var cfg = JSON.parse(JSON.stringify(config))
+        cfg.game = game
+        if (game.ratio) {
+          cfg.resolution.height = cfg.resolution.width / game.ratio
+        }
+
+        // Create container to override previous
+        mameContainer.innerHTML = buttonTemplate
+        var gameCnt = document.createElement('div')
+        gameCnt.className = "game-container"
+        mameContainer.appendChild(gameCnt)
+
+        mamejs.run(cfg, gameCnt).then(function(mame) {
+          // this is just a demo, kiss
+          // will be used by controls
+          window.mame = mame
+          console.log('running game ' + game.name, mame)
+        }).catch(function(error) {
+          console.error('error running game ' + game.name, error)
+        })
+      }
+
+      for (var i = 0, l = gamelist.length; i < l; i++) {
+        var game = gamelist[i]
+        var element = document.createElement('div')
+        element.className = 'game-item'
+        element.innerHTML = gameTemplate
+        element.style.backgroundImage = 'url(' + game.screenshot + ')'
+        element.getElementsByClassName('game-title')[0].innerHTML = game.name
+
+        element.addEventListener('click', (function(game) {
+          return function () {
+            runGame(game)
+          }
+        })(game));
+
+        gamelistContainer.appendChild(element)
+      }
+    </script>
+  </body>
+</html>
