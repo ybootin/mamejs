@@ -26,32 +26,48 @@
           //'snowbros.zip': '../roms/snowbros.zip',
           //'twincobr.zip': '../emulators/roms/twincobr.zip',
           //'bublbobl.zip': '../emulators/bublbobl.zip',
-          'shinobi.zip': '../roms/shinobi.zip',
+          'twincobr.zip': '../roms/twincobr.zip',
+          //'shinobi.zip': '../roms/shinobi.zip',
           //'sf2.zip' : '../emulators/roms/sf2.zip',
           //'ghouls.zip' : '../emulators/cps1/ghouls.zip',
           //'outrun.zip' : '../emulators/outrun/outrun.zip',
           //'outrun.cfg' : '../emulators/outrun/outrun.cfg',
           //'outrun.zip': 'https://cors.archive.org/cors/arcade_outrun/outrun.zip',
         },
-        driver: 'shinobi'
+        driver: 'twincobr'
       }
 
       var config = {
         emulator: '../dist/mame.js',
         game: game,
         resolution: {
-          width: 400,
-          height: 300
+          width: 300,
+          height: 400
         }
       }
 
       var container = document.getElementById('mame-container')
 
-      mamejs.run(config, container).then(function(mame) {
-        console.log('Mame launched', mame, config)
+      console.log('launch mame ', config, container)
+      mamejs.load(config.emulator, container).then(function(mame) {
+        console.log('mame loaded', mame)
+        return mame.loadRoms(config.game.files).then(function() {
+          console.log('rom loaded', config.game.files)
+          return mame.runGame(config.game.driver, config.resolution).then(function() {
+            return mame
+          })
+        })
+      }).then(function(mame) {
+        console.log('Game launched')
       }).catch(function(error) {
         console.error('error running mame', error)
       })
+
+      // mamejs.run(config, container).then(function(mame) {
+      //   console.log('Mame launched', mame, config)
+      // }).catch(function(error) {
+      //   console.error('error running mame', error)
+      // })
 
     </script>
   </body>

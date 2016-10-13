@@ -46,8 +46,8 @@ namespace mamejs {
       stdout.scope.Module = <IModule> {
         arguments: [],
         screenIsReadOnly: true,
-        print: stdout.print,
-        printErr: stdout.printErr,
+        print: (text: string): void => stdout.print(text),
+        printErr: (err: string): void => stdout.printErr(err),
         canvas: stdout.canvas,
         noInitialRun: true,
       }
@@ -70,11 +70,15 @@ namespace mamejs {
       FS.mkdir(Mame.ROM_PATH);
       FS.mount(MEMFS, {root: '/'}, Mame.ROM_PATH);
 
-      this._controls = new control.Controls(this._stdout)
+      this._controls = new control.Controls(this)
     }
 
     public get stdout(): IStdout {
       return this._stdout
+    }
+
+    public get module(): IModule {
+      return this.stdout.scope.Module
     }
 
     public get controls(): control.Controls {
@@ -86,7 +90,7 @@ namespace mamejs {
     }
 
     public run(args: Array<string>): Promise<void> {
-      return Promise.resolve(this.stdout.module.callMain(args))
+      return Promise.resolve(this.module.callMain(args))
     }
 
     public runGame(driver: string, resolution?: IResolution): Promise<void> {

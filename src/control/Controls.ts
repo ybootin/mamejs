@@ -13,11 +13,11 @@ namespace mamejs.control {
 
     private pauseButton: IButton
 
-    constructor(private _stdout: IStdout) {
-      this._player1 = new Arcade6Buttons(player1Controller, this._stdout.module)
-      this._player2 = new Arcade6Buttons(player1Controller, this._stdout.module)
+    constructor(private _mame: Mame) {
+      this._player1 = new Arcade6Buttons(player1Controller, this._mame.module)
+      this._player2 = new Arcade6Buttons(player1Controller, this._mame.module)
 
-      this.pauseButton = new Button(PAUSE, this._stdout.module._SDL_SendKeyboardKey)
+      this.pauseButton = new Button(PAUSE, this._mame.module._SDL_SendKeyboardKey)
     }
 
     public get player1(): IControl {

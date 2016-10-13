@@ -11,11 +11,14 @@ interface Window {
   cancelRequestAnimationFrame: any
 }
 
-// shortcut for requestAnimationFrame
-namespace mamejs {
-  export var raf = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.requestAnimationFrame;
-  export var craf = window.mozCancelRequestAnimationFrame || window.webkitCancelRequestAnimationFrame || window.cancelRequestAnimationFrame;
+if (!window.requestAnimationFrame) {
+  window.requestAnimationFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame
 }
+
+if (!window.cancelAnimationFrame) {
+  window.cancelAnimationFrame = window.mozCancelRequestAnimationFrame || window.webkitCancelRequestAnimationFrame
+}
+
 
 interface JSMESS {
   ready?: {(callback: any): void}

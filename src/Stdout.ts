@@ -30,10 +30,6 @@ namespace mamejs {
       return this._scope
     }
 
-    public get module(): IModule {
-      return this._scope.Module
-    }
-
     public get stdout(): Array<string> {
       return this._stdout
     }
