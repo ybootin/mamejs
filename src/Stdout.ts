@@ -11,15 +11,25 @@ namespace mamejs {
     private _stderr: Array<string> = []
 
     private _scope: Window
+    private _iframe: HTMLIFrameElement
 
     protected _canvas: HTMLCanvasElement
 
     constructor(private _container: HTMLElement) {
       super()
-      this._scope = helper.HTMLHelper.getWindow(this._container)
+
+      // Iframe Mame prevent from loading the emscriptem app in the main scope
+      this._iframe = helper.HTMLHelper.createIframe(helper.HTMLHelper.getWindow(this._container).document)
+      this._container.appendChild(this._iframe)
+
+      this._iframe.contentWindow.document.write('<!doctype html><html><head></head><body style="margin:0px;padding:0px"></body></html>')
+      this._iframe.contentWindow.document.close()
+
+
+      this._scope = this._iframe.contentWindow
       this._canvas = this._scope.document.createElement('canvas')
 
-      this._container.appendChild(this._canvas)
+      this._iframe.contentWindow.document.body.appendChild(this._canvas)
     }
 
     public get canvas(): HTMLCanvasElement {
@@ -46,6 +56,13 @@ namespace mamejs {
     public printErr(error: string): void {
       this.emit(Stdout.ON_STDERROR)
       this._stderr.push(error)
+    }
+
+    public resize(width: number, height: number): void {
+      this._iframe.style.width = width + 'px'
+      this._iframe.style.height = height + 'px'
+
+      helper.HTMLHelper.resizeCanvas(this.canvas, width, height)
     }
   }
 }

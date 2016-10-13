@@ -64,11 +64,11 @@ namespace mamejs {
      * Mame emulator must be loaded before instanciate this class
      */
     constructor(private _stdout: IStdout) {
-      instances.push(this)
+      instances.push(this);
 
-      // init filesystem
-      FS.mkdir(Mame.ROM_PATH);
-      FS.mount(MEMFS, {root: '/'}, Mame.ROM_PATH);
+      // init filesystem in the correct scope
+      (<any>this.stdout.scope).FS.mkdir(Mame.ROM_PATH);
+      (<any>this.stdout.scope).FS.mount((<any>this.stdout.scope).MEMFS, {root: '/'}, Mame.ROM_PATH);
 
       this._controls = new control.Controls(this)
     }
@@ -96,6 +96,8 @@ namespace mamejs {
     public runGame(driver: string, resolution?: IResolution): Promise<void> {
       resolution = resolution || Mame.DEFAULT_RESOLUTION
 
+      this.stdout.resize(resolution.width, resolution.height)
+
       helper.HTMLHelper.resizeCanvas(this.stdout.canvas, resolution.width, resolution.height)
 
       return this.run([
@@ -112,7 +114,7 @@ namespace mamejs {
     }
 
     public addRom(file: IFile): void {
-      FS.writeFile(Mame.ROM_PATH + '/' + file.name, file.data, {
+      (<any>this.stdout.scope).FS.writeFile(Mame.ROM_PATH + '/' + file.name, file.data, {
         encoding: 'binary'
       })
       this._files.push(file)

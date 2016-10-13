@@ -8,10 +8,6 @@ namespace mamejs {
     preInit?: Function
     callMain?: {(arguments: Array<string>): void}
     addOnExit?: Function
-    addOnInit?: Function
-    addOnPostRun?: Function
-    addOnPreMain?: Function
-    addOnPreRun?: Function
 
     _SDL_SendKeyboardKey?: IModule_SDL_SendKeyboardKey
   }

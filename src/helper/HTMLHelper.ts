@@ -35,9 +35,9 @@ namespace mamejs.helper {
       canvas.height = height
     }
 
-    static createIframe(): HTMLIFrameElement {
+    static createIframe(doc: Document = window.document): HTMLIFrameElement {
 
-      var iframe: HTMLIFrameElement = <HTMLIFrameElement>document.createElement('iframe')
+      var iframe: HTMLIFrameElement = <HTMLIFrameElement>doc.createElement('iframe')
       iframe.style.margin = '0px'
       iframe.style.padding = '0px'
       iframe.style.width = '0'

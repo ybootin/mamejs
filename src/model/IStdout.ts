@@ -6,5 +6,6 @@ namespace mamejs {
     stderr: Array<string>
     print: {(text: string): void}
     printErr: {(error: string): void}
+    resize(width: number, height: number): void
   }
 }
