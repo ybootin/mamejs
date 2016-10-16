@@ -1,21 +1,20 @@
+/// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
 /// <reference path="model/FS.d.ts" />
 /// <reference path="model/IModule.ts" />
 /// <reference path="model/IResolution.ts" />
-/// <reference path="model/IStdout.ts" />
 /// <reference path="model/IFile.ts" />
-/// <reference path="model/IControl.ts" />
 /// <reference path="model/IConfig.ts" />
 /// <reference path="model/Window.ts" />
 /// <reference path="helper/HTMLHelper.ts" />
 /// <reference path="helper/FileLoader.ts" />
-/// <reference path="control/Controls.ts" />
-/// <reference path="Stdout.ts" />
+/// <reference path="model/IEmscriptenApp.ts" />
+/// <reference path="EmscriptenApp.ts" />
 
 namespace mamejs {
 
   // Shortcut functions for quick use
   export function load(url: string, container: HTMLElement): Promise<Mame> {
-    return Mame.load(url, new Stdout(container))
+    return Mame.load(url, new EmscriptenApp(container))
   }
 
   export function run(config: IConfig, container: HTMLElement): Promise<Mame> {
@@ -41,47 +40,34 @@ namespace mamejs {
       height: 224
     }
 
-    static load(url: string, stdout: IStdout): Promise<Mame> {
-      //  Emscripten module
-      stdout.scope.Module = <IModule> {
-        arguments: [],
-        screenIsReadOnly: true,
-        print: (text: string): void => stdout.print(text),
-        printErr: (err: string): void => stdout.printErr(err),
-        canvas: stdout.canvas,
-        noInitialRun: true,
-      }
-
-      return helper.HTMLHelper.loadScript(stdout.scope.document, url).then((): Mame => {
-        return new Mame(stdout)
+    static load(url: string, emApp: IEmscriptenApp): Promise<Mame> {
+      return helper.HTMLHelper.loadScript(emApp.scope.document, url).then((): Mame => {
+        return new Mame(emApp)
       })
     }
 
-    private _controls: control.Controls
     private _files: Array<IFile> = []
+
+    private _controls: IControls
 
     /**
      * Mame emulator must be loaded before instanciate this class
      */
-    constructor(private _stdout: IStdout) {
+    constructor(private _emApp: IEmscriptenApp) {
       instances.push(this);
 
-      // init filesystem in the correct scope
-      (<any>this.stdout.scope).FS.mkdir(Mame.ROM_PATH);
-      (<any>this.stdout.scope).FS.mount((<any>this.stdout.scope).MEMFS, {root: '/'}, Mame.ROM_PATH);
+      // init the /roms filesystem
+      (<any>this.emApp.scope).FS.mkdir(Mame.ROM_PATH);
+      (<any>this.emApp.scope).FS.mount((<any>this.emApp.scope).MEMFS, {root: '/'}, Mame.ROM_PATH);
 
-      this._controls = new control.Controls(this)
+      this._controls = new control.Controls(this.emApp.module)
     }
 
-    public get stdout(): IStdout {
-      return this._stdout
+    public get emApp(): IEmscriptenApp {
+      return this._emApp
     }
 
-    public get module(): IModule {
-      return this.stdout.scope.Module
-    }
-
-    public get controls(): control.Controls {
+    public get controls(): IControls {
       return this._controls
     }
 
@@ -90,15 +76,15 @@ namespace mamejs {
     }
 
     public run(args: Array<string>): Promise<void> {
-      return Promise.resolve(this.module.callMain(args))
+      return Promise.resolve(this.emApp.module.callMain(args))
     }
 
     public runGame(driver: string, resolution?: IResolution): Promise<void> {
       resolution = resolution || Mame.DEFAULT_RESOLUTION
 
-      this.stdout.resize(resolution.width, resolution.height)
+      this.emApp.resize(resolution.width, resolution.height)
 
-      helper.HTMLHelper.resizeCanvas(this.stdout.canvas, resolution.width, resolution.height)
+      helper.HTMLHelper.resizeCanvas(this.emApp.canvas, resolution.width, resolution.height)
 
       return this.run([
         driver,
@@ -114,7 +100,7 @@ namespace mamejs {
     }
 
     public addRom(file: IFile): void {
-      (<any>this.stdout.scope).FS.writeFile(Mame.ROM_PATH + '/' + file.name, file.data, {
+      (<any>this.emApp.scope).FS.writeFile(Mame.ROM_PATH + '/' + file.name, file.data, {
         encoding: 'binary'
       })
       this._files.push(file)

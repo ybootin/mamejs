@@ -1,5 +1,5 @@
 /// <reference path="../model/IModule.ts" />
-/// <reference path="../model/IControl.ts" />
+/// <reference path="../model/IControls.ts" />
 /// <reference path="Button.ts" />
 
 namespace mamejs.control {
@@ -20,19 +20,19 @@ namespace mamejs.control {
     private _down: Button
     private _left: Button
 
-    constructor(control: IControlMapping, module: IModule) {
-      this._start = new Button(control.start, module._SDL_SendKeyboardKey)
-      this._coin = new Button(control.coin, module._SDL_SendKeyboardKey)
-      this._button1 = new Button(control.button1, module._SDL_SendKeyboardKey)
-      this._button2 = new Button(control.button2, module._SDL_SendKeyboardKey)
-      this._button3 = new Button(control.button3, module._SDL_SendKeyboardKey)
-      this._button4 = new Button(control.button4, module._SDL_SendKeyboardKey)
-      this._button5 = new Button(control.button5, module._SDL_SendKeyboardKey)
-      this._button6 = new Button(control.button6, module._SDL_SendKeyboardKey)
-      this._up = new Button(control.up, module._SDL_SendKeyboardKey)
-      this._right = new Button(control.right, module._SDL_SendKeyboardKey)
-      this._down = new Button(control.down, module._SDL_SendKeyboardKey)
-      this._left = new Button(control.left, module._SDL_SendKeyboardKey)
+    constructor(control: IControlMapping, _module: IModule) {
+      this._start = new Button(control.start, _module)
+      this._coin = new Button(control.coin, _module)
+      this._button1 = new Button(control.button1, _module)
+      this._button2 = new Button(control.button2, _module)
+      this._button3 = new Button(control.button3, _module)
+      this._button4 = new Button(control.button4, _module)
+      this._button5 = new Button(control.button5, _module)
+      this._button6 = new Button(control.button6, _module)
+      this._up = new Button(control.up, _module)
+      this._right = new Button(control.right, _module)
+      this._down = new Button(control.down, _module)
+      this._left = new Button(control.left, _module)
     }
 
     public get start(): Button {

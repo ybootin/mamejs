@@ -1,23 +1,19 @@
 /// <reference path="../model/IModule.ts" />
-/// <reference path="../model/IControl.ts" />
-/// <reference path="../model/IStdout.ts" />
+/// <reference path="../model/IControls.ts" />
+/// <reference path="../model/IEmscriptenApp.ts" />
 /// <reference path="MAMEControllers.ts" />
 /// <reference path="Arcade6Buttons.ts" />
 /// <reference path="Button.ts" />
 
 namespace mamejs.control {
-  export class Controls {
+  export class Controls implements IControls {
 
     private _player1: IControl
     private _player2: IControl
 
-    private pauseButton: IButton
-
-    constructor(private _mame: Mame) {
-      this._player1 = new Arcade6Buttons(player1Controller, this._mame.module)
-      this._player2 = new Arcade6Buttons(player1Controller, this._mame.module)
-
-      this.pauseButton = new Button(PAUSE, this._mame.module._SDL_SendKeyboardKey)
+    constructor(private _module: IModule) {
+      this._player1 = new Arcade6Buttons(player1Controller, this._module)
+      this._player2 = new Arcade6Buttons(player1Controller, this._module)
     }
 
     public get player1(): IControl {
@@ -28,8 +24,8 @@ namespace mamejs.control {
       return this._player2
     }
 
-    public pause(callback?: Function): void {
-      this.pauseButton.pressAndRelease(callback)
+    public triggerKey(keyCode: number): void {
+      (new Button(keyCode, this._module)).pressAndRelease()
     }
   }
 }

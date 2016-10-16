@@ -1,33 +1,32 @@
 /// <reference path="../model/IModule.ts" />
-/// <reference path="SDL_SCANCODE.ts" />
+/// <reference path="../helper/EmscriptenHelper.ts" />
 
 namespace mamejs.control {
   export class Button implements IButton {
 
     private _pressed: boolean = false
+    private _charCode: number
 
-    constructor(private scancode: number, private handler: IModule_SDL_SendKeyboardKey) {}
+    constructor(private _keyCode: number, private _module: IModule) {
+
+    }
 
     public get pressed(): boolean {
       return this._pressed
     }
 
     public press(callback?: Function): void {
-      this._pressed = true
-      this.handler(BUTTON_PRESS, this.scancode)
-
-      if (typeof callback === 'function') {
-        requestAnimationFrame(() => callback())
-      }
+      helper.EmscriptenHelper.simulateKeyEvent(this._module, 'keydown', this._keyCode, this._charCode || 0)
     }
 
-    public release(): void {
-      this.handler(BUTTON_RELEASE, this.scancode)
-      this._pressed = false
+    public release(callback?: Function): void {
+      helper.EmscriptenHelper.simulateKeyEvent(this._module, 'keyup', this._keyCode, this._charCode || 0)
+
     }
 
     public pressAndRelease(callback?: Function): void {
-      this.press(() => this.release())
+      this.press()
+      this._module.requestAnimationFrame(() => this.release())
     }
   }
 }

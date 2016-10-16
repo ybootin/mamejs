@@ -1,8 +1,10 @@
 namespace mamejs {
+  export interface IControls {
+    player1: IControl
+    player2: IControl
+    triggerKey(keyCode: number)
+  }
 
-  /**
-   * SDL_SCANCODE mapping for control
-   */
   export interface IControl {
     start: IButton
     coin: IButton
@@ -24,9 +26,6 @@ namespace mamejs {
     pressAndRelease(callback?: Function): void
   }
 
-  /**
-   * SDL_SCANCODE mapping for control
-   */
   export interface IControlMapping {
     start: number
     coin: number
