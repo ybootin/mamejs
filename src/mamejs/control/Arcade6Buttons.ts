@@ -1,4 +1,4 @@
-/// <reference path="../model/IModule.ts" />
+/// <reference path="../../emloader/model/IModule.ts" />
 /// <reference path="../model/IControls.ts" />
 /// <reference path="Button.ts" />
 
@@ -20,7 +20,7 @@ namespace mamejs.control {
     private _down: Button
     private _left: Button
 
-    constructor(control: IControlMapping, _module: IModule) {
+    constructor(control: IControlMapping, _module: emloader.IModule) {
       this._start = new Button(control.start, _module)
       this._coin = new Button(control.coin, _module)
       this._button1 = new Button(control.button1, _module)

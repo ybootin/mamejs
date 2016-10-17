@@ -1,4 +1,4 @@
-namespace mamejs {
+namespace emloader {
   export interface IModule {
     arguments: Array<string>
     screenIsReadOnly: boolean
@@ -9,8 +9,6 @@ namespace mamejs {
     callMain?: {(arguments: Array<string>): void}
     addOnExit?: Function
     requestAnimationFrame?: any
-
-    _SDL_SendKeyboardKey?: IModule_SDL_SendKeyboardKey
   }
 
   export interface IModule_SDL_SendKeyboardKey {

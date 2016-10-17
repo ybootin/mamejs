@@ -1,4 +1,4 @@
-/// <reference path="../helper/KeyCode.ts" />
+/// <reference path="../../emloader/helper/KeyCode.ts" />
 
 namespace mamejs.control {
   /**
@@ -67,42 +67,42 @@ namespace mamejs.control {
    * 2                        Start Game
    */
   export class MameKeyCode {
-    static INSERT_COIN1: number = helper.KeyCode.digit5
-    static INSERT_COIN2: number = helper.KeyCode.digit6
-    static INSERT_COIN3: number = helper.KeyCode.digit7
-    static INSERT_COIN4: number = helper.KeyCode.digit8
+    static INSERT_COIN1: number = emloader.helper.KeyCode.digit5
+    static INSERT_COIN2: number = emloader.helper.KeyCode.digit6
+    static INSERT_COIN3: number = emloader.helper.KeyCode.digit7
+    static INSERT_COIN4: number = emloader.helper.KeyCode.digit8
 
-    static PLAYER1_START: number = helper.KeyCode.digit1
-    static PLAYER2_START: number = helper.KeyCode.digit2
-    static PLAYER3_START: number = helper.KeyCode.digit3
-    static PLAYER4_START: number = helper.KeyCode.digit4
+    static PLAYER1_START: number = emloader.helper.KeyCode.digit1
+    static PLAYER2_START: number = emloader.helper.KeyCode.digit2
+    static PLAYER3_START: number = emloader.helper.KeyCode.digit3
+    static PLAYER4_START: number = emloader.helper.KeyCode.digit4
 
-    static PAUSE: number = helper.KeyCode.p
+    static PAUSE: number = emloader.helper.KeyCode.p
 
-    static PLAYER1_UP: number = helper.KeyCode.uparrow
-    static PLAYER1_RIGHT: number = helper.KeyCode.rightarrow
-    static PLAYER1_DOWN: number = helper.KeyCode.downarrow
-    static PLAYER1_LEFT: number = helper.KeyCode.leftarrow
+    static PLAYER1_UP: number = emloader.helper.KeyCode.uparrow
+    static PLAYER1_RIGHT: number = emloader.helper.KeyCode.rightarrow
+    static PLAYER1_DOWN: number = emloader.helper.KeyCode.downarrow
+    static PLAYER1_LEFT: number = emloader.helper.KeyCode.leftarrow
 
-    static PLAYER1_BUTTON1: number = helper.KeyCode.ctrl
-    static PLAYER1_BUTTON2: number = helper.KeyCode.alt
-    static PLAYER1_BUTTON3: number = helper.KeyCode.space
-    static PLAYER1_BUTTON4: number = helper.KeyCode.shift
-    static PLAYER1_BUTTON5: number = helper.KeyCode.z
-    static PLAYER1_BUTTON6: number = helper.KeyCode.x
+    static PLAYER1_BUTTON1: number = emloader.helper.KeyCode.ctrl
+    static PLAYER1_BUTTON2: number = emloader.helper.KeyCode.alt
+    static PLAYER1_BUTTON3: number = emloader.helper.KeyCode.space
+    static PLAYER1_BUTTON4: number = emloader.helper.KeyCode.shift
+    static PLAYER1_BUTTON5: number = emloader.helper.KeyCode.z
+    static PLAYER1_BUTTON6: number = emloader.helper.KeyCode.x
 
   // @TODO
-    static PLAYER2_UP: number = helper.KeyCode.uparrow
-    static PLAYER2_RIGHT: number = helper.KeyCode.rightarrow
-    static PLAYER2_DOWN: number = helper.KeyCode.downarrow
-    static PLAYER2_LEFT: number = helper.KeyCode.leftarrow
+    static PLAYER2_UP: number = emloader.helper.KeyCode.uparrow
+    static PLAYER2_RIGHT: number = emloader.helper.KeyCode.rightarrow
+    static PLAYER2_DOWN: number = emloader.helper.KeyCode.downarrow
+    static PLAYER2_LEFT: number = emloader.helper.KeyCode.leftarrow
 
-    static PLAYER2_BUTTON1: number = helper.KeyCode.ctrl
-    static PLAYER2_BUTTON2: number = helper.KeyCode.alt
-    static PLAYER2_BUTTON3: number = helper.KeyCode.space
-    static PLAYER2_BUTTON4: number = helper.KeyCode.shift
-    static PLAYER2_BUTTON5: number = helper.KeyCode.z
-    static PLAYER2_BUTTON6: number = helper.KeyCode.x
+    static PLAYER2_BUTTON1: number = emloader.helper.KeyCode.ctrl
+    static PLAYER2_BUTTON2: number = emloader.helper.KeyCode.alt
+    static PLAYER2_BUTTON3: number = emloader.helper.KeyCode.space
+    static PLAYER2_BUTTON4: number = emloader.helper.KeyCode.shift
+    static PLAYER2_BUTTON5: number = emloader.helper.KeyCode.z
+    static PLAYER2_BUTTON6: number = emloader.helper.KeyCode.x
 
   }
 }

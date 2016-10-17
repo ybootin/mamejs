@@ -1,7 +1,7 @@
 /// <reference path="../model/IModule.ts" />
 /// <reference path="./HTMLHelper.ts" />
 
-namespace mamejs.helper {
+namespace emloader.helper {
 
   export class EmscriptenHelper {
     static simulateKeyEvent(module: IModule, eventType: string, keyCode: number, charCode: number) {

@@ -1,4 +1,4 @@
-namespace mamejs.helper {
+namespace emloader.helper {
   /**
    * Holds javascript keycode
    *  https://css-tricks.com/snippets/javascript/javascript-keycodes/

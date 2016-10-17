@@ -1,5 +1,5 @@
 /// <reference path="IResolution.ts" />
-/// <reference path="IFile.ts" />
+/// <reference path="../../emloader/model/IFile.ts" />
 
 namespace mamejs {
   export interface IGame {

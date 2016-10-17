@@ -1,13 +1,25 @@
+/// <reference path="model/FS.d.ts" />
 /// <reference path="model/Window.ts" />
-/// <reference path="model/IEmscriptenApp.ts" />
+/// <reference path="model/IFile.ts" />
+/// <reference path="model/IModule.ts" />
+/// <reference path="model/IEmloader.ts" />
 /// <reference path="event/EventEmiter.ts" />
 /// <reference path="helper/HTMLHelper.ts" />
-/// <reference path="control/Controls.ts" />
+/// <reference path="helper/FileLoader.ts" />
+/// <reference path="helper/EmscriptenHelper.ts" />
 
-namespace mamejs {
-  export class EmscriptenApp extends event.EventEmiter implements IEmscriptenApp {
-    static ON_STDERROR: 'stderror'
-    static ON_STDOUT: 'stdout'
+namespace emloader {
+  export function load(url: string, container: HTMLElement): Promise<Emloader> {
+    let emloader = new Emloader(container)
+    return helper.HTMLHelper.loadScript(emloader.scope.document, url).then((): Emloader => {
+      return emloader
+    })
+  }
+
+  export class Emloader extends event.EventEmiter implements IEmloader {
+
+    static ON_STDERROR: 'onstderror'
+    static ON_STDOUT: 'onstdout'
 
     private _stdout: Array<string> = []
     private _stderr: Array<string> = []
@@ -15,7 +27,8 @@ namespace mamejs {
     private _scope: Window
     private _iframe: HTMLIFrameElement
 
-    private _controls: IControls
+    private _files: Array<IFile> = []
+
     protected _canvas: HTMLCanvasElement
 
     constructor(private _container: HTMLElement) {
@@ -71,13 +84,21 @@ namespace mamejs {
       return this._stderr
     }
 
+    public get files(): Array<IFile> {
+      return this._files
+    }
+
+    public get FS(): any {
+      return (<any>this.scope).FS
+    }
+
     public print(text: string): void {
-      this.emit(EmscriptenApp.ON_STDOUT)
+      this.emit(Emloader.ON_STDOUT)
       this._stdout.push(text)
     }
 
     public printErr(error: string): void {
-      this.emit(EmscriptenApp.ON_STDERROR)
+      this.emit(Emloader.ON_STDERROR)
       this._stderr.push(error)
     }
 
@@ -86,6 +107,30 @@ namespace mamejs {
       this._iframe.style.height = height + 'px'
 
       helper.HTMLHelper.resizeCanvas(this.canvas, width, height)
+    }
+
+    public addFS(basepath: string, fs?: FS.IFileSystem): void {
+      this.FS.mkdir(basepath);
+      this.FS.mount(fs || (<any>this.scope).MEMFS, {root: '/'}, basepath);
+    }
+
+    public addFile(file: IFile, path: string): void {
+      this.FS.writeFile(path + '/' + file.name, file.data, {
+        encoding: 'binary'
+      })
+      this._files.push(file)
+    }
+
+    public loadFile(url: string, name: string, path: string, handler?: {(evt: ProgressEvent): void}): Promise<void> {
+      return helper.FileLoader.loadFile(url, name, handler).then((file: IFile): void => this.addFile(file, path))
+    }
+
+    public loadFiles(files: {[filename: string]: string}, path: string, handler?: {(evt: ProgressEvent): void}): Promise<void> {
+      return Promise.all(Object.keys(files).map((name: string): Promise<void> => {
+        return this.loadFile(files[name], name, path, handler)
+      })).then((): Promise<void> => {
+        return Promise.resolve()
+      })
     }
   }
 }

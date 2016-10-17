@@ -1,4 +1,4 @@
-namespace mamejs.helper {
+namespace emloader.helper {
   export class FileLoader {
 
     static loadFile(url: string, name: string, handler?: {(evt: ProgressEvent): void}): Promise<IFile> {

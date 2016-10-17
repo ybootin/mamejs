@@ -1,7 +1,7 @@
 interface CSSStyleDeclaration {
   imageRendering: string
 }
-namespace mamejs.helper {
+namespace emloader.helper {
   export class HTMLHelper {
 
     // append a script to the DOM

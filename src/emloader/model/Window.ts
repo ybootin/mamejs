@@ -1,9 +1,7 @@
 /// <reference path="IModule.ts" />
-/// <reference path="FS.d.ts" />
 
 interface Window {
-  Module: mamejs.IModule
-  JSMESS: JSMESS
+  Module: emloader.IModule
   mozRequestAnimationFrame: any
   webkitRequestAnimationFrame: any
   mozCancelRequestAnimationFrame: any
@@ -18,11 +16,3 @@ if (!window.requestAnimationFrame) {
 if (!window.cancelAnimationFrame) {
   window.cancelAnimationFrame = window.mozCancelRequestAnimationFrame || window.webkitCancelRequestAnimationFrame
 }
-
-
-interface JSMESS {
-  ready?: {(callback: any): void}
-}
-
-window.JSMESS = window.JSMESS || {};
-window.JSMESS.ready = function (f) { f(); };

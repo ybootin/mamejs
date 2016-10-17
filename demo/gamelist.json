@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Twin Cobra",
+    "screenshot": "",
+    "files" : {
+      "twincobr.zip": "../roms/twincobr.zip",
+    },
+    "driver": "twincobr",
+    "ratio": 0.75
+  }
+]

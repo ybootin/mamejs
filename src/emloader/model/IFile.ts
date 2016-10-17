@@ -1,4 +1,4 @@
-namespace mamejs {
+namespace emloader {
   export interface IFile {
     // Origin of the file
     url: string,

@@ -1,4 +1,4 @@
-namespace mamejs.event {
+namespace emloader.event {
 
   export class EventEmiter {
 

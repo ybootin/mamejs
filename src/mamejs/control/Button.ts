@@ -1,5 +1,5 @@
-/// <reference path="../model/IModule.ts" />
-/// <reference path="../helper/EmscriptenHelper.ts" />
+/// <reference path="../../emloader/model/IModule.ts" />
+/// <reference path="../../emloader/helper/EmscriptenHelper.ts" />
 
 namespace mamejs.control {
   export class Button implements IButton {
@@ -7,7 +7,7 @@ namespace mamejs.control {
     private _pressed: boolean = false
     private _charCode: number
 
-    constructor(private _keyCode: number, private _module: IModule) {
+    constructor(private _keyCode: number, private _module: emloader.IModule) {
 
     }
 
@@ -16,11 +16,11 @@ namespace mamejs.control {
     }
 
     public press(callback?: Function): void {
-      helper.EmscriptenHelper.simulateKeyEvent(this._module, 'keydown', this._keyCode, this._charCode || 0)
+      emloader.helper.EmscriptenHelper.simulateKeyEvent(this._module, 'keydown', this._keyCode, this._charCode || 0)
     }
 
     public release(callback?: Function): void {
-      helper.EmscriptenHelper.simulateKeyEvent(this._module, 'keyup', this._keyCode, this._charCode || 0)
+      emloader.helper.EmscriptenHelper.simulateKeyEvent(this._module, 'keyup', this._keyCode, this._charCode || 0)
 
     }
 
