@@ -1,0 +1,62 @@
+.game-item {
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  margin-right: 10px;
+  background-position: center center;
+}
+
+.game-title {
+  background-color: grey;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  font-size: 12px;
+  font-family: Monaco;
+  text-align: center;
+  padding: 2px;
+  color: white;
+  opacity: 0.8;
+}
+.play-button {
+  margin-top:20px;
+  width: 100%;
+  height: 100px;
+  color: white;
+  font-size: 60px;
+  background-color: transparent;
+}
+
+#mame-container .game-item {
+  width: 400px;
+  height: 400px;
+  margin-right: 0px;
+  border: 5px solid;
+}
+#mame-container  .play-button {
+  height: 400px;
+  font-size: 120px;
+}
+
+.game-button {
+
+}
+
+.game-button-up {}
+.game-button-down {}
+.game-button-left {}
+.game-button-right {}
+.game-button-coin {}
+.game-button-start {}
+.game-button-button1 {}
+.game-button-button2 {}
+.game-button-button3 {}
+.game-button-button4 {}
+.game-button-button5 {}
+.game-button-button6 {}

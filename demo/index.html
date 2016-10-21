@@ -5,6 +5,7 @@
     <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="../dist/mamejs.js"></script>
+    <link rel="stylesheet" type="text/css" href="demo.css">
 
     <script>
       var gamelist = [
@@ -37,46 +38,17 @@
       // Holds the loaded mame instance
       var mame
     </script>
-    <style>
-      .game-item {
-        display: inline-block;
-        width: 120px;
-        height: 120px;
-        background-size: cover;
-        position: relative;
-        overflow: hidden;
-        cursor: pointer;
-        margin-right: 10px;
-      }
-
-      .game-title {
-        background-color: grey;
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 20px;
-        font-size: 12px;
-        font-family: Monaco;
-        text-align: center;
-        padding: 2px;
-        color: white;
-        opacity: 0.8;
-      }
-      .play-button {
-        margin-top:20px;
-        width: 100%;
-        height: 100px;
-        color: white;
-        font-size: 60px;
-        background-color: transparent;
-      }
-    </style>
   </head>
   <body>
     <div class="container">
       <h1>mamejs - Demo page</h1>
-      <div id="mame-container"></div>
+      <div class="row">
+        <div id="mame-container"></div>
+        <div class="control-container">
+          <div id="player1controller" class="game-controller"></div>
+          <div id="player2controller" class="game-controller"></div>
+        </div>
+      </div>
       <div id="gamelist-container"></div>
     </div>
     <script type="text/x-tmpl" id="game-template">
@@ -84,6 +56,11 @@
         <div class="glyphicon glyphicon-play-circle" aria-label="play"></div>
       </button>
       <div class="game-title"></div>
+    </script>
+    <script type="text/x-tmpl" id="loader-template">
+      <div class="loader-template">
+        <div class="loader-text"></div>
+      </div>
     </script>
     <script type="text/x-tmpl" id="main-buttons">
       <div class="main-buttons">
@@ -95,8 +72,8 @@
     <script>
       var mameContainer = document.getElementById('mame-container')
       var gamelistContainer = document.getElementById('gamelist-container')
+      controllerContainer = document.getElementById('gamelist-container')
       var gameTemplate = document.getElementById('game-template').innerHTML
-      var buttonTemplate = document.getElementById('main-buttons').innerHTML
 
       function runGame(game) {
         // clone config
@@ -107,11 +84,11 @@
         }
 
         // Create container to override previous
-        mameContainer.innerHTML = buttonTemplate
         var gameCnt = document.createElement('div')
         gameCnt.className = "game-container"
         mameContainer.appendChild(gameCnt)
 
+        // run mame is as simple as this !
         mamejs.run(cfg, gameCnt).then(function(mame) {
           // this is just a demo, kiss
           // will be used by controls
@@ -122,22 +99,47 @@
         })
       }
 
-      for (var i = 0, l = gamelist.length; i < l; i++) {
-        var game = gamelist[i]
+      function encodeHtml(str) {
+        return str.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
+           return '&#'+i.charCodeAt(0)+';';
+        });
+      }
+
+      function buildControllers(container, playerControler) {
+        for (var bt in playerControler) {
+          var button = document.createElement('button')
+          button.className = "btn btn-default mame-button-" + bt
+          button.innerHTML = bt //encodeHtml(String.fromCharCode(playerControler[bt]))
+
+          button.addEventListener('click', (function(bt) {
+            return function() {
+              // will use mame expose on the global scope
+              mame.controls.triggerKey(playerControler[bt])
+            }
+          })(bt))
+
+          container.appendChild(button)
+        }
+      }
+
+      gamelist.forEach(function(game, index) {
         var element = document.createElement('div')
         element.className = 'game-item'
         element.innerHTML = gameTemplate
         element.style.backgroundImage = 'url(' + game.screenshot + ')'
         element.getElementsByClassName('game-title')[0].innerHTML = game.name
 
-        element.addEventListener('click', (function(game) {
-          return function () {
-            runGame(game)
-          }
-        })(game));
+        element.addEventListener('click', function () {
+          runGame(game)
+        });
 
-        gamelistContainer.appendChild(element)
-      }
+        // always append first game in the main container
+        (index === 0 ? mameContainer : gamelistContainer).appendChild(element)
+      })
+
+      // build controllers
+      buildControllers(document.getElementById('player1controller'), mamejs.control.player1Controller)
+      buildControllers(document.getElementById('player2controller'), mamejs.control.player2Controller)
     </script>
   </body>
 </html>
