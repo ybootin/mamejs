@@ -92,15 +92,15 @@ namespace mamejs.control {
     static PLAYER1_BUTTON6: number = emloader.helper.KeyCode.x
 
   // @TODO
-    static PLAYER2_UP: number = emloader.helper.KeyCode.uparrow
-    static PLAYER2_RIGHT: number = emloader.helper.KeyCode.rightarrow
-    static PLAYER2_DOWN: number = emloader.helper.KeyCode.downarrow
-    static PLAYER2_LEFT: number = emloader.helper.KeyCode.leftarrow
+    static PLAYER2_UP: number = emloader.helper.KeyCode.r
+    static PLAYER2_RIGHT: number = emloader.helper.KeyCode.g
+    static PLAYER2_DOWN: number = emloader.helper.KeyCode.d
+    static PLAYER2_LEFT: number = emloader.helper.KeyCode.f
 
-    static PLAYER2_BUTTON1: number = emloader.helper.KeyCode.ctrl
-    static PLAYER2_BUTTON2: number = emloader.helper.KeyCode.alt
-    static PLAYER2_BUTTON3: number = emloader.helper.KeyCode.space
-    static PLAYER2_BUTTON4: number = emloader.helper.KeyCode.shift
+    static PLAYER2_BUTTON1: number = emloader.helper.KeyCode.a
+    static PLAYER2_BUTTON2: number = emloader.helper.KeyCode.s
+    static PLAYER2_BUTTON3: number = emloader.helper.KeyCode.q
+    static PLAYER2_BUTTON4: number = emloader.helper.KeyCode.w
     static PLAYER2_BUTTON5: number = emloader.helper.KeyCode.z
     static PLAYER2_BUTTON6: number = emloader.helper.KeyCode.x
 

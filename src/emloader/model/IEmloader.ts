@@ -15,5 +15,6 @@ namespace emloader {
     addFile(file: IFile, path: string): void
     loadFile(url: string, name: string, path: string, handler?: {(evt: ProgressEvent): void}): Promise<void>
     loadFiles(files: {[filename: string]: string}, path: string, handler?: {(evt: ProgressEvent): void}): Promise<void>
+    simulateKeyEvent(type: string, keyCode: number, charCode?: number): void
   }
 }

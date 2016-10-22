@@ -51,7 +51,7 @@ namespace mamejs {
       // init the roms filesystem
       this.loader.addFS(Mame.ROM_PATH)
 
-      this._controls = new control.Controls(this.loader.module)
+      this._controls = new control.Controls(this)
     }
 
     public get loader(): emloader.IEmloader {

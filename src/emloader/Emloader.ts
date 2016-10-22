@@ -29,6 +29,10 @@ namespace emloader {
 
     private _files: Array<IFile> = []
 
+    private _keyboardEventHandler: {(evt: KeyboardEvent): void}
+    private _gamepadEventHandler: {(evt: GamepadEvent): void}
+    private _mouseEventHandler: {(evt: MouseEvent): void}
+
     protected _canvas: HTMLCanvasElement
 
     constructor(private _container: HTMLElement) {
@@ -54,14 +58,16 @@ namespace emloader {
         noInitialRun: true,
       }
 
-      // Map all keyboard keys to the iframed canvas
-      let onEvt = (evt: KeyboardEvent): void => {
-        helper.EmscriptenHelper.simulateKeyEvent(this.module, evt.type, evt.keyCode, evt.charCode)
-      }
+      var events = ['keyup', 'keydown']
+      events.forEach((evtName: string): void => {
+        this._canvas.addEventListener(evtName, (evt: Event) => {
+          this.emit(evtName, evt)
+        })
+      })
 
-      // Must be attached to the main scope, in order to redispatch them to the emScope
-      document.addEventListener('keyup', onEvt)
-      document.addEventListener('keydown', onEvt)
+
+      // Map all inputs due to the iframed scope
+      this.bindKeys()
     }
 
     public get canvas(): HTMLCanvasElement {
@@ -131,6 +137,44 @@ namespace emloader {
       })).then((): Promise<void> => {
         return Promise.resolve()
       })
+    }
+
+    public simulateKeyEvent(type: string, keyCode: number, charCode: number = 0): void {
+      helper.EmscriptenHelper.simulateKeyEvent(this.module, type, keyCode, charCode)
+    }
+
+    public bindKeys(): void {
+      if (this._keyboardEventHandler) {
+        return
+      }
+      this._keyboardEventHandler = (evt: KeyboardEvent): void => {
+        this.triggerEvent({
+          type: evt.type,
+          keyCode: evt.keyCode,
+          charCode: evt.charCode
+        })
+      }
+
+      // Must be attached to the main scope, in order to redispatch them to the emScope
+      document.addEventListener('keyup', this._keyboardEventHandler)
+      document.addEventListener('keydown', this._keyboardEventHandler)
+    }
+
+    public unbindKeys(): void {
+      document.removeEventListener('keyup', this._keyboardEventHandler)
+      document.removeEventListener('keydown', this._keyboardEventHandler)
+      this._keyboardEventHandler = null
+    }
+
+    public triggerEvent(evt: Event|KeyboardEvent|GamepadEvent|MouseEvent|any): void {
+      switch (evt.type) {
+        case 'keyup':
+        case 'keydown':
+          helper.EmscriptenHelper.simulateKeyEvent(this.module, evt.type, evt.keyCode, evt.charCode)
+          break
+        default:
+          helper.EmscriptenHelper.simulateEvent(this.module, evt.type, evt)
+      }
     }
   }
 }
