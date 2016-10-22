@@ -24,6 +24,7 @@
   color: white;
   opacity: 0.8;
 }
+
 .play-button {
   margin-top:20px;
   width: 100%;
@@ -33,30 +34,149 @@
   background-color: transparent;
 }
 
+#main-container {
+  display: none
+}
+
+#mame-container {
+  width: 320px;
+  height: 320px;
+}
+
 #mame-container .game-item {
-  width: 400px;
-  height: 400px;
+  width: 320px;
+  height: 320px;
   margin-right: 0px;
   border: 5px solid;
+  position: relative;
 }
+
 #mame-container  .play-button {
-  height: 400px;
+  height: 320px;
   font-size: 120px;
 }
 
-.game-button {
-
+.loading-container {
+  width: 320px;
+  height: 320px;
+  position: absolute;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
 }
 
-.game-button-up {}
-.game-button-down {}
-.game-button-left {}
-.game-button-right {}
-.game-button-coin {}
-.game-button-start {}
-.game-button-button1 {}
-.game-button-button2 {}
-.game-button-button3 {}
-.game-button-button4 {}
-.game-button-button5 {}
-.game-button-button6 {}
+.loading-text {
+  background-color: #CCCCCC;
+  text-align: center;
+  font-size: 16px;
+  padding: 10px;
+  opacity: 0.8;
+}
+
+.game-controller {
+  margin-left: 10px;
+  height: 160px;
+  position: relative;
+}
+.game-controller:after {
+    content: "Player 1";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    color: #9da0a4;
+}
+
+#player2controller:after {
+  content: "Player 2";
+}
+
+.game-container {
+  z-index: 1;
+  position: absolute;
+}
+
+.game-button {
+  display: inline;
+  width: 40px;
+  padding: 2px;
+  cursor: pointer;
+  font-size: 12px;
+  height: 40px;
+  border-radius: 20px;
+  position: absolute;
+}
+.game-button.keydown {
+  background-color: #d4d4d4;
+}
+.game-button-coin {
+  border-radius: 5px;
+  height: auto;
+  left: 140px;
+}
+.game-button-start {
+  border-radius: 5px;
+  height: auto;
+  left: 190px;
+}
+
+.game-button-up, .game-button-down, .game-button-left, .game-button-right {
+  background-color: black;
+  color: white;
+}
+
+.game-button-up {
+  top: 35px;
+  left: 35px;
+  border-radius: 5px 5px 20px 20px;
+  background: url(glyphicons-halflings.png) no repeat -96px -72px !important;
+}
+.game-button-down {
+  top: 100px;
+  left: 35px;
+  border-radius: 20px 20px 5px 5px;
+}
+.game-button-left {
+  top: 67px;
+  left: 0px;
+  border-radius: 5px 20px 20px 5px;
+}
+.game-button-right {
+  top: 67px;
+  left: 67px;
+  border-radius: 20px 5px 5px 20px;
+}
+
+.game-button-button1, .game-button-button2, .game-button-button3, .game-button-button4, .game-button-button5, .game-button-button6 {
+  background-color: #ffbf00;
+  border-color: #ffbf00;
+}
+
+.game-button-button1 {
+  top: 40px;
+  left: 140px;
+}
+.game-button-button2 {
+  top: 40px;
+  left: 190px;
+}
+.game-button-button3 {
+  top: 40px;
+  left: 240px;
+}
+.game-button-button4 {
+  top: 90px;
+  left: 140px;
+}
+.game-button-button5 {
+  top: 90px;
+  left: 190px;
+}
+.game-button-button6 {
+  top: 90px;
+  left: 240px;
+}
