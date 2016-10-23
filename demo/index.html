@@ -13,6 +13,9 @@
       <hr />
       <div class="row" id="main-container">
         <div class="row">
+          <div id="buttons-container" class="col-xs-12"></div>
+        </div>
+        <div class="row">
           <div id="mame-container" class="col-xs-6 col-md-6"></div>
           <div class="control-container col-xs-6 col-md-6">
             <div id="player1controller" class="game-controller"></div>
@@ -35,16 +38,10 @@
       </div>
       <div class="game-container"></div>
     </script>
-    <script type="text/x-tmpl" id="main-buttons">
-      <div class="main-buttons">
-        <a class="btn btn-default btn-xs button-insertcoin" onclick="mame.controls.player1.coin.pressAndRelease()">Insert Coin</a>
-        <a class="btn btn-default btn-xs button-p1start" onclick="mame.controls.player1.start.pressAndRelease()">Player 1 Start</a>
-        <a class="btn btn-default btn-xs button-p2start" onclick="mame.controls.player2.start.pressAndRelease()">Player 2 Start</a>
-      </div>
-    </script>
     <script>
       var mameContainer = document.getElementById('mame-container'),
           mainContainer = document.getElementById('main-container'),
+          buttonsContainer = document.getElementById('buttons-container'),
           gamelistContainer = document.getElementById('gamelist-container'),
           gameTemplate = document.getElementById('game-template').innerHTML,
           loadingTemplate = document.getElementById('loading-template').innerHTML
@@ -80,8 +77,8 @@
           // will be used by controls
           window.mame = mame
 
-          mame.loader.on('keyup', handleMameKey)
-          mame.loader.on('keydown', handleMameKey)
+          mame.loader.on('keyup', handleMameEvent)
+          mame.loader.on('keydown', handleMameEvent)
 
           console.log('running game ' + game.name, mame)
         }).catch(function(error) {
@@ -89,7 +86,13 @@
         })
       }
 
-      function handleMameKey(evt) {
+      function simulateKeyEvent(type, keyCode) {
+        return function(evt) {
+          mame.loader.simulateKeyEvent(type, keyCode, keyCode)
+        }
+      }
+
+      function handleMameEvent(evt) {
         // highlight pressed button
         var buttons = document.getElementsByClassName('game-button')
         for (var i = 0, l = buttons.length; i < l ; i++) {
@@ -100,6 +103,11 @@
         }
       }
 
+      function handleButton(button, keyCode) {
+        button.addEventListener('mousedown', simulateKeyEvent('keydown', keyCode))
+        button.addEventListener('mouseup', simulateKeyEvent('keyup', keyCode))
+      }
+
       function buildControllers() {
         // build visual controllers
         buildController(document.getElementById('player1controller'), mamejs.control.player1Controller)
@@ -108,20 +116,24 @@
 
       function buildController(container, playerControler) {
         for (var bt in playerControler) {
-          var button = document.createElement('button')
-          button.className = "btn btn-xs btn-default game-button game-button-" + bt
-          button.dataset.keycode = playerControler[bt]
-          button.innerHTML = bt.replace('button', '')
+          let keyCode = mamejs.control.Button.getKeyCode(playerControler[bt])
+          let button = document.createElement('button')
+          button.className = "btn btn-xs btn-default game-button game-button-" + bt + " game-button-" + playerControler[bt]
+          button.dataset.keycode = keyCode
 
-          let simulateKeyEvent = function(type, keyCode) {
-            return function(evt) {
-              mame.loader.simulateKeyEvent(type, keyCode, keyCode)
-            }
+          let content = document.createElement('span')
+          button.appendChild(content)
+
+          switch (bt) {
+            case 'coin':
+            case 'start':
+              content.innerHTML = bt
+              break
+            default:
+              content.innerHTML = playerControler[bt]
           }
-          button.addEventListener('mousedown', simulateKeyEvent('keydown', playerControler[bt]))
-          button.addEventListener('touchenter', simulateKeyEvent('keydown', playerControler[bt]))
-          button.addEventListener('mouseup', simulateKeyEvent('keyup', playerControler[bt]))
-          button.addEventListener('touchleave', simulateKeyEvent('keyup', playerControler[bt]))
+
+          handleButton(button, keyCode)
 
           container.appendChild(button)
         }
@@ -141,6 +153,34 @@
         container.appendChild(element)
       }
 
+      var gameButtons = [
+        {key: mamejs.control.MameKey.PAUSE, name: 'game', glyphicon: 'pause'},
+        {key: mamejs.control.MameKey.SHOW_FPS, name: 'Show FPS', glyphicon: 'film'},
+      ]
+
+      function buildGameButtons(container) {
+        gameButtons.forEach(function(item) {
+          let button = document.createElement('button')
+          button.className = "btn-xs btn btn-default"
+
+          if (item.glyphicon) {
+            let icon = document.createElement('span')
+            icon.className = 'glyphicon glyphicon-' + item.glyphicon
+            button.appendChild(icon)
+          }
+
+          if (item.name) {
+            let name = document.createElement('span')
+            name.innerHTML = ' ' + item.name
+            button.appendChild(name)
+          }
+
+          handleButton(button, mamejs.control.Button.getKeyCode(item.key));
+
+          container.appendChild(button)
+        })
+      }
+
       function buildGamelist(gamelist) {
         gamelist.forEach(function(game, index) {
           // always append first game in the main container
@@ -155,6 +195,7 @@
         mainContainer.style.display = 'block'
         buildGamelist(gamelist)
         buildControllers()
+        buildGameButtons(buttonsContainer)
       }
 
       // load & init

@@ -26,8 +26,8 @@ namespace mamejs.control {
       return this._player2
     }
 
-    public triggerKey(keyCode: number): void {
-      (new Button(keyCode, this._mame.loader.module)).pressAndRelease()
+    public triggerKey(key: string): void {
+      (new Button(key, this._mame.loader.module)).pressAndRelease()
     }
 
     private handleGamepads(): void {

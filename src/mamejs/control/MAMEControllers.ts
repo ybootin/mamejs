@@ -1,34 +1,35 @@
 /// <reference path="../model/IControls.ts" />
-/// <reference path="./MameKeyCode.ts" />
+/// <reference path="MameKey.ts" />
+/// <reference path="../../emloader/helper/KeyCode.ts" />
 
 namespace mamejs.control {
   export var player1Controller: IControlMapping = {
-    start: MameKeyCode.PLAYER1_START,
-    coin: MameKeyCode.INSERT_COIN1,
-    up: MameKeyCode.PLAYER1_UP,
-    right: MameKeyCode.PLAYER1_RIGHT,
-    down: MameKeyCode.PLAYER1_DOWN,
-    left: MameKeyCode.PLAYER1_LEFT,
-    button1: MameKeyCode.PLAYER1_BUTTON1,
-    button2: MameKeyCode.PLAYER1_BUTTON2,
-    button3: MameKeyCode.PLAYER1_BUTTON3,
-    button4: MameKeyCode.PLAYER1_BUTTON4,
-    button5: MameKeyCode.PLAYER1_BUTTON5,
-    button6: MameKeyCode.PLAYER1_BUTTON6,
+    start: MameKey.PLAYER1_START,
+    coin: MameKey.INSERT_COIN1,
+    up: MameKey.PLAYER1_UP,
+    right: MameKey.PLAYER1_RIGHT,
+    down: MameKey.PLAYER1_DOWN,
+    left: MameKey.PLAYER1_LEFT,
+    button1: MameKey.PLAYER1_BUTTON1,
+    button2: MameKey.PLAYER1_BUTTON2,
+    button3: MameKey.PLAYER1_BUTTON3,
+    button4: MameKey.PLAYER1_BUTTON4,
+    button5: MameKey.PLAYER1_BUTTON5,
+    button6: MameKey.PLAYER1_BUTTON6,
   }
 
   export var player2Controller: IControlMapping = {
-    start: MameKeyCode.PLAYER1_START,
-    coin: MameKeyCode.INSERT_COIN2,
-    up: MameKeyCode.PLAYER1_UP,
-    right: MameKeyCode.PLAYER2_RIGHT,
-    down: MameKeyCode.PLAYER2_DOWN,
-    left: MameKeyCode.PLAYER1_LEFT,
-    button1: MameKeyCode.PLAYER2_BUTTON1,
-    button2: MameKeyCode.PLAYER2_BUTTON2,
-    button3: MameKeyCode.PLAYER2_BUTTON3,
-    button4: MameKeyCode.PLAYER2_BUTTON4,
-    button5: MameKeyCode.PLAYER2_BUTTON5,
-    button6: MameKeyCode.PLAYER2_BUTTON6,
+    start: MameKey.PLAYER2_START,
+    coin: MameKey.INSERT_COIN2,
+    up: MameKey.PLAYER2_UP,
+    right: MameKey.PLAYER2_RIGHT,
+    down: MameKey.PLAYER2_DOWN,
+    left: MameKey.PLAYER2_LEFT,
+    button1: MameKey.PLAYER2_BUTTON1,
+    button2: MameKey.PLAYER2_BUTTON2,
+    button3: MameKey.PLAYER2_BUTTON3,
+    button4: MameKey.PLAYER2_BUTTON4,
+    button5: MameKey.PLAYER2_BUTTON5,
+    button6: MameKey.PLAYER2_BUTTON6,
   }
 }

@@ -139,6 +139,9 @@ namespace emloader {
       })
     }
 
+    public simulateKey(type: string, key: string): void {
+      this.simulateKeyEvent(type, helper.KeyCode[key], helper.KeyCode[key])
+    }
     public simulateKeyEvent(type: string, keyCode: number, charCode: number = 0): void {
       helper.EmscriptenHelper.simulateKeyEvent(this.module, type, keyCode, charCode)
     }

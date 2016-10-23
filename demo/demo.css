@@ -34,6 +34,14 @@
   background-color: transparent;
 }
 
+#gamelist-container .game-item .play-button {
+  display: none;
+}
+#gamelist-container .game-item:hover .play-button {
+  display: block;
+  color: white
+}
+
 #main-container {
   display: none
 }
@@ -110,9 +118,33 @@
   border-radius: 20px;
   position: absolute;
 }
+
+.game-button-uparrow, .game-button-downarrow, .game-button-leftarrow, .game-button-rightarrow {
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+.game-button-uparrow span, .game-button-downarrow span, .game-button-leftarrow span, .game-button-rightarrow span {
+  display: none
+}
+.game-button-uparrow:before {
+  content: "\e093";
+}
+.game-button-downarrow:before {
+  content: "\e094";
+}
+.game-button-leftarrow:before {
+  content: "\e091";
+}
+.game-button-rightarrow:before {
+  content: "\e092";
+}
 .game-button.keydown {
   background-color: #d4d4d4;
 }
+
 .game-button-coin {
   border-radius: 5px;
   height: auto;
