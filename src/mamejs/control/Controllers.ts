@@ -1,6 +1,5 @@
 /// <reference path="../model/IControls.ts" />
 /// <reference path="MameKey.ts" />
-/// <reference path="../../emloader/helper/KeyCode.ts" />
 
 namespace mamejs.control {
   export var player1Controller: IControlMapping = {

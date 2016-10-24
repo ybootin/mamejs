@@ -2,7 +2,6 @@ namespace mamejs {
   export interface IControls {
     player1: IControl
     player2: IControl
-    triggerKey(key: string)
   }
 
   export interface IControl {
@@ -23,7 +22,7 @@ namespace mamejs {
   export interface IButton {
     press(): void
     release(): void
-    pressAndRelease(callback?: Function): void
+    pressAndRelease(): void
   }
 
   export interface IControlMapping {

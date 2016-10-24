@@ -1,19 +1,27 @@
-/// <reference path="../../emloader/model/IModule.ts" />
 /// <reference path="../model/IControls.ts" />
-/// <reference path="../../emloader/model/IEmloader.ts" />
-/// <reference path="MAMEControllers.ts" />
 /// <reference path="Arcade6Buttons.ts" />
 /// <reference path="Button.ts" />
+/// <reference path="Keyboard.ts" />
+/// <reference path="Joystick.ts" />
+/// <reference path="Controllers.ts" />
 
 namespace mamejs.control {
-  export class Controls implements IControls {
+  export class Controls extends emloader.event.EventEmiter implements IControls {
+    static JOYSTICKCONNECTED: string = 'joystickconnected'
+    static JOYSTICKDISCONNECTED: string = 'joystickdisconnected'
 
     private _player1: IControl
     private _player2: IControl
 
+    private _joysticks: Array<Joystick> = []
+    private _keyboard: Keyboard
+
     constructor(private _mame: Mame) {
-      this._player1 = new Arcade6Buttons(player1Controller, this._mame.loader.module)
-      this._player2 = new Arcade6Buttons(player1Controller, this._mame.loader.module)
+      super()
+      this._keyboard = new Keyboard(_mame.loader.module)
+
+      this._player1 = new Arcade6Buttons(player1Controller, this._keyboard)
+      this._player2 = new Arcade6Buttons(player1Controller, this._keyboard)
 
       this.handleGamepads()
     }
@@ -26,59 +34,34 @@ namespace mamejs.control {
       return this._player2
     }
 
-    public triggerKey(key: string): void {
-      (new Button(key, this._mame.loader.module)).pressAndRelease()
+    public get keyboard(): Keyboard {
+      return this._keyboard
+    }
+
+    public get joysticks(): Array<Joystick> {
+      return this._joysticks
     }
 
     private handleGamepads(): void {
       let connectGamepad = (gamepad: Gamepad): void => {
-        let pressed = {}
-        let axes = [['left', 'right'], ['up', 'down']]
-        let keyMap = ['button1', 'button2', 'button3', 'button4', 'button5', 'button6', null, null, 'coin', 'start']
+        // on connect, always get the control according to the gamepad index
+        // for the moment, only 2 controllers are handled (this.player1 & this.player2)
+        let control = this['player' + (gamepad.index + 1)]
+        if (control) {
+          this._joysticks[gamepad.index] = new Joystick(gamepad, control)
+          this._joysticks[gamepad.index].connect()
 
-        let loop = () => {
-          let gmp = navigator.getGamepads()[gamepad.index]
-          let keyPress = (key : string) => {
-            pressed[key] = true
-            this._mame.loader.simulateKeyEvent('keydown', this.player1[key].press())
-          }
-          let keyRelease = (key: string) => {
-            pressed[key] = false
-            this._mame.loader.simulateKeyEvent('keyup', this.player1[key].release())
-          }
-
-          // handles axis press / release
-          axes.forEach((axe: Array<string>, index: number): void => {
-            try {
-              if (gmp.axes[index] === -1 || gmp.axes[index] === 1) {
-                keyPress(gmp.axes[index] === -1 ? axe[0] : axe[1])
-              } else if (pressed[axe[0]] || pressed[axe[1]]) {
-                keyRelease(pressed[axe[0]] ? axe[0] : axe[1])
-              }
-             } catch (e) {} // prevent exception when disconnect
-          })
-
-          // handle key press/release
-          keyMap.forEach((bt: string, index: number): void => {
-            if (bt) {
-              try {
-                if (gmp.buttons[index].pressed) {
-                  keyPress(bt)
-                } else if (pressed[bt]) {
-                  keyRelease(bt)
-                }
-              } catch (e) {} // prevent exception when disconnect
-            }
-          })
-
-          requestAnimationFrame(loop)
+          this.emit(Controls.JOYSTICKCONNECTED, this._joysticks[gamepad.index])
         }
-        loop()
-        console.log('connectGamepad', gamepad)
       }
 
       let disconnectGamepad = (gamepad: Gamepad): void => {
-        console.log('diconnectGamepad', gamepad)
+        try {
+          this.emit(Controls.JOYSTICKDISCONNECTED, this._joysticks[gamepad.index])
+          this._joysticks[gamepad.index].disconnect()
+        } catch (e) {
+           console.error('disconnect gamepad throw an exception', gamepad, e)
+        }
       }
 
       window.addEventListener("gamepadconnected", (evt: GamepadEvent) => connectGamepad(evt.gamepad))
