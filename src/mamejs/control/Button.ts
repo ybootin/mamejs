@@ -1,18 +1,16 @@
-/// <reference path="../../emloader/model/IModule.ts" />
-/// <reference path="../../emloader/helper/EmscriptenHelper.ts" />
+/// <reference path="KeyHandler.ts" />
 
 namespace mamejs.control {
   export class Button implements IButton {
 
-    constructor(private key: string, private keyboard: Keyboard) {}
+    constructor(private key: string, private handler: KeyHandler) {}
 
     public press(): void {
-      this.keyboard.pressKey(this.key)
+      this.handler.pressMameKey(this.key)
     }
 
     public release(): void {
-      this.keyboard.releaseKey(this.key)
-
+      this.handler.releaseMameKey(this.key)
     }
 
     public pressAndRelease(): void {

@@ -100,15 +100,15 @@
           console.log('running game ' + game.name, mame)
         }).catch(function(error) {
           mameContainer.innerHTML = errorTemplate
-          mameContainer.getElementsByClassName('error-content').innerHTML = 'error running game ' + game.name + '<br /><br />' + error
+          mameContainer.getElementsByClassName('error-content')[0].innerHTML = 'error running game ' + game.name + '<br /><br />' + error
         })
       }
 
       function onMame(mame) {
-        mame.controls.keyboard.on('keypress', function(key) {
+        mame.controls.on('keypress', function(key) {
           handleKeyboardEvent('keypress', key)
         })
-        mame.controls.keyboard.on('keyrelease', function(key) {
+        mame.controls.on('keyrelease', function(key) {
           handleKeyboardEvent('keyrelease', key)
         })
 
@@ -171,7 +171,8 @@
       }
 
       // evt : {type : keypress|keyrelease, data: keyName}
-      function handleKeyboardEvent(type, key) {
+      function handleKeyboardEvent(type, mameKey) {
+        var key = mamejs.control.MameKey[mameKey]
         // highlight pressed button
         var button = document.getElementsByClassName('game-button-' + key)[0]
         type === 'keypress' ? $(button).addClass('keypress') : $(button).removeClass('keypress')
@@ -181,13 +182,13 @@
       function handleButton(button, key) {
         button.className = button.className + ' mame-button'
         button.addEventListener('mousedown', function(evt) {
-          mame.controls.keyboard.pressKey(key)
+          mame.controls.pressKey(key)
         })
         button.addEventListener('mouseup', function(evt) {
-          mame.controls.keyboard.releaseKey(key)
+          mame.controls.releaseKey(key)
         })
         button.addEventListener('touch', function(evt) {
-          mame.controls.keyboard.pressAndReleaseKey(key)
+          mame.controls.keyboard.pressAndReleaseMameKey(key)
         })
       }
 
@@ -204,7 +205,7 @@
         buildController(controller2Container, mamejs.control.player2Controller, 1)
       }
 
-      function buildController(container, playerControler, gamepadIndex) {
+      function buildController(container, controller, gamepadIndex) {
         // check if have gamepad to display gamepad icon instead of keyboard icon
         // By default mamejs will handle gamepads in the same order than the getGamespads
         var gamepad = navigator.getGamepads()[gamepadIndex]
@@ -215,10 +216,13 @@
 
         container.appendChild(icon)
 
-        for (var bt in playerControler) {
+        for (var bt in controller) {
           let button = document.createElement('button')
-          button.className = "btn btn-xs btn-default game-button game-button-" + bt + " game-button-" + playerControler[bt]
-          button.dataset.key = playerControler[bt] // the mame key, to be used with mame.controls.keyboard.pressKey|releaseKey|pressAndReleaseKey
+          // the keyboard keyname, ex : shift, ctrl, space, a ...
+          let keyName = mamejs.control.MameKey[controller[bt]]
+
+          button.className = "btn btn-xs btn-default game-button game-button-" + bt + " game-button-" + keyName
+          button.dataset.key = controller[bt] // the mame key, @see mamejs.control.MameKey
           button.dataset.button = bt // the key, ie , uparrow, a, shift ... as it's reference in playerController
 
           let content = document.createElement('span')
@@ -228,13 +232,13 @@
             case 'coin':
             case 'start':
               // this is just a hack to have 1, 2, 3 ... instead of digit1, digit2 ... when use game pad
-              content.innerHTML = bt.replace('coin', 'insert coin') + ' (' + playerControler[bt].replace('digit', '') + ')'
+              content.innerHTML = bt.replace('coin', 'insert coin') + ' (' + keyName.replace('digit', '') + ')'
               break
             default:
-              content.innerHTML = gamepad ? bt.replace('button', '') : playerControler[bt]
+              content.innerHTML = gamepad ? bt.replace('button', '') : keyName
           }
 
-          handleButton(button, playerControler[bt])
+          handleButton(button, controller[bt])
 
           container.appendChild(button)
         }

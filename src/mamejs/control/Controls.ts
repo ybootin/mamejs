@@ -1,7 +1,7 @@
 /// <reference path="../model/IControls.ts" />
 /// <reference path="Arcade6Buttons.ts" />
 /// <reference path="Button.ts" />
-/// <reference path="Keyboard.ts" />
+/// <reference path="KeyHandler.ts" />
 /// <reference path="Joystick.ts" />
 /// <reference path="Controllers.ts" />
 
@@ -14,14 +14,18 @@ namespace mamejs.control {
     private _player2: IControl
 
     private _joysticks: Array<Joystick> = []
-    private _keyboard: Keyboard
+    private _keyhandler: KeyHandler
 
     constructor(private _mame: Mame) {
       super()
-      this._keyboard = new Keyboard(_mame.loader.module)
+      this._keyhandler = new KeyHandler(_mame.loader)
 
-      this._player1 = new Arcade6Buttons(player1Controller, this._keyboard)
-      this._player2 = new Arcade6Buttons(player2Controller, this._keyboard)
+      // redispatch events
+      this._keyhandler.on(KeyHandler.KEYPRESS, (key: string) => this.emit(KeyHandler.KEYPRESS, key))
+      this._keyhandler.on(KeyHandler.KEYRELEASE, (key: string) => this.emit(KeyHandler.KEYRELEASE, key))
+
+      this._player1 = new Arcade6Buttons(player1Controller, this._keyhandler)
+      this._player2 = new Arcade6Buttons(player2Controller, this._keyhandler)
 
       this.handleGamepads()
     }
@@ -34,12 +38,16 @@ namespace mamejs.control {
       return this._player2
     }
 
-    public get keyboard(): Keyboard {
-      return this._keyboard
-    }
-
     public get joysticks(): Array<Joystick> {
       return this._joysticks
+    }
+
+    public pressKey(key: string): void {
+      this._keyhandler.pressMameKey(key)
+    }
+
+    public releaseKey(key: string): void {
+      this._keyhandler.releaseMameKey(key)
     }
 
     private handleGamepads(): void {

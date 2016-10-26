@@ -7,6 +7,7 @@
 /// <reference path="helper/HTMLHelper.ts" />
 /// <reference path="helper/FileLoader.ts" />
 /// <reference path="helper/EmscriptenHelper.ts" />
+/// <reference path="Keyboard.ts" />
 
 namespace emloader {
   export function load(url: string, container: HTMLElement): Promise<Emloader> {
@@ -21,6 +22,21 @@ namespace emloader {
     static ON_STDERROR: 'onstderror'
     static ON_STDOUT: 'onstdout'
 
+    static triggerEvent(module: IModule, eventType: string, data: any = {}) {
+      let scope = helper.HTMLHelper.getWindow(module.canvas)
+      let e = (<any>scope).document.createEventObject ? (<any>scope).document.createEventObject() : scope.document.createEvent("Events");
+      if (e.initEvent) e.initEvent(eventType, true, true);
+
+      for (var att in data) {
+        if (data.hasOwnProperty(att) && e[att] === undefined) {
+          e[att] = data[att]
+        }
+      }
+
+      // Dispatch to browser for real (use this if page uses SDL or something else for event handling):
+      module.canvas.dispatchEvent ? module.canvas.dispatchEvent(e) : (<any>module).canvas.fireEvent("on" + eventType, e);
+    }
+
     private _stdout: Array<string> = []
     private _stderr: Array<string> = []
 
@@ -29,9 +45,7 @@ namespace emloader {
 
     private _files: Array<IFile> = []
 
-    private _keyboardEventHandler: {(evt: KeyboardEvent): void}
-    private _gamepadEventHandler: {(evt: GamepadEvent): void}
-    private _mouseEventHandler: {(evt: MouseEvent): void}
+    private _keyboard: Keyboard
 
     protected _canvas: HTMLCanvasElement
 
@@ -65,9 +79,11 @@ namespace emloader {
         })
       })
 
+      this._keyboard = new Keyboard(this.module)
+    }
 
-      // Map all inputs due to the iframed scope
-      this.bindKeys()
+    public get keyboard(): Keyboard {
+      return this._keyboard
     }
 
     public get canvas(): HTMLCanvasElement {
@@ -137,47 +153,6 @@ namespace emloader {
       })).then((): Promise<void> => {
         return Promise.resolve()
       })
-    }
-
-    public simulateKey(type: string, key: string): void {
-      this.simulateKeyEvent(type, helper.KeyCode[key], helper.KeyCode[key])
-    }
-    public simulateKeyEvent(type: string, keyCode: number, charCode: number = 0): void {
-      helper.EmscriptenHelper.simulateKeyEvent(this.module, type, keyCode, charCode)
-    }
-
-    public bindKeys(): void {
-      if (this._keyboardEventHandler) {
-        return
-      }
-      this._keyboardEventHandler = (evt: KeyboardEvent): void => {
-        this.triggerEvent({
-          type: evt.type,
-          keyCode: evt.keyCode,
-          charCode: evt.charCode
-        })
-      }
-
-      // Must be attached to the main scope, in order to redispatch them to the emScope
-      document.addEventListener('keyup', this._keyboardEventHandler)
-      document.addEventListener('keydown', this._keyboardEventHandler)
-    }
-
-    public unbindKeys(): void {
-      document.removeEventListener('keyup', this._keyboardEventHandler)
-      document.removeEventListener('keydown', this._keyboardEventHandler)
-      this._keyboardEventHandler = null
-    }
-
-    public triggerEvent(evt: Event|KeyboardEvent|GamepadEvent|MouseEvent|any): void {
-      switch (evt.type) {
-        case 'keyup':
-        case 'keydown':
-          helper.EmscriptenHelper.simulateKeyEvent(this.module, evt.type, evt.keyCode, evt.charCode)
-          break
-        default:
-          helper.EmscriptenHelper.simulateEvent(this.module, evt.type, evt)
-      }
     }
   }
 }

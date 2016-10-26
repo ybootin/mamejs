@@ -20,19 +20,19 @@ namespace mamejs.control {
     private _down: Button
     private _left: Button
 
-    constructor(control: IControlMapping, _keyboard: Keyboard) {
-      this._start = new Button(control.start, _keyboard)
-      this._coin = new Button(control.coin, _keyboard)
-      this._button1 = new Button(control.button1, _keyboard)
-      this._button2 = new Button(control.button2, _keyboard)
-      this._button3 = new Button(control.button3, _keyboard)
-      this._button4 = new Button(control.button4, _keyboard)
-      this._button5 = new Button(control.button5, _keyboard)
-      this._button6 = new Button(control.button6, _keyboard)
-      this._up = new Button(control.up, _keyboard)
-      this._right = new Button(control.right, _keyboard)
-      this._down = new Button(control.down, _keyboard)
-      this._left = new Button(control.left, _keyboard)
+    constructor(control: IControlMapping, _keyhandler: KeyHandler) {
+      this._start = new Button(control.start, _keyhandler)
+      this._coin = new Button(control.coin, _keyhandler)
+      this._button1 = new Button(control.button1, _keyhandler)
+      this._button2 = new Button(control.button2, _keyhandler)
+      this._button3 = new Button(control.button3, _keyhandler)
+      this._button4 = new Button(control.button4, _keyhandler)
+      this._button5 = new Button(control.button5, _keyhandler)
+      this._button6 = new Button(control.button6, _keyhandler)
+      this._up = new Button(control.up, _keyhandler)
+      this._right = new Button(control.right, _keyhandler)
+      this._down = new Button(control.down, _keyhandler)
+      this._left = new Button(control.left, _keyhandler)
     }
 
     public get start(): Button {
