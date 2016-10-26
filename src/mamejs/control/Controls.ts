@@ -21,7 +21,7 @@ namespace mamejs.control {
       this._keyboard = new Keyboard(_mame.loader.module)
 
       this._player1 = new Arcade6Buttons(player1Controller, this._keyboard)
-      this._player2 = new Arcade6Buttons(player1Controller, this._keyboard)
+      this._player2 = new Arcade6Buttons(player2Controller, this._keyboard)
 
       this.handleGamepads()
     }
