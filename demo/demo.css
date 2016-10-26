@@ -59,6 +59,17 @@
   position: relative;
 }
 
+#mame-container .error-container {
+  width: 320px;
+  height: 320px;
+  font-family: Monaco;
+  overflow-y: scroll;
+}
+
+#mame-container .error-content div {
+  font-size: 10px;
+}
+
 #mame-container  .play-button {
   height: 320px;
   font-size: 120px;

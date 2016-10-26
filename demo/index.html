@@ -32,6 +32,14 @@
       </button>
       <div class="game-title"></div>
     </script>
+    <script type="text/x-tmpl" id="error-template">
+      <div class="panel panel-danger error-container">
+        <div class="panel-heading">
+          <h3 class="panel-title">Mame Error</h3>
+        </div>
+        <div class="panel-body error-content"></div>
+      </div>
+    </script>
     <script type="text/x-tmpl" id="loading-template">
       <div class="loading-container">
         <div class="loading-text">Loading %game% please wait ...</div>
@@ -46,7 +54,8 @@
           controller1Container = document.getElementById('player1controller'),
           controller2Container = document.getElementById('player2controller'),
           gameTemplate = document.getElementById('game-template').innerHTML,
-          loadingTemplate = document.getElementById('loading-template').innerHTML
+          loadingTemplate = document.getElementById('loading-template').innerHTML,
+          errorTemplate = document.getElementById('error-template').innerHTML
 
       // mamejs.run config file
       var config = {
@@ -65,7 +74,11 @@
        // launch mame game :
        // @see gamelist.json for `game` interface
       function runGame(game) {
-        config.game = game
+        var cfg = JSON.parse(JSON.stringify(config)) // lazy clone
+        cfg.game = game
+
+        // special trick to use custom emulator
+        cfg.emulator = game.emulator || cfg.emulator
 
         mameContainer.innerHTML = loadingTemplate.replace('%game%', game.name)
         mameContainer.getElementsByClassName('loading-container')[0].style.backgroundImage = 'url(' + game.screenshot + ')'
@@ -77,7 +90,7 @@
         enableMameButtons(false)
 
         // run mame is as simple as this !
-        mamejs.run(config, gameCnt).then(function(mame) {
+        mamejs.run(cfg, gameCnt).then(function(mame) {
           // this is just a demo, kiss
           // will be used by controls
           window.mame = mame
@@ -86,7 +99,8 @@
 
           console.log('running game ' + game.name, mame)
         }).catch(function(error) {
-          console.error('error running game ' + game.name, error)
+          mameContainer.innerHTML = errorTemplate
+          mameContainer.getElementsByClassName('error-content').innerHTML = 'error running game ' + game.name + '<br /><br />' + error
         })
       }
 
@@ -111,6 +125,23 @@
         })
 
         enableMameButtons(true)
+
+        // handle errors
+        var haveError = false
+        var onStderr = function(text) {
+          if (!haveError) {
+            haveError = true
+            mameContainer.innerHTML = errorTemplate
+
+            enableMameButtons(false)
+          }
+
+          var content = document.createElement('div')
+          content.innerHTML = text
+          mameContainer.getElementsByClassName('error-content')[0].appendChild(content)
+        }
+        mame.loader.on(emloader.ON_STDERR, onStderr)
+        mame.loader.stderr.forEach(onStderr)
       }
 
       // return the player id, actually 1 or 2 attached to the Joystick object
