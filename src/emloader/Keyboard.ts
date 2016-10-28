@@ -13,11 +13,7 @@ namespace emloader {
     }
 
     static getKey(keyCode: number): string {
-      for (var key in helper.KeyCode) {
-        if (helper.KeyCode[key] === keyCode) {
-          return key
-        }
-      }
+      return helper.KeyCodeKey[keyCode]
     }
 
     static triggerKeyEvent(module: IModule, eventType: string, keyCode: number, charCode: number) {

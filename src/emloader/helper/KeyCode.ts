@@ -104,4 +104,10 @@ namespace emloader.helper {
     static closebraket: number = 221
     static singlequote: number = 222
   }
+
+  // revert for quick access
+  export var KeyCodeKey: Array<string> = new Array(222)
+  for (var key in KeyCode) {
+    KeyCodeKey[KeyCode[key]] = key
+  }
 }

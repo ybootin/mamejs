@@ -7,13 +7,34 @@ namespace mamejs.control {
     static KEYPRESS: string = emloader.Keyboard.KEYPRESS
     static KEYRELEASE: string = emloader.Keyboard.KEYRELEASE
 
-    static getMameKey(keyCode: number): string {
-      let key = emloader.Keyboard.getKey(keyCode)
+    static COOKIENAME: string = 'mamejskeymapping'
 
-      for (var keyName in MameKey) {
-        if (MameKey[keyName] === key) {
-          return keyName
-        }
+    static keyMapping = DefaultKeyMapping
+    static keyMappingKey = DefaultKeyMappingKey
+
+    static getMameKey(keyCode: number): string {
+      return KeyHandler.keyMappingKey[keyCode]
+    }
+
+    static getKeyCode(mameKey: string): number {
+      return KeyHandler.keyMapping[mameKey]
+    }
+
+    static getKeyName(mameKeyOrKeyCode: string|number): string {
+      let keyCode: number = typeof mameKeyOrKeyCode === 'string' ? KeyHandler.getKeyCode(mameKeyOrKeyCode) : mameKeyOrKeyCode
+      return emloader.helper.KeyCodeKey[keyCode]
+    }
+
+    static setKeyMapping(keyMapping, save: boolean = true) {
+      KeyHandler.keyMappingKey = []
+      for (let mameKey in KeyHandler.keyMapping) {
+        KeyHandler.keyMapping[mameKey] = keyMapping[mameKey] || KeyHandler.keyMapping[mameKey]
+        KeyHandler.keyMappingKey[KeyHandler.keyMapping[mameKey]] = mameKey
+      }
+      if (save) {
+        // set cookie for 10 years !, should be enought
+        let expire = new Date(String(new Date().getFullYear() + 10)).toUTCString()
+        document.cookie = KeyHandler.COOKIENAME + '=' +  encodeURIComponent(JSON.stringify(keyMapping)) + ';expires=' + expire
       }
     }
 
@@ -22,18 +43,27 @@ namespace mamejs.control {
     constructor(private loader: emloader.IEmloader) {
       super()
 
-      // need to desactivate all keys handler, to listen only to mame keys
+      // need to desactivate all keys handler in emloader, to listen only to mame keys
+      // this is the key for rebinds key from main frame to emloader frame
       this.loader.keyboard.unbindKeys()
       this.bindKeys()
     }
 
     public pressMameKey(key: string): void {
-      this.loader.keyboard.pressKey(MameKey[key])
+      // handle simple key and multiple key combination
+      (typeof MameKey[key] === 'number' ? [MameKey[key]] : MameKey[key]).forEach((mameKey: string) => {
+        this.loader.keyboard.pressKey(mameKey)
+      })
+
       this.emit(emloader.Keyboard.KEYPRESS, key)
     }
 
     public releaseMameKey(key: string): void {
-      this.loader.keyboard.releaseKey(MameKey[key])
+      // handle simple key and multiple key combination
+      (typeof MameKey[key] === 'number' ? [MameKey[key]] : MameKey[key]).forEach((mameKey: string) => {
+        this.loader.keyboard.releaseKey(mameKey)
+      })
+
       this.emit(emloader.Keyboard.KEYRELEASE, key)
     }
 
@@ -42,18 +72,18 @@ namespace mamejs.control {
       this.releaseMameKey(MameKey[key])
     }
 
-    public bindKeys() {
-      // prevent parse all keys each time to get the mapping
-      let MameKeyMapping = {}
-      Object.keys(MameKey).forEach((keyName: string): void => {
-        MameKeyMapping[emloader.Keyboard.getKeyCode(MameKey[keyName])] = keyName
-      })
+    public setKeyMapping(keyMapping) {
+      KeyHandler.setKeyMapping(keyMapping)
+      this.unbindKeys()
+      this.bindKeys()
+    }
 
-      // handle only MameKey
+    public bindKeys() {
       this.keyboardEventHandler = (evt: KeyboardEvent): void => {
-        let mameKey = MameKeyMapping[evt.keyCode]
+        // handle only MameKey
+        let mameKey = KeyHandler.getMameKey(evt.keyCode)
         if (mameKey) {
-          evt.type === 'keydown' ? this.pressMameKey(MameKeyMapping[evt.keyCode]) : this.releaseMameKey(MameKeyMapping[evt.keyCode])
+          evt.type === 'keydown' ? this.pressMameKey(mameKey) : this.releaseMameKey(mameKey)
         }
       }
 
@@ -70,4 +100,10 @@ namespace mamejs.control {
       }
     }
   }
+
+  try {
+    // check for cookie, to inject saved keyMapping !
+    let cookie: string = document.cookie.replace(new RegExp('/(?:(?:^|.*;\s*)' + KeyHandler.COOKIENAME + '\s*\=\s*([^;]*).*$)|^.*$/'), "$1")
+    KeyHandler.setKeyMapping(JSON.parse(decodeURIComponent(cookie)), false)
+  } catch(e) {}
 }

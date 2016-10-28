@@ -67,59 +67,70 @@ namespace mamejs.control {
    * 2                        Start Game
    */
   export class MameKey {
-    static INSERT_COIN1: string = 'digit5'
-    static INSERT_COIN2: string = 'digit6'
-    static INSERT_COIN3: string = 'digit7'
-    static INSERT_COIN4: string = 'digit8'
+    static INSERT_COIN1: number = emloader.helper.KeyCode.digit5
+    static INSERT_COIN2: number = emloader.helper.KeyCode.digit6
+    static INSERT_COIN3: number = emloader.helper.KeyCode.digit7
+    static INSERT_COIN4: number = emloader.helper.KeyCode.digit8
 
-    static PLAYER1_START: string = 'digit1'
-    static PLAYER2_START: string = 'digit2'
-    static PLAYER3_START: string = 'digit3'
-    static PLAYER4_START: string = 'digit4'
+    static PLAYER1_START: number = emloader.helper.KeyCode.digit1
+    static PLAYER2_START: number = emloader.helper.KeyCode.digit2
+    static PLAYER3_START: number = emloader.helper.KeyCode.digit3
+    static PLAYER4_START: number = emloader.helper.KeyCode.digit4
 
-    static PLAYER1_UP: string = 'uparrow'
-    static PLAYER1_RIGHT: string = 'rightarrow'
-    static PLAYER1_DOWN: string = 'downarrow'
-    static PLAYER1_LEFT: string = 'leftarrow'
+    static PLAYER1_UP: number = emloader.helper.KeyCode.uparrow
+    static PLAYER1_RIGHT: number = emloader.helper.KeyCode.rightarrow
+    static PLAYER1_DOWN: number = emloader.helper.KeyCode.downarrow
+    static PLAYER1_LEFT: number = emloader.helper.KeyCode.leftarrow
 
-    static PLAYER1_BUTTON1: string = 'ctrl'
-    static PLAYER1_BUTTON2: string = 'alt'
-    static PLAYER1_BUTTON3: string = 'space'
-    static PLAYER1_BUTTON4: string = 'shift'
-    static PLAYER1_BUTTON5: string = 'z'
-    static PLAYER1_BUTTON6: string = 'x'
+    static PLAYER1_BUTTON1: number = emloader.helper.KeyCode.ctrl
+    static PLAYER1_BUTTON2: number = emloader.helper.KeyCode.alt
+    static PLAYER1_BUTTON3: number = emloader.helper.KeyCode.space
+    static PLAYER1_BUTTON4: number = emloader.helper.KeyCode.shift
+    static PLAYER1_BUTTON5: number = emloader.helper.KeyCode.z
+    static PLAYER1_BUTTON6: number = emloader.helper.KeyCode.x
 
-    static PLAYER2_UP: string = 'r'
-    static PLAYER2_RIGHT: string = 'g'
-    static PLAYER2_DOWN: string = 'f'
-    static PLAYER2_LEFT: string = 'd'
+    static PLAYER2_UP: number = emloader.helper.KeyCode.r
+    static PLAYER2_RIGHT: number = emloader.helper.KeyCode.g
+    static PLAYER2_DOWN: number = emloader.helper.KeyCode.f
+    static PLAYER2_LEFT: number = emloader.helper.KeyCode.d
 
-    static PLAYER2_BUTTON1: string = 'a'
-    static PLAYER2_BUTTON2: string = 's'
-    static PLAYER2_BUTTON3: string = 'q'
-    static PLAYER2_BUTTON4: string = 'w'
-    static PLAYER2_BUTTON5: string = 'z'
-    static PLAYER2_BUTTON6: string = 'x'
+    static PLAYER2_BUTTON1: number = emloader.helper.KeyCode.a
+    static PLAYER2_BUTTON2: number = emloader.helper.KeyCode.s
+    static PLAYER2_BUTTON3: number = emloader.helper.KeyCode.q
+    static PLAYER2_BUTTON4: number = emloader.helper.KeyCode.w
+    static PLAYER2_BUTTON5: number = emloader.helper.KeyCode.z
+    static PLAYER2_BUTTON6: number = emloader.helper.KeyCode.x
 
-    static ENABLE_CROSSHAIRS: string = 'f1'
-    static TEST_SERVICE_SWITCH: string = 'f2'
-    static GAME_RESET: string = 'f3'
-    static GAME_HARD_RESET: string = 'shift + f3'
-    static SHOW_GAME_GRAPHICS: string = 'f4'
-    static ENABLE_DISABLE_CHEAT: string = 'f6'
-    static LOAD_SAVE_GAME: string = 'f7'
-    static SAVE_GAME: string = 'shift + f7'
-    static DECREASE_FRAME_SKIP: string = 'f8'
-    static INCREASE_FRAME_SKIP: string = 'f9'
-    static SPEED_THROTTLE: string = 'f10'
-    static SHOW_FPS: string = 'f11'
-    static ENABLES_PROFILER: string = 'shift + f11'
-    static SAVE_SNAP: string = 'f12'
-    static PAUSE: string = 'p'
-    static SKIP_ONE_FRAME_FORWARD: string = 'shift + p'
-    static EXIT_FROM_GAME: string = 'esc'
-    static VOLUME_UP: string = '~'
-    static VOLUME_DOWN: string = '¬'
-    static RUN_FULL_THROTTLE: string = 'insert'
+    static IN_GAME_MENU: number = emloader.helper.KeyCode.tab
+    static ENABLE_CROSSHAIRS: number = emloader.helper.KeyCode.f1
+    static TEST_SERVICE_SWITCH: number = emloader.helper.KeyCode.f2
+    static GAME_RESET: number = emloader.helper.KeyCode.f3
+    static GAME_HARD_RESET: Array<number> = [emloader.helper.KeyCode.shift, emloader.helper.KeyCode.f3]
+    static SHOW_GAME_GRAPHICS: number = emloader.helper.KeyCode.f4
+    static ENABLE_DISABLE_CHEAT: number = emloader.helper.KeyCode.f6
+    static LOAD_SAVE_GAME: number = emloader.helper.KeyCode.f7
+    static SAVE_GAME: Array<number> = [emloader.helper.KeyCode.shift, emloader.helper.KeyCode.f7]
+    static DECREASE_FRAME_SKIP: number = emloader.helper.KeyCode.f8
+    static INCREASE_FRAME_SKIP: number = emloader.helper.KeyCode.f9
+    static SPEED_THROTTLE: number = emloader.helper.KeyCode.f10
+    static SHOW_FPS: number = emloader.helper.KeyCode.f11
+    static ENABLES_PROFILER: Array<number> = [emloader.helper.KeyCode.shift, emloader.helper.KeyCode.f11]
+    static SAVE_SNAP: number = emloader.helper.KeyCode.f12
+    static PAUSE: number = emloader.helper.KeyCode.p
+    static SKIP_ONE_FRAME_FORWARD: Array<number> = [emloader.helper.KeyCode.shift, emloader.helper.KeyCode.p]
+    static EXIT_FROM_GAME: number = emloader.helper.KeyCode.escape
+    static RUN_FULL_THROTTLE: number = emloader.helper.KeyCode.insert
+  }
+
+  // This is the default map for the user keyboard, by default we don't map multiple key touch
+  // userkey -> MameKeyMapping <-> MameKey -> Mame
+  export var DefaultKeyMapping = {}
+  export var DefaultKeyMappingKey = {}
+  for (var mameKey in MameKey) {
+    if (typeof MameKey[mameKey] === 'number') {
+      DefaultKeyMapping[mameKey] = MameKey[mameKey]
+      DefaultKeyMappingKey[MameKey[mameKey]] = mameKey
+    }
+
   }
 }

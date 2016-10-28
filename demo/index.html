@@ -163,16 +163,16 @@
 
         for (var i = 0, l = buttons.length; i < l; i++) {
           var button = buttons[i]
-          if (button.dataset.button.indexOf('button') === 0) {
+          if (button.dataset.controlName.indexOf('button') === 0) {
             // replace button name button1, button2 ... to 1, 2, 3 ...
-            button.getElementsByTagName('span')[0].innerHTML = (type === 'connected' ? button.dataset.button.replace('button', '') : button.dataset.keyName)
+            button.getElementsByTagName('span')[0].innerHTML = (type === 'connected' ? button.dataset.controlName.replace('button', '') : button.dataset.keyName)
           }
         }
       }
 
       // evt : {type : keypress|keyrelease, data: keyName}
       function handleKeyboardEvent(type, mameKey) {
-        var key = mamejs.control.MameKey[mameKey]
+        var key = mamejs.control.KeyHandler.getKeyName(mameKey)
         // highlight pressed button
         var button = document.getElementsByClassName('game-button-' + key)[0]
         type === 'keypress' ? $(button).addClass('keypress') : $(button).removeClass('keypress')
@@ -216,30 +216,32 @@
 
         container.appendChild(icon)
 
-        for (var bt in controller) {
+        for (var controlName in controller) {
           let button = document.createElement('button')
-          // the keyboard keyname, ex : shift, ctrl, space, a ...
-          let keyName = mamejs.control.MameKey[controller[bt]]
+          let mameKey = controller[controlName]
 
-          button.className = "btn btn-xs btn-default game-button game-button-" + bt + " game-button-" + keyName
-          button.dataset.key = controller[bt] // the mame key, @see mamejs.control.MameKey
+          // the keyboard keyname , ex : shift, ctrl, space, a ...
+          let keyName = mamejs.control.KeyHandler.getKeyName(mameKey)
+
+          button.className = "btn btn-xs btn-default game-button game-button-" + controlName + " game-button-" + keyName
+          button.dataset.mameKey = mameKey
           button.dataset.keyName = keyName
-          button.dataset.button = bt
+          button.dataset.controlName = controlName // coin, start, button1 ...
 
           let content = document.createElement('span')
           button.appendChild(content)
 
-          switch (bt) {
+          switch (controlName) {
             case 'coin':
             case 'start':
               // this is just a hack to have 1, 2, 3 ... instead of digit1, digit2 ... when use game pad
-              content.innerHTML = bt.replace('coin', 'insert coin') + ' (' + keyName.replace('digit', '') + ')'
+              content.innerHTML = controlName.replace('coin', 'insert coin') + ' (' + keyName.replace('digit', '') + ')'
               break
             default:
-              content.innerHTML = gamepad ? bt.replace('button', '') : keyName
+              content.innerHTML = gamepad ? controlName.replace('button', '') : keyName
           }
 
-          handleButton(button, controller[bt])
+          handleButton(button, mameKey)
 
           container.appendChild(button)
         }
@@ -264,8 +266,9 @@
       }
 
       var gameButtons = [
-        {key: mamejs.control.MameKey.PAUSE, name: 'game', glyphicon: 'pause'},
-        {key: mamejs.control.MameKey.SHOW_FPS, name: 'Show FPS', glyphicon: 'film'},
+        {key: 'PAUSE', name: 'game', glyphicon: 'pause'},
+        {key: 'SHOW_FPS', name: 'Show FPS', glyphicon: 'film'},
+        {key: 'IN_GAME_MENU', name: 'Menu', glyphicon: 'list-alt'},
       ]
 
       function buildGameButtons(container) {
