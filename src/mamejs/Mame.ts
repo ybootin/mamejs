@@ -34,6 +34,7 @@ namespace mamejs {
 
   // Main class
   export class Mame {
+    static EXIT: 'exit'
     static ROM_PATH: string = '/roms'
     static DEFAULT_RESOLUTION: IResolution = {
       width: 320,
@@ -46,6 +47,9 @@ namespace mamejs {
      * Mame emulator must be loaded before instanciate this class
      */
     constructor(private _loader: emloader.IEmloader) {
+      if (instances.length > 0) {
+        instances.pop().exit()
+      }
       instances.push(this);
 
       // init the roms filesystem
@@ -94,6 +98,10 @@ namespace mamejs {
 
     public loadRoms(files: {[filename: string]: string}, handler?: {(evt: ProgressEvent): void}): Promise<void> {
       return this.loader.loadFiles(files, Mame.ROM_PATH, handler)
+    }
+
+    public exit() {
+      this.controls.destroy()
     }
   }
 }

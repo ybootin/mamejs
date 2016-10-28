@@ -2,6 +2,7 @@ namespace mamejs {
   export interface IControls {
     player1: IControl
     player2: IControl
+    destroy(): void
   }
 
   export interface IControl {

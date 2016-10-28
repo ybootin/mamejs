@@ -6,7 +6,6 @@
 /// <reference path="event/EventEmiter.ts" />
 /// <reference path="helper/HTMLHelper.ts" />
 /// <reference path="helper/FileLoader.ts" />
-/// <reference path="helper/EmscriptenHelper.ts" />
 /// <reference path="Keyboard.ts" />
 
 namespace emloader {

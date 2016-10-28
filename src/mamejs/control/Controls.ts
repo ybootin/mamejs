@@ -16,6 +16,9 @@ namespace mamejs.control {
     private _joysticks: Array<Joystick> = []
     private _keyhandler: KeyHandler
 
+    private _gamepadconnectedHandler: EventListener
+    private _gamepaddisconnectedHandler: EventListener
+
     constructor(private _mame: Mame) {
       super()
       this._keyhandler = new KeyHandler(_mame.loader)
@@ -50,6 +53,13 @@ namespace mamejs.control {
       this._keyhandler.releaseMameKey(key)
     }
 
+    public destroy() {
+      this._keyhandler.clean()
+      this._keyhandler.unbindKeys()
+      this.unbindGamepads()
+      this.clean()
+    }
+
     private handleGamepads(): void {
       let connectGamepad = (gamepad: Gamepad): void => {
         // on connect, always get the control according to the gamepad index
@@ -72,8 +82,11 @@ namespace mamejs.control {
         }
       }
 
-      window.addEventListener("gamepadconnected", (evt: GamepadEvent) => connectGamepad(evt.gamepad))
-      window.addEventListener("gamepaddisconnected", (evt: GamepadEvent) => disconnectGamepad(evt.gamepad))
+      this._gamepadconnectedHandler = (evt: GamepadEvent) => connectGamepad(evt.gamepad)
+      this._gamepaddisconnectedHandler = (evt: GamepadEvent) => disconnectGamepad(evt.gamepad)
+
+      window.addEventListener("gamepadconnected", this._gamepadconnectedHandler)
+      window.addEventListener("gamepaddisconnected", this._gamepaddisconnectedHandler)
 
       let gamepads = navigator.getGamepads()
       for (var i = 0, l = gamepads.length; i < l; i++) {
@@ -81,6 +94,11 @@ namespace mamejs.control {
           connectGamepad(gamepads[i])
         }
       }
+    }
+
+    private unbindGamepads(): void {
+      window.removeEventListener("gamepadconnected", this._gamepadconnectedHandler)
+      window.removeEventListener("gamepaddisconnected", this._gamepaddisconnectedHandler)
     }
   }
 }

@@ -29,12 +29,6 @@ namespace emloader {
     constructor(private module: IModule) {
       super()
 
-      ;['keyup', 'keydown'].forEach((evtName: string): void => {
-        this.module.canvas.addEventListener(evtName, (evt: KeyboardEvent) => {
-          this.emit(evtName === 'keydown' ? Keyboard.KEYPRESS : Keyboard.KEYRELEASE, Keyboard.getKey(evt.keyCode))
-        })
-      })
-
       // by default, we bind all keys
       this.bindKeys()
     }
@@ -57,6 +51,7 @@ namespace emloader {
 
       this._keyboardEventHandler = (evt: KeyboardEvent): void => {
         evt.type === 'keydown' ? this.pressKey(evt.keyCode) : this.releaseKey(evt.keyCode)
+        this.emit(evt.type === 'keydown' ? Keyboard.KEYPRESS : Keyboard.KEYRELEASE, Keyboard.getKey(evt.keyCode))
       }
 
       // Must be attached to the main scope, in order to redispatch them to the emScope
@@ -65,11 +60,9 @@ namespace emloader {
     }
 
     public unbindKeys(): void {
-      if (this._keyboardEventHandler) {
-        document.removeEventListener('keyup', this._keyboardEventHandler)
-        document.removeEventListener('keydown', this._keyboardEventHandler)
-        this._keyboardEventHandler = null
-      }
+      document.removeEventListener('keyup', this._keyboardEventHandler)
+      document.removeEventListener('keydown', this._keyboardEventHandler)
+      this._keyboardEventHandler = null
     }
   }
 }
