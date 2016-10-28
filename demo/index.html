@@ -165,7 +165,7 @@
           var button = buttons[i]
           if (button.dataset.button.indexOf('button') === 0) {
             // replace button name button1, button2 ... to 1, 2, 3 ...
-            button.getElementsByTagName('span')[0].innerHTML = (type === 'connected' ? button.dataset.button.replace('button', '') : button.dataset.key)
+            button.getElementsByTagName('span')[0].innerHTML = (type === 'connected' ? button.dataset.button.replace('button', '') : button.dataset.keyName)
           }
         }
       }
@@ -223,7 +223,8 @@
 
           button.className = "btn btn-xs btn-default game-button game-button-" + bt + " game-button-" + keyName
           button.dataset.key = controller[bt] // the mame key, @see mamejs.control.MameKey
-          button.dataset.button = bt // the key, ie , uparrow, a, shift ... as it's reference in playerController
+          button.dataset.keyName = keyName
+          button.dataset.button = bt
 
           let content = document.createElement('span')
           button.appendChild(content)
@@ -242,6 +243,10 @@
 
           container.appendChild(button)
         }
+      }
+
+      function formatButton(content, mameKey, key, buttonName) {
+
       }
 
       function buildGameItem(game, container) {
