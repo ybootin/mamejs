@@ -162,11 +162,7 @@
         var buttons = cnt.getElementsByClassName('game-button')
 
         for (var i = 0, l = buttons.length; i < l; i++) {
-          var button = buttons[i]
-          if (button.dataset.controlName.indexOf('button') === 0) {
-            // replace button name button1, button2 ... to 1, 2, 3 ...
-            button.getElementsByTagName('span')[0].innerHTML = (type === 'connected' ? button.dataset.controlName.replace('button', '') : button.dataset.keyName)
-          }
+          formatControlButton(buttons[i], null, null, type === 'connected')
         }
       }
 
@@ -218,37 +214,58 @@
 
         for (var controlName in controller) {
           let button = document.createElement('button')
+          button.className = "btn btn-xs btn-default"
+
           let mameKey = controller[controlName]
 
           // the keyboard keyname , ex : shift, ctrl, space, a ...
           let keyName = mamejs.control.KeyHandler.getKeyName(mameKey)
 
-          button.className = "btn btn-xs btn-default game-button game-button-" + controlName + " game-button-" + keyName
-          button.dataset.mameKey = mameKey
-          button.dataset.keyName = keyName
-          button.dataset.controlName = controlName // coin, start, button1 ...
-
-          let content = document.createElement('span')
-          button.appendChild(content)
-
-          switch (controlName) {
-            case 'coin':
-            case 'start':
-              // this is just a hack to have 1, 2, 3 ... instead of digit1, digit2 ... when use game pad
-              content.innerHTML = controlName.replace('coin', 'insert coin') + ' (' + keyName.replace('digit', '') + ')'
-              break
-            default:
-              content.innerHTML = gamepad ? controlName.replace('button', '') : keyName
-          }
-
+          formatControlButton(button, controlName, keyName, !!gamepad)
           handleButton(button, mameKey)
 
           container.appendChild(button)
         }
       }
 
-      function formatButton(content, mameKey, key, buttonName) {
+      function formatControlButton(button, controlName, keyName, useGamepad) {
+        keyName = keyName || button.dataset.keyName
+        controlName = controlName || button.dataset.controlName // coin, start, button1 ...
 
+        button.dataset.keyName = keyName
+        button.dataset.controlName = controlName
+
+        let content = button.getElementsByTagName('span')[0]
+        if (!content) {
+          content = document.createElement('span')
+          button.appendChild(content)
+        }
+
+        // remove game-button classes, and reput them
+        let classes = button.className.split(' ').filter(function(classItem) {
+          return classItem.indexOf('game-button') === -1
+        })
+        classes.push('game-button')
+        classes.push('game-button-' + keyName)
+        classes.push('game-button-' + controlName)
+
+        if (useGamepad) {
+          classes.push('game-button-gamepad')
+        }
+
+        console.log(classes)
+
+        button.className = classes.join(' ')
+
+        switch (controlName) {
+          case 'coin':
+          case 'start':
+            // this is just a hack to have 1, 2, 3 ... instead of digit1, digit2 ... when use game pad
+            content.innerHTML = controlName.replace('coin', 'insert coin') + ' (' + keyName.replace('digit', '') + ')'
+            break
+          default:
+            content.innerHTML = useGamepad ? controlName.replace('button', '') : keyName
+        }
       }
 
       function buildGameItem(game, container) {

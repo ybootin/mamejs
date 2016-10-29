@@ -131,7 +131,8 @@
 }
 
 /** glyphicon hack, to use icons without glyphicon- class **/
-.game-button-uparrow, .game-button-downarrow, .game-button-leftarrow, .game-button-rightarrow {
+.game-button-uparrow, .game-button-downarrow, .game-button-leftarrow, .game-button-rightarrow,
+.game-button-up.game-button-gamepad, .game-button-down.game-button-gamepad, .game-button-left.game-button-gamepad, .game-button-right.game-button-gamepad {
   font-family: 'Glyphicons Halflings';
   font-style: normal;
   font-weight: 400;
