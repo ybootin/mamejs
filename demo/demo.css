@@ -100,13 +100,9 @@
 .game-controller:after {
     content: "Player 1";
     position: absolute;
-    top: -1px;
-    left: -1px;
-    padding: 3px 7px;
+    top: 6px;
+    left: 86px;
     font-size: 12px;
-    font-weight: bold;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
     color: #9da0a4;
 }
 
@@ -128,34 +124,6 @@
   height: 40px;
   border-radius: 20px;
   position: absolute;
-}
-
-/** glyphicon hack, to use icons without glyphicon- class **/
-.game-button-uparrow, .game-button-downarrow, .game-button-leftarrow, .game-button-rightarrow,
-.game-button-up.game-button-gamepad, .game-button-down.game-button-gamepad, .game-button-left.game-button-gamepad, .game-button-right.game-button-gamepad {
-  font-family: 'Glyphicons Halflings';
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-}
-.game-button-uparrow span, .game-button-downarrow span, .game-button-leftarrow span, .game-button-rightarrow span {
-  display: none
-}
-.game-button-uparrow:before {
-  content: "\e093";
-}
-.game-button-downarrow:before {
-  content: "\e094";
-}
-.game-button-leftarrow:before {
-  content: "\e091";
-}
-.game-button-rightarrow:before {
-  content: "\e092";
-}
-.game-button.keypress {
-  background-color: #d4d4d4;
 }
 
 .game-button-coin {
@@ -182,7 +150,6 @@
   top: 35px;
   left: 35px;
   border-radius: 5px 5px 20px 20px;
-  background: url(glyphicons-halflings.png) no repeat -96px -72px !important;
 }
 .game-button-down {
   top: 100px;
@@ -225,6 +192,39 @@
   left: 240px;
 }
 
+/** glyphicon hack, to use icons without glyphicon- class **/
+.game-button-uparrow, .game-button-downarrow, .game-button-leftarrow, .game-button-rightarrow,
+.game-button-up.game-button-gamepad, .game-button-down.game-button-gamepad, .game-button-left.game-button-gamepad, .game-button-right.game-button-gamepad {
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+}
+.game-button-uparrow span, .game-button-downarrow span, .game-button-leftarrow span, .game-button-rightarrow span,
+.game-button-up.game-button-gamepad span, .game-button-down.game-button-gamepad span, .game-button-left.game-button-gamepad span, .game-button-right.game-button-gamepad span {
+  display: none
+}
+.game-button-uparrow:before,
+.game-button-up.game-button-gamepad:before {
+  content: "\e093";
+}
+.game-button-downarrow:before,
+.game-button-down.game-button-gamepad:before {
+  content: "\e094";
+}
+.game-button-leftarrow:before,
+.game-button-left.game-button-gamepad:before {
+  content: "\e091";
+}
+.game-button-rightarrow:before,
+.game-button-right.game-button-gamepad:before {
+  content: "\e092";
+}
+.game-button.keypress {
+  background-color: #d4d4d4;
+}
+
 .keyboard-icon {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAD00lEQVR42u2ZWWxNURSGV4vWEDELQRsPRUVjSIwxtEFaIYRE0EgkYqoXhBheWvViCCkvpCF9IUoiqLFCUsODIClCDPFAzRGiIkprqP/PPjtdPXrbe697e+5pupIv93b1nL33f87ea629b5z43OK8HkBLEzAadAePwCs/CigGC0AOKPSjgAsgC8wFJX4TEA/egV5gKHjiNwGZoBS8BQPAHz8JSAGXQTLIA9uCvdErAZ3BIDAMpIP5oCO4DyaA77EoYDpYAiaCJFffnC5ctMvBp1AabQ4BfNpHwUzVXw145nAHnAUPwmm8OQScAPPAV1AATolJVD8j0Xi0BUwC18E3MA48jHQH0RbAbLoC7AEbotFBtAWUgxFgCrgRTQEMYcvAeNA1gu1PBe3ANQkhNDZhleAmOASqKKA3KAOpSlBtgO/679ogrg/me7j3PwYZdBwGi8FTsEvMgotl6wQ2gsHgCAVUgUSQJia8+cFY7DFvVNup8AN08HpUIRrXVGKLEMA6pFoJGAXOqwu5wLPBeqkfy3PBQVAEZig/sy6jxHPQ3vHxAQ0UE+VOqmsvgqViaiBdge4WkztYgmQoP8uRcrcA9xsY6wzArvhSZ4Asc7dKXTRYC/aJKQ3mqOvTpS5sJjp+2z7zwVXVxmkxu681YK9zP/+X70CBWcrPB3CrxQlwTyErwNolJSBP+de5BFjLcAkQ1T4FlKlrS5SAAuXXAjKVP6g3QF+CuokCWTm2AW2V/xf4LSbTxit/jdNmotS36gi23agAlhUp0rB9ELPx7g96KH+FmBSf6hqgrfHTXINgFmXJkqz83Mi8Bn3FVAcNGfcPVW4BTU0hbTvBFnAArFT+ReC4mMijB9XN+fzsEsuIxPOfYuVn5crzoO1gU4D+w1rEugbZ4RJg/QtdAqzfFoaVqp0XSsAx1YcWsLmBvsOOQjEvwD2FOI/3B3iFTCxMXoxAs5WfSajMmRJ9lH+W83lO+d6LmXKMVrnKf0ZMJGJSyw7Q/2ox66fRN+AXCyigp5iUbe0NuAKGi9ldWbvtPA0+yaQwB/FS6vYiY5T/npgzommgn/KzxPnoFhDpRBaKRSWR/W8pEcruKiZLCc/fQLLzdK3xmLvQaShL+TlwnvmwHNaZNhRjpmY5PtkRYq3UeXAM1UOUn2+poikBfrF6AjiFWAMFdSYfA8YCjzVRAgXY7MlzoSKvRxakcdryXKiCAlaJKQ34JrhdC+rXQQ+Nv95w28ux59iwxujC+sPuYWP9YItrlnVZvm6kCxgp/25EYs24Xu+CLyLN8/tAVK1VgNfWKsBr+wslEWQOHSbCvwAAAABJRU5ErkJggg==)
 }
@@ -233,12 +233,42 @@
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAFZklEQVR42u2ZeYxdUxzHf4NBtY1UpkotnVrGVrGX2hJBKySWaKKWqVCqsRNFRDe79I8W84dd7HtrIpZaExRRjC2RjGqnWluVNoqWGcb34/e7mef13fveZOb15SXzS7559557zj2/77m/7ZxXY1UuNZVWoI9ApRXoI1BpBaqBwCHCbcLFwrvVSGCGMFWYItxQjQRmCZcIlwuzq5HAPGG0cJLwXLUR2F5oFTYQthF+qjYCLwrHCI8JZ5RjglIIbC0MNV/FH4WlQmcJ4443N5mfhT2FH0rUZzthSMzBmG+z5ksjMMzc8U6OFyb9OuOFDwgzhdUZyjxrbvelOO9AYbJwlrmp5c63XHheuF34vBQClwo3Cv3i/hehLV4GmS2j/SthTDwrJEuif4OwMEP5enNH3znu8ZOlcY0P1cX1P8IdwpVCexqBWUGAzk/G/YK8PqPiRfvG1/giRbGjhA2F14S/MwiMiFVvMU928ws8nyRMFGqFF4QThY58AmcL9wprzR1uTsakA4S3hH3ivtP+/9m7c22h/OHCbxlzHiw0xxe5Vbg6l8DmwtfCFkKj8KgVl0HC/hnPc5UtJh8KK0vod6jwprmF7CosTia50NxJXheOLuFFlZQHzRf5JuHahMDL5tlynPDUelZoR2F6XFM3LSzSjm+9Yv7VRiYE8HocqV74Jm+C6+N3SpkIYP97mZvcp8LeRdrxAUIr0bGuJjrgPITNzcydOJGNrMuxcNyOXlae5Lgq3o2sEfpntCdj/jKPbANQfmB0XpMzIJHaPALt1vtyi3lsR0iOVxVpR1aYB5zBECDrtpknnvrogNkcEGyPjDYcHO8nL6SZUzLO8vqltSeShOOWEtspEEl8DRAgIeEQH5uHRZT+HnYpSsJ+qyCTK7yLWqkup9+QuC7UXkp4TZP3hAOFUUxK9CGV49ljosMOwk7mPtAcbSeY+wAlxOKUFw+3rpIgt19aO9LdKISQjY8VjoPAaeaJ6/G4zpX14QO50eazuM5qRx42rxYaeXiR+aa7ybwWyRXMKSmDC5lNT4VaiQCSRJgk2qS1JzI7dL0MAtOFafE7o8AkmBP2mmY2PRXqmslxnRtt0tqRqaHrdRBg5S8w/xJNvaAQ76Qsachrb41VK+S83Y1ClD5UxE1Mhu2fIpwe1z0VzoHeTnlGxflOL8xxqrnfPgEBog8FHNHo1RIGn2/uQONt3Y0KmZxqcaRwj/meAhkrnGe+o6KWyd/cY9/XCC+VSJBoSf02DwIfmeeC/cxzQZagIHUTWZB6hM0PW8eOWN2Z8R6SIp9/VYwjgr0v7GEeFJrinnG7mZvwiFiQXax4sCApfiAsgADOSTYeHhNnCbuiO83DaW20cY1dbxz3i8xjdGveWJIXpxNHFJmDffjcIn3IEeSTRRD41fwTDorrNEmqQlaqMb4GzrR7PEPxR8y3oasz3oEJsdlnQ0KYXmZuuoPjC2JChxUhgAWQ0VfWWFdyoqhbmzGIlaMe+s78ayXj+oVif1jPBDNbEgt5kLmJpMmmySIlJlRvbrOfZAyaEytXlkPakJvN4z2bqnEZ/YaF3isgcLdwrnCX+e6/kLDi2DQ1OEcdy8tEYGgohl7kkbaUfkQsjn7m0hGbbolBOFBzgQGExHOEh4Qzy6R8IszRGHNOLPCcEP2GuQ+OTraU0wKENbIonxCbZuXHB7E/zcPtl2UmQFglnG8iPG1euPFVsHuOK68w9ztOByckBPhl08FZC4VU/hnO7+bHfs+UWflExoaC/W3dsyR+7zNPqO35J3MkoUnxS5xnYzM/BixbT8onsq0wwbw04YAZ6yCM329+qPaf9P3JV2npI1Bp6SNQafkXtH1Dpd3NkJUAAAAASUVORK5CYII=)
 }
 
-.game-controller .keyboard-icon, .game-controller .gamepad-icon {
-  width: 32px;
-  height: 32px;
+.game-controller .keyboard-icon, .game-controller .gamepad-icon, .controller-selection-item .keyboard-icon, .controller-selection-item .gamepad-icon, .filter-option .icon {
+  width: 26px;
+  height: 26px;
   position: absolute;
   left: 72px;
   top: -7px;
-  background-size: 32px 32px;
+  background-size: 26px 26px;
   background-repeat: no-repeat;
 }
+
+.controller-selection {
+  width: 80px;
+  height: 30px;
+  position: absolute;
+  left: 0px;
+}
+
+.controller-selection .btn {
+  padding: 4px 12px
+}
+
+.controller-selection-item {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  box-shadow: none;
+  border-color: none;
+}
+.controller-selection-item .icon, .filter-option .icon {
+  left: 10px !important;
+  padding: 4px 0px 0px 35px;
+  top: 0px
+}
+
+.bootstrap-select .btn:focus {
+    outline: none !important;
+}
+
+

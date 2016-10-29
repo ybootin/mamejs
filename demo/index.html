@@ -5,6 +5,9 @@
     <script src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="../dist/mamejs.js"></script>
+    <!-- Bootstrap-select for gamepad / keyboard selection -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
     <link rel="stylesheet" type="text/css" href="demo.css">
   </head>
   <body>
@@ -18,14 +21,33 @@
         <div class="row">
           <div id="mame-container" class="col-xs-6 col-md-6"></div>
           <div class="control-container col-xs-6 col-md-6">
-            <div id="player1controller" class="game-controller"></div>
-            <div id="player2controller" class="game-controller"></div>
+            <div id="player1controller" class="game-controller">
+              <select class="selectpicker controller-selection" data-height="30px" data-width="80px">
+                <option value="keyboard" selected class="controller-selection-item keyboard" data-content="<div class='icon keyboard-icon'></div>"></option>
+                <option value="gamepad1" class="controller-selection-item gamepad gamepad1" data-content="<div class='icon gamepad-icon'> 1</div>"></option>
+                <option value="gamepad2" class="controller-selection-item gamepad gamepad2" data-content="<div class='icon gamepad-icon'> 2</div>"> 2</option>
+              </select>
+            </div>
+            <div id="player2controller" class="game-controller">
+              <select class="selectpicker controller-selection" data-height="30px" data-width="80px">
+                <option value="keyboard" selected class="controller-selection-item keyboard" data-content="<div class='icon keyboard-icon'></div>"></option>
+                <option value="gamepad1" class="controller-selection-item gamepad gamepad1" data-content="<div class='icon gamepad-icon'> 1</div>"></option>
+                <option value="gamepad2" class="controller-selection-item gamepad gamepad2" data-content="<div class='icon gamepad-icon'> 2</div>"> 2</option>
+              </select>
+            </div>
           </div>
         </div>
         <hr />
         <div id="gamelist-container"></div>
       </div>
     </div>
+    <script type="text/x-tmpl" id="control-selector-template">
+      <select class="mame-button selectpicker controller-selection" data-height="30px" data-width="80px">
+        <option value="keyboard" selected class="controller-selection-item keyboard" data-content="<div class='icon keyboard-icon'></div>"></option>
+        <option value="gamepad1" class="controller-selection-item gamepad gamepad1" data-content="<div class='icon gamepad-icon'> 1</div>"></option>
+        <option value="gamepad2" class="controller-selection-item gamepad gamepad2" data-content="<div class='icon gamepad-icon'> 2</div>"> 2</option>
+      </select>
+    </script>
     <script type="text/x-tmpl" id="game-template">
       <button type="button" class="play-button btn btn-lg">
         <div class="glyphicon glyphicon-play-circle" aria-label="play"></div>
@@ -55,7 +77,8 @@
           controller2Container = document.getElementById('player2controller'),
           gameTemplate = document.getElementById('game-template').innerHTML,
           loadingTemplate = document.getElementById('loading-template').innerHTML,
-          errorTemplate = document.getElementById('error-template').innerHTML
+          errorTemplate = document.getElementById('error-template').innerHTML,
+          controlSelectorTemplate = document.getElementById('control-selector-template').innerHTML
 
       // mamejs.run config file
       var config = {
@@ -153,16 +176,34 @@
       function handleJoystickEvent(type, joystick) {
         var cnt = getControllerId(joystick) === 1 ? controller1Container : controller2Container
 
-        // Update icon class with the good icon
-        var currentIco = cnt.getElementsByClassName('keyboard-icon').length ? 'keyboard-icon' : 'gamepad-icon'
-        var newIco = type === 'connected' ? 'gamepad-icon' : 'keyboard-icon'
-        cnt.getElementsByClassName(currentIco)[0].className = newIco
-
         // also visual remap buttons visual, to display button number instead of key, and vice verca
         var buttons = cnt.getElementsByClassName('game-button')
 
         for (var i = 0, l = buttons.length; i < l; i++) {
           formatControlButton(buttons[i], null, null, type === 'connected')
+        }
+      }
+
+      function onSelectpickerChange(selectpicker, container) {
+        var playerId = container === player1controller ? 1 : 2
+
+        var val = $(selectpicker).val()
+
+        if (val === 'gamepad1' || val === 'gamepad2') {
+          var joystick = mame.controls.joysticks[val === 'gamepad1' ? 0 : 1]
+          var joystick2 = mame.controls.joysticks[val === 'gamepad1' ? 1 : 0]
+          if (joystick) {
+            joystick.setControl(mame.controls['player' + playerId])
+          }
+
+          if (joystick2) {
+            joystick2.setControl(mame.controls['player' + (playerId === 1 ? 2 : 1)])
+          }
+        }
+
+        var buttons = container.getElementsByClassName('game-button')
+        for (var i = 0, l = buttons.length; i < l; i++) {
+          formatControlButton(buttons[i], null, null, val.indexOf('gamepad') === 0)
         }
       }
 
@@ -206,11 +247,20 @@
         // By default mamejs will handle gamepads in the same order than the getGamespads
         var gamepad = navigator.getGamepads()[gamepadIndex]
 
-        // display the current icon controller
-        let icon = document.createElement('div')
-        icon.className = gamepad ? 'gamepad-icon' : 'keyboard-icon'
+        // controller selector
+        var controllerSelector = document.createElement('div')
+        controllerSelector.className = "controller-selector"
+        controllerSelector.innerHTML = controlSelectorTemplate
 
-        container.appendChild(icon)
+        let selectpicker = container.getElementsByClassName('selectpicker')[0]
+        $(selectpicker).change(function(evt) {
+          onSelectpickerChange(selectpicker, container)
+        })
+        if (gamepad) {
+          $(selectpicker).selectpicker('val', 'gamepad' + (gamepad.index + 1));
+        }
+
+        container.appendChild(controllerSelector)
 
         for (var controlName in controller) {
           let button = document.createElement('button')
@@ -252,8 +302,6 @@
         if (useGamepad) {
           classes.push('game-button-gamepad')
         }
-
-        console.log(classes)
 
         button.className = classes.join(' ')
 
