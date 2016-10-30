@@ -1,18 +1,23 @@
 /// <reference path="../model/IControls.ts" />
 
 namespace mamejs.control {
-  export class Joystick {
+  export class Joystick extends emloader.event.EventEmiter {
     static axes = [['left', 'right'], ['up', 'down']]
 
     // maps IControl keys as string like this control[button]
     static keyMap = ['button1', 'button2', 'button3', 'button4', 'button5', 'button6', null, null, 'coin', 'start']
+
+    static ONCONTROLCHANGE: string = 'controlchange'
+    static ONDISCONNECT: string = 'disconnect'
 
     private pressed = {}
     private loopId: number
 
     private customKeyMap: Array<string>
 
-    constructor(private gamepad: Gamepad, private control: IControl) {}
+    constructor(private gamepad: Gamepad, private control: IControl) {
+      super()
+    }
 
     public connect() {
       if (!this.isConnected()) {
@@ -53,6 +58,7 @@ namespace mamejs.control {
     public disconnect() {
       cancelAnimationFrame(this.loopId)
       this.loopId = null
+      this.emit(Joystick.ONDISCONNECT)
     }
 
     public isConnected(): boolean {
@@ -64,7 +70,10 @@ namespace mamejs.control {
     }
 
     public setControl(control: IControl): void {
-      this.control = control
+      if (control !== this.control) {
+        this.control = control
+        this.emit(Joystick.ONCONTROLCHANGE)
+      }
     }
 
     public getControl(): IControl {

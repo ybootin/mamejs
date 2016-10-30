@@ -167,6 +167,7 @@
         mame.loader.stderr.forEach(onStderr)
       }
 
+
       // return the player id, actually 1 or 2 attached to the Joystick object
       function getControllerId(joystick) {
         return joystick.controller === mame.controls.player1Controller ? 1 : 2
@@ -174,13 +175,19 @@
 
       // visual update for joystick plug / unplug
       function handleJoystickEvent(type, joystick) {
-        var cnt = getControllerId(joystick) === 1 ? controller1Container : controller2Container
+        var controllerId = getControllerId(joystick)
+        var cnt = controllerId === 1 ? controller1Container : controller2Container
 
         // also visual remap buttons visual, to display button number instead of key, and vice verca
         var buttons = cnt.getElementsByClassName('game-button')
 
         for (var i = 0, l = buttons.length; i < l; i++) {
           formatControlButton(buttons[i], null, null, type === 'connected')
+        }
+
+        // activate selectpicker (if change during load)
+        if (type === 'connect') {
+          cnt.getElementsByClassName('selectpicker')[0].selectpicker('gamepad' + controllerId)
         }
       }
 
@@ -190,9 +197,24 @@
         var val = $(selectpicker).val()
 
         if (val === 'gamepad1' || val === 'gamepad2') {
-          var joystick = mame.controls.joysticks[val === 'gamepad1' ? 0 : 1]
+          let joystickId = val === 'gamepad1' ? 0 : 1
+          var joystick = mame.controls.joysticks[joystickId]
           if (joystick) {
             joystick.setControl(mame.controls['player' + playerId])
+
+            // change other controller
+            let otherId = playerId === 1 ? 2 : 1
+            let otherCnt = otherId === 1 ? controller1Container : controller2Container
+            let otherSp = otherCnt.getElementsByClassName('selectpicker')[0]
+            let otherJoystickId = joystickId === 0 ? 1 : 0
+            let otherJoystick = mame.controls.joysticks[otherJoystickId]
+
+            if ($(otherSp).val() === val) {
+              $(otherSp).selectpicker('val', otherJoystick ? 'gamepad' + (otherJoystickId + 1) : 'keyboard')
+              if (otherJoystick) {
+                otherJoystick.setControl(mame.controls['player' + otherId])
+              }
+            }
           }
         }
 
