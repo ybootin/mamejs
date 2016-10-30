@@ -191,13 +191,8 @@
 
         if (val === 'gamepad1' || val === 'gamepad2') {
           var joystick = mame.controls.joysticks[val === 'gamepad1' ? 0 : 1]
-          var joystick2 = mame.controls.joysticks[val === 'gamepad1' ? 1 : 0]
           if (joystick) {
             joystick.setControl(mame.controls['player' + playerId])
-          }
-
-          if (joystick2) {
-            joystick2.setControl(mame.controls['player' + (playerId === 1 ? 2 : 1)])
           }
         }
 
@@ -331,9 +326,9 @@
       }
 
       var gameButtons = [
-        {key: 'PAUSE', name: 'game', glyphicon: 'pause'},
-        {key: 'SHOW_FPS', name: 'Show FPS', glyphicon: 'film'},
-        {key: 'IN_GAME_MENU', name: 'Menu', glyphicon: 'list-alt'},
+        {key: 'UI_PAUSE', name: 'game', glyphicon: 'pause'},
+        {key: 'UI_SHOW_FPS', name: 'Show FPS', glyphicon: 'film'},
+        {key: 'UI_CONFIGURE', name: 'Menu', glyphicon: 'list-alt'},
       ]
 
       function buildGameButtons(container) {

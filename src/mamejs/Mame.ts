@@ -85,6 +85,8 @@ namespace mamejs {
         [resolution.width, resolution.height].join('x'),
         '-samplerate',
         '48000',
+        '-ctrlr',
+        'mamejs'
       ])
     }
 

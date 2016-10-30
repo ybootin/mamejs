@@ -1,5 +1,7 @@
 /// <reference path="../../emloader/Keyboard.ts" />
+/// <reference path="../helper/StringHelper.ts" />
 /// <reference path="MameKey.ts" />
+/// <reference path="CfgHelper.ts" />
 
 namespace mamejs.control {
   export class KeyHandler extends emloader.event.EventEmiter {
@@ -43,6 +45,15 @@ namespace mamejs.control {
     constructor(private loader: emloader.IEmloader) {
       super()
 
+      // generate .cfg controller keymaping file, and mount it into FS
+      // as this we have full controls on key
+      this.loader.addFS('/ctrlr')
+      this.loader.addFile({
+        url: '',
+        name: 'mamejs.cfg',
+        data: helper.StringHelper.toUint8Array(generateCtlrCfg(MameKeyMameKeyCode)),
+      }, '/ctrlr')
+
       // need to desactivate all keys handler in emloader, to listen only to mame keys
       // this is the key for rebinds key from main frame to emloader frame
       this.loader.keyboard.unbindKeys()
@@ -55,7 +66,7 @@ namespace mamejs.control {
         this.loader.keyboard.pressKey(mameKey)
       })
 
-      this.emit(emloader.Keyboard.KEYPRESS, key)
+      this.emit(KeyHandler.KEYPRESS, key)
     }
 
     public releaseMameKey(key: string): void {
@@ -64,7 +75,7 @@ namespace mamejs.control {
         this.loader.keyboard.releaseKey(mameKey)
       })
 
-      this.emit(emloader.Keyboard.KEYRELEASE, key)
+      this.emit(KeyHandler.KEYRELEASE, key)
     }
 
     public pressAndReleaseMameKey(key: string): void {
