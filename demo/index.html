@@ -41,13 +41,6 @@
         <div id="gamelist-container"></div>
       </div>
     </div>
-    <script type="text/x-tmpl" id="control-selector-template">
-      <select class="mame-button selectpicker controller-selection" data-height="30px" data-width="80px">
-        <option value="keyboard" selected class="controller-selection-item keyboard" data-content="<div class='icon keyboard-icon'></div>"></option>
-        <option value="gamepad1" class="controller-selection-item gamepad gamepad1" data-content="<div class='icon gamepad-icon'> 1</div>"></option>
-        <option value="gamepad2" class="controller-selection-item gamepad gamepad2" data-content="<div class='icon gamepad-icon'> 2</div>"> 2</option>
-      </select>
-    </script>
     <script type="text/x-tmpl" id="game-template">
       <button type="button" class="play-button btn btn-lg">
         <div class="glyphicon glyphicon-play-circle" aria-label="play"></div>
@@ -69,6 +62,29 @@
       <div class="game-container"></div>
     </script>
     <script>
+      // load game list and bootstrap
+      $('document').ready(function() {
+        $.get('gamelist.json', main)
+      })
+
+      // Demo bootstrap
+      function main(gamelist) {
+        mainContainer.style.display = 'block'
+
+        // The gamelist, and the main game
+        buildGamelist(gamelist)
+
+        // the visual controlers
+        buildControllers()
+
+        // The mame buttons on the top of the game
+        buildMameButtons(buttonsContainer)
+
+        // Disable buttons during initialisation, they will be reinit on mame launched
+        enableMameButtons(false)
+      }
+
+      // Global vars
       var mameContainer = document.getElementById('mame-container'),
           mainContainer = document.getElementById('main-container'),
           buttonsContainer = document.getElementById('buttons-container'),
@@ -78,7 +94,14 @@
           gameTemplate = document.getElementById('game-template').innerHTML,
           loadingTemplate = document.getElementById('loading-template').innerHTML,
           errorTemplate = document.getElementById('error-template').innerHTML,
-          controlSelectorTemplate = document.getElementById('control-selector-template').innerHTML
+          controlSelectorTemplate = ''//document.getElementById('control-selector-template').innerHTML
+
+      // Custom mame button, for available keys @see src/mamejs/control/MameKey.ts
+      var mameButtons = [
+        {key: 'UI_PAUSE', name: 'game', glyphicon: 'pause'},
+        {key: 'UI_SHOW_FPS', name: 'Show FPS', glyphicon: 'film'},
+        {key: 'UI_CONFIGURE', name: 'Menu', glyphicon: 'list-alt'},
+      ]
 
       // mamejs.run config file
       var config = {
@@ -103,6 +126,7 @@
         // special trick to use custom emulator
         cfg.emulator = game.emulator || cfg.emulator
 
+        // loading screen
         mameContainer.innerHTML = loadingTemplate.replace('%game%', game.name)
         mameContainer.getElementsByClassName('loading-container')[0].style.backgroundImage = 'url(' + game.screenshot + ')'
 
@@ -114,11 +138,29 @@
 
         // run mame is as simple as this !
         mamejs.run(cfg, gameCnt).then(function(mame) {
-          // this is just a demo, kiss
-          // will be used by controls
-          window.mame = mame
+        // this is just a demo, kiss
+        // will be used by controls
+        window.mame = mame
 
-          onMame(mame)
+        // Initialize the visual controllers at the left of the game
+        initVisualControllers(mame)
+
+        // handle mamejs and Mame
+        var haveError = false
+        var onStderr = function(text) {
+          if (!haveError) {
+            haveError = true
+            mameContainer.innerHTML = errorTemplate
+
+            enableMameButtons(false)
+          }
+
+          var content = document.createElement('div')
+          content.innerHTML = text
+          mameContainer.getElementsByClassName('error-content')[0].appendChild(content)
+        }
+        mame.loader.on(emloader.ON_STDERR, onStderr)
+        mame.loader.stderr.forEach(onStderr)
 
           console.log('running game ' + game.name, mame)
         }).catch(function(error) {
@@ -127,7 +169,85 @@
         })
       }
 
-      function onMame(mame) {
+      // simple gamelist
+      function buildGamelist(gamelist) {
+        gamelist.forEach(function(game, index) {
+          // always append first game in the main container
+          buildGameItem(game, index === 0 ? mameContainer : gamelistContainer)
+        })
+
+        // put first game at the end of the list
+        buildGameItem(gamelist[0], gamelistContainer)
+      }
+
+      // Create game thumb, and launch mame on click
+      function buildGameItem(game, container) {
+        var element = document.createElement('div')
+        element.className = 'game-item'
+        element.innerHTML = gameTemplate
+        element.style.backgroundImage = 'url(' + game.screenshot + ')'
+        element.getElementsByClassName('game-title')[0].innerHTML = game.name
+
+        element.addEventListener('click', function () {
+          runGame(game)
+        });
+
+        container.appendChild(element)
+      }
+
+
+      /**
+       * DEMO UI Buttons and controllers handling
+       */
+
+      // a helper to handle button like they should work in mame
+      function initMameButton(button, key) {
+        button.className = button.className + ' mame-button'
+        button.addEventListener('mousedown', function(evt) {
+          mame.controls.pressKey(key)
+        })
+        button.addEventListener('mouseup', function(evt) {
+          mame.controls.releaseKey(key)
+        })
+        button.addEventListener('touch', function(evt) {
+          mame.controls.keyboard.pressAndReleaseMameKey(key)
+        })
+      }
+
+      function enableMameButtons(enable) {
+        let buttons = document.getElementsByClassName('mame-button')
+        for (var i = 0, l = buttons.length; i < l; i++) {
+          buttons[i].disabled = enable ? "" : "disabled"
+        }
+      }
+
+      function buildMameButtons(container) {
+        mameButtons.forEach(function(item) {
+          let button = document.createElement('button')
+          button.className = "btn-xs btn btn-default"
+
+          if (item.glyphicon) {
+            let icon = document.createElement('span')
+            icon.className = 'glyphicon glyphicon-' + item.glyphicon
+            button.appendChild(icon)
+          }
+
+          if (item.name) {
+            let name = document.createElement('span')
+            name.innerHTML = ' ' + item.name
+            button.appendChild(name)
+          }
+
+          initMameButton(button, item.key);
+
+          container.appendChild(button)
+        })
+      }
+
+      /**
+       * VISUAL CONTROLLERS
+       */
+      function initVisualControllers(mame) {
         mame.controls.on('keypress', function(key) {
           handleKeyboardEvent('keypress', key)
         })
@@ -148,109 +268,6 @@
         })
 
         enableMameButtons(true)
-
-        // handle errors
-        var haveError = false
-        var onStderr = function(text) {
-          if (!haveError) {
-            haveError = true
-            mameContainer.innerHTML = errorTemplate
-
-            enableMameButtons(false)
-          }
-
-          var content = document.createElement('div')
-          content.innerHTML = text
-          mameContainer.getElementsByClassName('error-content')[0].appendChild(content)
-        }
-        mame.loader.on(emloader.ON_STDERR, onStderr)
-        mame.loader.stderr.forEach(onStderr)
-      }
-
-
-      // return the player id, actually 1 or 2 attached to the Joystick object
-      function getControllerId(joystick) {
-        return joystick.controller === mame.controls.player1Controller ? 1 : 2
-      }
-
-      // visual update for joystick plug / unplug
-      function handleJoystickEvent(type, joystick) {
-        var controllerId = getControllerId(joystick)
-        var cnt = controllerId === 1 ? controller1Container : controller2Container
-
-        // also visual remap buttons visual, to display button number instead of key, and vice verca
-        var buttons = cnt.getElementsByClassName('game-button')
-
-        for (var i = 0, l = buttons.length; i < l; i++) {
-          formatControlButton(buttons[i], null, null, type === 'connected')
-        }
-
-        // activate selectpicker (if change during load)
-        if (type === 'connect') {
-          cnt.getElementsByClassName('selectpicker')[0].selectpicker('gamepad' + controllerId)
-        }
-      }
-
-      function onSelectpickerChange(selectpicker, container) {
-        var playerId = container === player1controller ? 1 : 2
-
-        var val = $(selectpicker).val()
-
-        if (val === 'gamepad1' || val === 'gamepad2') {
-          let joystickId = val === 'gamepad1' ? 0 : 1
-          var joystick = mame.controls.joysticks[joystickId]
-          if (joystick) {
-            joystick.setControl(mame.controls['player' + playerId])
-
-            // change other controller
-            let otherId = playerId === 1 ? 2 : 1
-            let otherCnt = otherId === 1 ? controller1Container : controller2Container
-            let otherSp = otherCnt.getElementsByClassName('selectpicker')[0]
-            let otherJoystickId = joystickId === 0 ? 1 : 0
-            let otherJoystick = mame.controls.joysticks[otherJoystickId]
-
-            if ($(otherSp).val() === val) {
-              $(otherSp).selectpicker('val', otherJoystick ? 'gamepad' + (otherJoystickId + 1) : 'keyboard')
-              if (otherJoystick) {
-                otherJoystick.setControl(mame.controls['player' + otherId])
-              }
-            }
-          }
-        }
-
-        var buttons = container.getElementsByClassName('game-button')
-        for (var i = 0, l = buttons.length; i < l; i++) {
-          formatControlButton(buttons[i], null, null, val.indexOf('gamepad') === 0)
-        }
-      }
-
-      // evt : {type : keypress|keyrelease, data: keyName}
-      function handleKeyboardEvent(type, mameKey) {
-        var key = mamejs.control.KeyHandler.getKeyName(mameKey)
-        // highlight pressed button
-        var button = document.getElementsByClassName('game-button-' + key)[0]
-        type === 'keypress' ? $(button).addClass('keypress') : $(button).removeClass('keypress')
-      }
-
-      // a helper to handle button like they should work in mame
-      function handleButton(button, key) {
-        button.className = button.className + ' mame-button'
-        button.addEventListener('mousedown', function(evt) {
-          mame.controls.pressKey(key)
-        })
-        button.addEventListener('mouseup', function(evt) {
-          mame.controls.releaseKey(key)
-        })
-        button.addEventListener('touch', function(evt) {
-          mame.controls.keyboard.pressAndReleaseMameKey(key)
-        })
-      }
-
-      function enableMameButtons(enable) {
-        let buttons = document.getElementsByClassName('mame-button')
-        for (var i = 0, l = buttons.length; i < l; i++) {
-          buttons[i].disabled = enable ? "" : "disabled"
-        }
       }
 
       function buildControllers() {
@@ -264,11 +281,6 @@
         // By default mamejs will handle gamepads in the same order than the getGamespads
         var gamepad = navigator.getGamepads()[gamepadIndex]
 
-        // controller selector
-        var controllerSelector = document.createElement('div')
-        controllerSelector.className = "controller-selector"
-        controllerSelector.innerHTML = controlSelectorTemplate
-
         let selectpicker = container.getElementsByClassName('selectpicker')[0]
         $(selectpicker).change(function(evt) {
           onSelectpickerChange(selectpicker, container)
@@ -276,8 +288,6 @@
         if (gamepad) {
           $(selectpicker).selectpicker('val', 'gamepad' + (gamepad.index + 1));
         }
-
-        container.appendChild(controllerSelector)
 
         for (var controlName in controller) {
           let button = document.createElement('button')
@@ -289,7 +299,7 @@
           let keyName = mamejs.control.KeyHandler.getKeyName(mameKey)
 
           formatControlButton(button, controlName, keyName, !!gamepad)
-          handleButton(button, mameKey)
+          initMameButton(button, mameKey)
 
           container.appendChild(button)
         }
@@ -333,71 +343,67 @@
         }
       }
 
-      function buildGameItem(game, container) {
-        var element = document.createElement('div')
-        element.className = 'game-item'
-        element.innerHTML = gameTemplate
-        element.style.backgroundImage = 'url(' + game.screenshot + ')'
-        element.getElementsByClassName('game-title')[0].innerHTML = game.name
+      function onSelectpickerChange(selectpicker, container) {
+        var playerId = container === player1controller ? 1 : 2
 
-        element.addEventListener('click', function () {
-          runGame(game)
-        });
+        var val = $(selectpicker).val()
 
-        container.appendChild(element)
-      }
+        if (val === 'gamepad1' || val === 'gamepad2') {
+          let joystickId = val === 'gamepad1' ? 0 : 1
+          var joystick = mame.controls.joysticks[joystickId]
+          if (joystick) {
+            joystick.setControl(mame.controls['player' + playerId])
 
-      var gameButtons = [
-        {key: 'UI_PAUSE', name: 'game', glyphicon: 'pause'},
-        {key: 'UI_SHOW_FPS', name: 'Show FPS', glyphicon: 'film'},
-        {key: 'UI_CONFIGURE', name: 'Menu', glyphicon: 'list-alt'},
-      ]
+            // change other controller
+            let otherId = playerId === 1 ? 2 : 1
+            let otherCnt = otherId === 1 ? controller1Container : controller2Container
+            let otherSp = otherCnt.getElementsByClassName('selectpicker')[0]
+            let otherJoystickId = joystickId === 0 ? 1 : 0
+            let otherJoystick = mame.controls.joysticks[otherJoystickId]
 
-      function buildGameButtons(container) {
-        gameButtons.forEach(function(item) {
-          let button = document.createElement('button')
-          button.className = "btn-xs btn btn-default"
-
-          if (item.glyphicon) {
-            let icon = document.createElement('span')
-            icon.className = 'glyphicon glyphicon-' + item.glyphicon
-            button.appendChild(icon)
+            if ($(otherSp).val() === val) {
+              $(otherSp).selectpicker('val', otherJoystick ? 'gamepad' + (otherJoystickId + 1) : 'keyboard')
+              if (otherJoystick) {
+                otherJoystick.setControl(mame.controls['player' + otherId])
+              }
+            }
           }
+        }
 
-          if (item.name) {
-            let name = document.createElement('span')
-            name.innerHTML = ' ' + item.name
-            button.appendChild(name)
-          }
-
-          handleButton(button, item.key);
-
-          container.appendChild(button)
-        })
+        var buttons = container.getElementsByClassName('game-button')
+        for (var i = 0, l = buttons.length; i < l; i++) {
+          formatControlButton(buttons[i], null, null, val.indexOf('gamepad') === 0)
+        }
       }
 
-      function buildGamelist(gamelist) {
-        gamelist.forEach(function(game, index) {
-          // always append first game in the main container
-          buildGameItem(game, index === 0 ? mameContainer : gamelistContainer)
-        })
-
-        // put first game at the end of the list
-        buildGameItem(gamelist[0], gamelistContainer)
+      // return the player id, actually 1 or 2 attached to the Joystick object
+      function getControllerId(joystick) {
+        return joystick.controller === mame.controls.player1Controller ? 1 : 2
       }
 
-      function main(gamelist) {
-        mainContainer.style.display = 'block'
-        buildGamelist(gamelist)
-        buildControllers()
-        buildGameButtons(buttonsContainer)
+      // visual update for joystick plug / unplug
+      function handleJoystickEvent(type, joystick) {
+        var controllerId = getControllerId(joystick)
+        var cnt = controllerId === 1 ? controller1Container : controller2Container
 
-        // Disable buttons during initialisation, they will be reinit on mame launched
-        enableMameButtons(false)
+        // also visual remap buttons visual, to display button number instead of key, and vice verca
+        var buttons = cnt.getElementsByClassName('game-button')
+
+        for (var i = 0, l = buttons.length; i < l; i++) {
+          formatControlButton(buttons[i], null, null, type === 'connected')
+        }
+
+        // activate selectpicker gamepad1/2 or keyboard if disconnected (if change during load)
+        $(cnt.getElementsByClassName('selectpicker')[0]).selectpicker(type === 'connect' ? 'gamepad' + controllerId : 'keyboard')
       }
 
-      // load & init
-      $.get('gamelist.json', main)
+      // evt : {type : keypress|keyrelease, data: keyName}
+      function handleKeyboardEvent(type, mameKey) {
+        var key = mamejs.control.KeyHandler.getKeyName(mameKey)
+        // highlight pressed button
+        var button = document.getElementsByClassName('game-button-' + key)[0]
+        type === 'keypress' ? $(button).addClass('keypress') : $(button).removeClass('keypress')
+      }
     </script>
   </body>
 </html>

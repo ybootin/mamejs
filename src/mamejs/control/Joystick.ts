@@ -13,6 +13,8 @@ namespace mamejs.control {
     private pressed = {}
     private loopId: number
 
+    private sensibility: number = 0.5
+
     private customKeyMap: Array<string>
 
     constructor(private gamepad: Gamepad, private control: IControl) {
@@ -27,8 +29,8 @@ namespace mamejs.control {
           // handles axis press / release
           Joystick.axes.forEach((axe: Array<string>, index: number): void => {
             try {
-              if (gamepad.axes[index] === -1 || gamepad.axes[index] === 1) {
-                this.keyPress(gamepad.axes[index] === -1 ? axe[0] : axe[1])
+              if (gamepad.axes[index] <= -this.sensibility || gamepad.axes[index] >= this.sensibility) {
+                this.keyPress(gamepad.axes[index] <= -this.sensibility ? axe[0] : axe[1])
               } else if (this.pressed[axe[0]] || this.pressed[axe[1]]) {
                 this.keyRelease(this.pressed[axe[0]] ? axe[0] : axe[1])
               }
