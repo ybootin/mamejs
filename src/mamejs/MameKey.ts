@@ -1,6 +1,6 @@
-/// <reference path="../../emloader/helper/KeyCode.ts" />
+/// <reference path="../emloader/helper/KeyCode.ts" />
 
-namespace mamejs.control {
+namespace mamejs {
   /**
    * Mame keymapping
    *  @see http://easyemu.mameworld.info/mameguide/mameguide-controlini.htm for keys

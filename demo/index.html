@@ -143,7 +143,7 @@
         window.mame = mame
 
         // Initialize the visual controllers at the left of the game
-        initVisualControllers(mame)
+        //initVisualControllers(mame)
 
         // handle mamejs and Mame
         var haveError = false
@@ -248,23 +248,11 @@
        * VISUAL CONTROLLERS
        */
       function initVisualControllers(mame) {
-        mame.controls.on('keypress', function(key) {
+        mame.on('keypress', function(key) {
           handleKeyboardEvent('keypress', key)
         })
-        mame.controls.on('keyrelease', function(key) {
+        mame.on('keyrelease', function(key) {
           handleKeyboardEvent('keyrelease', key)
-        })
-
-        // Handle joystick event for display / hide icons
-        mame.controls.on(mamejs.control.Controls.JOYSTICKCONNECTED, function(joystick) {
-          handleJoystickEvent('connected', joystick)
-        })
-        mame.controls.on(mamejs.control.Controls.JOYSTICKDISCONNECTED, function(joystick) {
-          handleJoystickEvent('disconnected', joystick)
-        })
-
-        mame.controls.joysticks.forEach(function(joystick) {
-          handleJoystickEvent('connected', joystick)
         })
 
         enableMameButtons(true)
@@ -272,14 +260,12 @@
 
       function buildControllers() {
         // build visual controllers
-        buildController(controller1Container, mamejs.control.player1Controller, 0)
-        buildController(controller2Container, mamejs.control.player2Controller, 1)
+        //buildController(controller1Container, mamejs.ControllerMappings.player1, 0)
+        //buildController(controller2Container, mamejs.ControllerMappings.player1, 1)
       }
 
-      function buildController(container, controller, gamepadIndex) {
-        // check if have gamepad to display gamepad icon instead of keyboard icon
-        // By default mamejs will handle gamepads in the same order than the getGamespads
-        var gamepad = navigator.getGamepads()[gamepadIndex]
+      function buildController(container, controllerMapping, gamepadIndex) {
+        var joystick = mamejs.JoystickHandler.getJoystick(controllerMapping)
 
         let selectpicker = container.getElementsByClassName('selectpicker')[0]
         $(selectpicker).change(function(evt) {
@@ -289,14 +275,14 @@
           $(selectpicker).selectpicker('val', 'gamepad' + (gamepad.index + 1));
         }
 
-        for (var controlName in controller) {
+        for (var controlName in controllerMapping) {
           let button = document.createElement('button')
           button.className = "btn btn-xs btn-default"
 
-          let mameKey = controller[controlName]
+          let mameKey = controllerMapping[controlName]
 
           // the keyboard keyname , ex : shift, ctrl, space, a ...
-          let keyName = mamejs.control.KeyHandler.getKeyName(mameKey)
+          let keyName = mamejs.KeyHandler.getKeyName(mameKey)
 
           formatControlButton(button, controlName, keyName, !!gamepad)
           initMameButton(button, mameKey)

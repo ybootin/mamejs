@@ -1,6 +1,8 @@
-/// <reference path="../model/IControls.ts" />
+/// <reference path="model/IControls.ts" />
+/// <reference path="MameKeyHandler.ts" />
+/// <reference path="model/IMameKeyHandler.ts" />
 
-namespace mamejs.control {
+namespace mamejs {
   export class Joystick extends emloader.event.EventEmiter {
     static axes = [['left', 'right'], ['up', 'down']]
 
@@ -9,6 +11,7 @@ namespace mamejs.control {
 
     static ONCONTROLCHANGE: string = 'controlchange'
     static ONDISCONNECT: string = 'disconnect'
+    static ONMAPPINGCHANGE: string = 'mappingchange'
 
     private pressed = {}
     private loopId: number
@@ -17,8 +20,14 @@ namespace mamejs.control {
 
     private customKeyMap: Array<string>
 
-    constructor(private gamepad: Gamepad, private control: IControl) {
+    private handler: IMameKeyHandler
+
+    constructor(public gamepad: Gamepad, public controlMapping?: IControlMapping) {
       super()
+    }
+
+    public setKeyHandler(handler: IMameKeyHandler) {
+      this.handler = handler
     }
 
     public connect() {
@@ -71,33 +80,29 @@ namespace mamejs.control {
       return navigator.getGamepads()[this.gamepad.index]
     }
 
-    public setControl(control: IControl): void {
-      if (control !== this.control) {
-        this.control = control
-        this.emit(Joystick.ONCONTROLCHANGE)
-      }
-    }
-
-    public getControl(): IControl {
-      return this.control
-    }
-
     public getKeyMap(): Array<string> {
       return this.customKeyMap || Joystick.keyMap
     }
 
     public setKeyMap(keyMap: Array<string>) {
-      this.customKeyMap = keyMap
+      if (keyMap !== this.customKeyMap) {
+        this.customKeyMap = keyMap
+        this.emit(Joystick.ONMAPPINGCHANGE)
+      }
     }
 
     private keyPress(key: string) {
-      this.pressed[key] = true
-      this.control[key].press()
+      if (this.handler) {
+        this.pressed[key] = true
+        this.handler.pressMameKey(this.controlMapping[key])
+      }
     }
 
     private keyRelease(key: string) {
-      this.pressed[key] = false
-      this.control[key].release()
+      if (this.handler) {
+        this.pressed[key] = false
+        this.handler.releaseMameKey(this.controlMapping[key])
+      }
     }
   }
 }
