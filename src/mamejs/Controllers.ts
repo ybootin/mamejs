@@ -10,19 +10,35 @@ namespace mamejs {
 
     static JOYSTICKCONNECTED: string = 'joystickconnected'
     static JOYSTICKDISCONNECTED: string = 'joystickdisconnected'
-    static JOYSTICKMAPPINGCHANGE: string = 'joystickmappingchange'
+    static JOYSTICKBUTTONMAPCHANGE: string = 'joystickbuttonmapchange'
+    static JOYSTICKCONTROLCHANGE: string = 'joystickcontrolchange'
 
     public keyboard = new Keyboard()
 
-    private joysticks: Array<Joystick> = new Array(4)
+    private _joysticks: Array<Joystick> = new Array(4)
 
-    private gamepadEventHandler: {(evt: GamepadEvent): void}
+    private gamepadChecker: number
 
     private keyHandler: IMameKeyHandler
 
+    constructor() {
+      super()
+      for (var i = 0; i < 4; i++) {
+        this._joysticks[i] = ((): Joystick => {
+          let joystick: Joystick = new Joystick()
+          joystick.on(Joystick.CONNECTED, () => this.emit(Controllers.JOYSTICKCONNECTED, joystick))
+          joystick.on(Joystick.DISCONNECTED, () => this.emit(Controllers.JOYSTICKDISCONNECTED, joystick))
+          joystick.on(Joystick.BUTTONMAPCHANGE, () => this.emit(Controllers.JOYSTICKBUTTONMAPCHANGE, joystick))
+          joystick.on(Joystick.CONTROLCHANGE, () => this.emit(Controllers.JOYSTICKCONTROLCHANGE, joystick))
+
+          return joystick
+        })()
+      }
+    }
+
     public setKeyHandler(keyHandler: IMameKeyHandler): void {
       this.keyHandler = keyHandler
-      this.joysticks.forEach((joystick: Joystick): void => {
+      this.getJoysticks().forEach((joystick: Joystick): void => {
         if (joystick) {
           joystick.setKeyHandler(keyHandler)
         }
@@ -31,16 +47,18 @@ namespace mamejs {
       this.keyboard.setKeyHandler(keyHandler)
     }
 
-    public getJoysticks() {
-      return this.joysticks
+    public getJoysticks(): Array<Joystick> {
+      return this._joysticks.filter((joystick: Joystick): boolean => {
+        return joystick.isConnected()
+      })
     }
 
     /**
      * return the joystick attached to the current mapping or null if not attached
      */
     public getJoystick(mapping: IControlMapping): Joystick {
-      return this.joysticks.filter((joystick: Joystick): boolean => {
-        return joystick && joystick.controlMapping === mapping
+      return this._joysticks.filter((joystick: Joystick): boolean => {
+        return joystick && joystick.getControlMapping() === mapping
       })[0]
     }
 
@@ -50,63 +68,40 @@ namespace mamejs {
       }).filter((mapping: IControlMapping): boolean => !this.getJoystick(mapping))
     }
 
-    public connectGamepad(gamepad: Gamepad): void {
-      console.log('connect gamepad', gamepad)
-      let joystick = new Joystick(gamepad, this.getAvailableMappings()[0])
-      this.joysticks[gamepad.index] = joystick
-
-      joystick.setKeyHandler(this.keyHandler)
-      joystick.connect()
-
-      this.emit(Controllers.JOYSTICKCONNECTED, this.joysticks[gamepad.index])
-
-      // redispatch MAPPINGCHANGE globally
-      joystick.on(Joystick.ONMAPPINGCHANGE, () => this.emit(Controllers.JOYSTICKMAPPINGCHANGE, joystick))
-    }
-
-    public disconnectGamepad(gamepad: Gamepad): void {
-      console.log('disconnect gamepad', gamepad)
-      try {
-        this.joysticks[gamepad.index].disconnect()
-        this.emit(Controllers.JOYSTICKDISCONNECTED, this.joysticks[gamepad.index])
-        this.joysticks[gamepad.index] = null
-      } catch (e) {
-         console.error('disconnect gamepad throw an exception', gamepad, e)
+    public checkGamepads(): void {
+      let gamepads = navigator.getGamepads()
+      for (let i = 0, l = gamepads.length; i < l; i++) {
+        if (gamepads[i] && !this._joysticks[i].isConnected()) {
+          this._joysticks[i].setControlMapping(this.getAvailableMappings()[0])
+          this._joysticks[i].setKeyHandler(this.keyHandler)
+          this._joysticks[i].connect(gamepads[i])
+        } else if (!gamepads[i] && this._joysticks[i].isConnected()) {
+          this._joysticks[i].disconnect()
+        }
       }
     }
 
     public bind(scope: Window = window): void {
       this.unbind(scope)
 
-      let gamepadEventHandler = (evt: GamepadEvent): void => {
-        switch(evt.type) {
-          case 'gamepadconnected':
-            return this.connectGamepad(evt.gamepad)
-          case 'gamepaddisconnected':
-            return this.disconnectGamepad(evt.gamepad)
-          default:
-            throw 'unknown event ' + evt.type
-        }
-      }
+      // gamepaddisconnected/gameconnected event works very bad on chrome ...
+      // this is bad, but this works well
+      this.gamepadChecker = setInterval(() => {
+        this.checkGamepads()
+      }, 1000)
 
-      scope.addEventListener("gamepaddisconnected", gamepadEventHandler)
-      scope.addEventListener("gamepadconnected", gamepadEventHandler)
-
-      let gamepads = scope.navigator.getGamepads()
-      for (var i = 0, l = gamepads.length; i < l; i++) {
-        if (gamepads[i]) {
-          this.connectGamepad(gamepads[i])
-        }
-      }
+      this.checkGamepads()
 
       this.keyboard.bind()
     }
 
     public unbind(scope: Window = window): void {
-      if (this.gamepadEventHandler) {
-        scope.removeEventListener("gamepadconnected", this.gamepadEventHandler)
-        scope.removeEventListener("gamepaddisconnected", this.gamepadEventHandler)
-        this.gamepadEventHandler = null
+      if (this.gamepadChecker) {
+        clearInterval(this.gamepadChecker)
+
+        this.getJoysticks().forEach((joystick: Joystick): void => {
+          joystick.disconnect()
+        })
       }
 
       this.keyboard.unbind()

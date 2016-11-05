@@ -7,31 +7,51 @@ namespace mamejs {
     static axes = [['left', 'right'], ['up', 'down']]
 
     // maps IControl keys as string like this control[button]
-    static keyMap = ['button1', 'button2', 'button3', 'button4', 'button5', 'button6', null, null, 'coin', 'start']
+    static buttonMap = ['button1', 'button2', 'button3', 'button4', 'button5', 'button6', null, null, 'coin', 'start']
 
-    static ONCONTROLCHANGE: string = 'controlchange'
-    static ONDISCONNECT: string = 'disconnect'
-    static ONMAPPINGCHANGE: string = 'mappingchange'
+    static BUTTONMAPCHANGE: string = 'buttonmapchange'
+    static DISCONNECTED: string = 'disconnected'
+    static CONNECTED: string = 'connected'
+    static CONTROLCHANGE: string = 'controlchange'
 
     private pressed = {}
     private loopId: number
 
     private sensibility: number = 0.5
 
-    private customKeyMap: Array<string>
+    private customButtonMap: Array<string>
 
     private handler: IMameKeyHandler
 
-    constructor(public gamepad: Gamepad, public controlMapping?: IControlMapping) {
-      super()
+    private gamepad: Gamepad
+
+    private controlMapping: IControlMapping
+
+    public setControlMapping(controlMapping: IControlMapping) {
+      if (this.controlMapping !== controlMapping) {
+        this.controlMapping = controlMapping
+        this.emit(Joystick.CONTROLCHANGE)
+      }
+    }
+
+    public getControlMapping(): IControlMapping {
+      return this.controlMapping
     }
 
     public setKeyHandler(handler: IMameKeyHandler) {
       this.handler = handler
     }
 
-    public connect() {
+    public getKeyHandler(): IMameKeyHandler {
+      return this.handler
+    }
+
+    public connect(gamepad: Gamepad) {
       if (!this.isConnected()) {
+        this.gamepad = gamepad
+
+        this.emit(Joystick.CONNECTED)
+
         let loop = () => {
           let gamepad = this.getGamepad()
 
@@ -47,7 +67,7 @@ namespace mamejs {
           })
 
           // handle key press/release
-          this.getKeyMap().forEach((bt: string, index: number): void => {
+          this.getButtonMap().forEach((bt: string, index: number): void => {
             if (bt) {
               try {
                 if (gamepad.buttons[index].pressed) {
@@ -69,7 +89,9 @@ namespace mamejs {
     public disconnect() {
       cancelAnimationFrame(this.loopId)
       this.loopId = null
-      this.emit(Joystick.ONDISCONNECT)
+      this.gamepad = null
+      this.controlMapping = null
+      this.emit(Joystick.DISCONNECTED)
     }
 
     public isConnected(): boolean {
@@ -80,14 +102,14 @@ namespace mamejs {
       return navigator.getGamepads()[this.gamepad.index]
     }
 
-    public getKeyMap(): Array<string> {
-      return this.customKeyMap || Joystick.keyMap
+    public getButtonMap(): Array<string> {
+      return this.customButtonMap || Joystick.buttonMap
     }
 
-    public setKeyMap(keyMap: Array<string>) {
-      if (keyMap !== this.customKeyMap) {
-        this.customKeyMap = keyMap
-        this.emit(Joystick.ONMAPPINGCHANGE)
+    public setButtonMap(buttonMap: Array<string>) {
+      if (buttonMap !== this.customButtonMap) {
+        this.customButtonMap = buttonMap
+        this.emit(Joystick.BUTTONMAPCHANGE)
       }
     }
 
