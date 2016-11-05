@@ -221,7 +221,7 @@
 .game-button-right.game-button-gamepad:before {
   content: "\e092";
 }
-.game-button.keypress {
+.game-button-pressed {
   background-color: #d4d4d4;
 }
 
@@ -267,8 +267,6 @@
   top: 0px
 }
 
-.bootstrap-select .btn:focus {
-    outline: none !important;
-}
+
 
 

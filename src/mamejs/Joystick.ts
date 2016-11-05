@@ -1,9 +1,10 @@
 /// <reference path="model/IControls.ts" />
 /// <reference path="MameKeyHandler.ts" />
 /// <reference path="model/IMameKeyHandler.ts" />
+/// <reference path="model/IJoystick.ts" />
 
 namespace mamejs {
-  export class Joystick extends emloader.event.EventEmiter {
+  export class Joystick extends emloader.event.EventEmiter implements IJoystick {
     static axes = [['left', 'right'], ['up', 'down']]
 
     // maps IControl keys as string like this control[button]

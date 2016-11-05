@@ -3,6 +3,7 @@
 /// <reference path="model/IConfig.ts" />
 /// <reference path="Mame.ts" />
 /// <reference path="Controllers.ts" />
+/// <reference path="plugins/VirtualController.ts" />
 
 namespace mamejs {
 
@@ -23,8 +24,5 @@ namespace mamejs {
     })
   }
 
-  export var controllers = new Controllers()
-
-  // Default behavior
-  controllers.bind()
+  export var controllers: Controllers = new Controllers()
 }

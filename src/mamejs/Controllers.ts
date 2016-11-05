@@ -12,6 +12,8 @@ namespace mamejs {
     static JOYSTICKDISCONNECTED: string = 'joystickdisconnected'
     static JOYSTICKBUTTONMAPCHANGE: string = 'joystickbuttonmapchange'
     static JOYSTICKCONTROLCHANGE: string = 'joystickcontrolchange'
+    static MAMEKEYPRESS: string = 'mamekeypress'
+    static MAMEKEYRELEASE: string = 'mamekeyrelease'
 
     public keyboard = new Keyboard()
 
@@ -38,6 +40,11 @@ namespace mamejs {
 
     public setKeyHandler(keyHandler: IMameKeyHandler): void {
       this.keyHandler = keyHandler
+
+      // redispatch key events
+      this.keyHandler.on(MameKeyHandler.KEYPRESS, (mameKey: string) => this.emit(Controllers.MAMEKEYPRESS, mameKey))
+      this.keyHandler.on(MameKeyHandler.KEYRELEASE, (mameKey: string) => this.emit(Controllers.MAMEKEYRELEASE, mameKey))
+
       this.getJoysticks().forEach((joystick: Joystick): void => {
         if (joystick) {
           joystick.setKeyHandler(keyHandler)
@@ -45,6 +52,10 @@ namespace mamejs {
       })
 
       this.keyboard.setKeyHandler(keyHandler)
+    }
+
+    public getKeyHandler(): IMameKeyHandler {
+      return this.keyHandler
     }
 
     public getJoysticks(): Array<Joystick> {

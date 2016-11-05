@@ -18,7 +18,7 @@ namespace mamejs {
     }
 
     public keyMapping: {[mameKey: string]: number}
-    public keyMappingKey: Array<string>
+    public keyMappingKey: Array<string> = []
 
     public keyhandler: IMameKeyHandler
 
@@ -46,11 +46,10 @@ namespace mamejs {
     }
 
     public setKeyMapping(keyMapping) {
-      this.keyMappingKey = new Array(222)
+      this.keyMapping = keyMapping
 
-      for (let mameKey in this.keyMapping) {
-        this.keyMapping[mameKey] = keyMapping[mameKey] || this.keyMapping[mameKey]
-        this.keyMappingKey[this.keyMapping[mameKey]] = mameKey
+      for (let mameKey in keyMapping) {
+        this.keyMappingKey[keyMapping[mameKey]] = mameKey
       }
     }
 

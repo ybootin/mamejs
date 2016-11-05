@@ -1,26 +1,30 @@
-namespace mamejs {
+/// <reference path="../model/IJoystick.ts" />
+/// <reference path="../mamejs.ts" />
+
+namespace mamejs.plugins {
+
   export class ControlSelector {
     private mainContainer: HTMLElement
-    private joystick: Joystick
+    private joystick: IJoystick
 
-    constructor(private mapping: IControlMapping) {
+    constructor(private mapping: IControlMapping, private onChange: {(joystick?: IJoystick): void}) {
       this.mainContainer = document.createElement('div')
 
-      this.setJoystick(mamejs.getJoystick(mapping))
+      this.setJoystick(mamejs.controllers.getJoystick(mapping))
 
-      mamejs.on('joystickconnected', (joystick) => {
+      mamejs.controllers.on(Controllers.JOYSTICKCONNECTED, (joystick: IJoystick) => {
         if (joystick.getControlMapping() === mapping) {
-          this.setJoystick(mapping)
+          this.setJoystick(joystick)
         }
       })
 
-      mamejs.on('joystickdisconnected', (joystick) => {
+      mamejs.controllers.on(Controllers.JOYSTICKDISCONNECTED, (joystick: IJoystick) => {
         if (joystick.getControlMapping() === mapping) {
           this.setJoystick(null)
         }
       })
 
-      mamejs.on('joystickmappingchange', (joystick) => {
+      mamejs.controllers.on(Controllers.JOYSTICKCONTROLCHANGE, (joystick: IJoystick) => {
         if (joystick === this.joystick && joystick.getControlMapping() !== mapping) {
           this.setJoystick(null)
         } else if (joystick !== this.joystick && joystick.getControlMapping() === mapping) {
@@ -33,7 +37,7 @@ namespace mamejs {
       return this.mainContainer
     }
 
-    public setJoystick(joystick: Joystick = null) {
+    public setJoystick(joystick: IJoystick = null) {
       if (!this.isOpened && joystick === this.joystick) {
         return
       }
@@ -42,7 +46,9 @@ namespace mamejs {
 
       if (joystick !== this.joystick) {
         this.joystick = joystick
-        this.joystick.setControlMapping(this.mapping)
+        if (joystick) {
+          this.joystick.setControlMapping(this.mapping)
+        }
       }
 
       this.mainContainer.appendChild(this.createSelectedOption(this.joystick))
@@ -53,7 +59,7 @@ namespace mamejs {
         return
       }
 
-      let addOptionClick = (joystick: Joystick = null) => {
+      let addOptionClick = (joystick: IJoystick = null) => {
         let option = this.createOption(joystick)
         option.addEventListener('click', (evt: MouseEvent) => {
           this.setJoystick(joystick)
@@ -65,7 +71,7 @@ namespace mamejs {
         addOptionClick()
       }
 
-      mamejs.getJoysticks().forEach((joystick: Joystick) => {
+      mamejs.controllers.getJoysticks().forEach((joystick: IJoystick) => {
         if (joystick && joystick !== this.joystick) {
           addOptionClick(joystick)
         }
@@ -78,7 +84,7 @@ namespace mamejs {
 
     // check if not already opened
     private isOpened(): boolean {
-      return this.container.childNodes.length > 1
+      return this.mainContainer.childNodes.length > 1
     }
 
     private empty(): void {
@@ -87,20 +93,19 @@ namespace mamejs {
       }
     }
 
-    private createSelectedOption(joystick: Joystick = null): HTMLElement {
-      let option = this.createOption(gamepad)
+    private createSelectedOption(joystick: IJoystick = null): HTMLElement {
+      let option = this.createOption(joystick)
       option.addEventListener('click', (evt: Event) => {
-        this.isClosed ? this.open() : this.close()
+        this.isOpened() ? this.close() : this.open()
       })
 
       return option
     }
 
-    private createOption(joystick: Joystick = null): HTMLElement {
+    private createOption(joystick: IJoystick = null): HTMLElement {
       let option = document.createElement('div')
       option.className = 'mamejs-joystick-selector ' + (joystick ? 'icon-gamepad' : 'icon-keyboard')
-      option.dataset.controlId = joystick ? 'joystick' + joystick.gamepad.index : 'keyboard'
-      option.innerHTML = joystick ? joystick.gamepad.index + 1 : ''
+      option.innerHTML = joystick ? String(joystick.getGamepad().index + 1) : ''
 
       return option
     }
