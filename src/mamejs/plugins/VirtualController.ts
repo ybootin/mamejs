@@ -12,10 +12,13 @@ namespace mamejs.plugins {
     private mainContainer: HTMLElement
     private selector: ControlSelector
 
+    private baseClass: string = 'mamejs-virtual-controller'
+
     private mameKeyButtonsMapping: {[mameKey: string]: string} = {}
 
     constructor(public mapping: IControlMapping) {
       this.mainContainer = document.createElement('div')
+      this.mainContainer.className = this.baseClass
 
       this.setJoystick(mamejs.controllers.getJoystick(mapping))
 
@@ -67,10 +70,11 @@ namespace mamejs.plugins {
 
     public updateButton(button: MameButton, buttonId: string): void {
       let keyName = mamejs.controllers.keyboard.getKeyName(button.mameKey)
-      let classes = ['game-button', 'game-button-' + keyName, 'game-button-' + buttonId]
+      let buttonClass = this.baseClass + '-button'
+      let classes = [buttonClass, buttonClass + '-' + keyName, buttonClass + '-' + buttonId]
 
       if (this.joystick) {
-        classes.push('game-button-gamepad')
+        classes.push(buttonClass + '-gamepad')
       }
 
       button.getElement().className = classes.join(' ')
@@ -89,7 +93,7 @@ namespace mamejs.plugins {
     private onKeyEvent(eventName: string, mameKey: string) {
       if (this.buttons[mameKey]) {
         // Lazy button.addClass/removeClass(className)
-        this.buttons[mameKey][(eventName === mamejs.Controllers.MAMEKEYPRESS ? 'add' : 'remove') + 'Class']('game-button-pressed')
+        helper.HTMLHelper[(eventName === mamejs.Controllers.MAMEKEYPRESS ? 'add' : 'remove') + 'Class'](this.buttons[mameKey].getElement(), this.baseClass + '-button-pressed')
       }
     }
   }

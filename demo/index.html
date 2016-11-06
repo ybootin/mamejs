@@ -7,6 +7,7 @@
     <script src="../dist/mamejs.js"></script>
     <!-- Bootstrap-select for gamepad / keyboard selection -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/mamejs-plugins.css">
     <link rel="stylesheet" type="text/css" href="demo.css">
   </head>
   <body>
@@ -66,9 +67,6 @@
 
         // The mame buttons on the top of the game
         //buildMameButtons(buttonsContainer)
-
-        // Disable buttons during initialisation, they will be reinit on mame launched
-        //enableMameButtons(false)
       }
 
       // Global vars
@@ -124,8 +122,6 @@
             if (!haveError) {
               haveError = true
               mameContainer.innerHTML = errorTemplate
-
-              // enableMameButtons(false)
             }
 
             var content = document.createElement('div')
@@ -184,201 +180,6 @@
         mamejs.controllers.bind()
       }
 
-
-      // /**
-      //  * DEMO UI Buttons and controllers handling
-      //  */
-
-      // // a helper to handle button like they should work in mame
-      // function initMameButton(button, key) {
-      //   button.className = button.className + ' mame-button'
-      //   button.addEventListener('mousedown', function(evt) {
-      //     mame.controls.pressKey(key)
-      //   })
-      //   button.addEventListener('mouseup', function(evt) {
-      //     mame.controls.releaseKey(key)
-      //   })
-      //   button.addEventListener('touch', function(evt) {
-      //     mame.controls.keyboard.pressAndReleaseMameKey(key)
-      //   })
-      // }
-
-      // function enableMameButtons(enable) {
-      //   let buttons = document.getElementsByClassName('mame-button')
-      //   for (var i = 0, l = buttons.length; i < l; i++) {
-      //     buttons[i].disabled = enable ? "" : "disabled"
-      //   }
-      // }
-
-      // function buildMameButtons(container) {
-      //   mameButtons.forEach(function(item) {
-      //     let button = document.createElement('button')
-      //     button.className = "btn-xs btn btn-default"
-
-      //     if (item.glyphicon) {
-      //       let icon = document.createElement('span')
-      //       icon.className = 'glyphicon glyphicon-' + item.glyphicon
-      //       button.appendChild(icon)
-      //     }
-
-      //     if (item.name) {
-      //       let name = document.createElement('span')
-      //       name.innerHTML = ' ' + item.name
-      //       button.appendChild(name)
-      //     }
-
-      //     initMameButton(button, item.key);
-
-      //     container.appendChild(button)
-      //   })
-      // }
-
-      // /**
-      //  * VISUAL CONTROLLERS
-      //  */
-      // function initVisualControllers(mame) {
-      //   mame.on('keypress', function(key) {
-      //     handleKeyboardEvent('keypress', key)
-      //   })
-      //   mame.on('keyrelease', function(key) {
-      //     handleKeyboardEvent('keyrelease', key)
-      //   })
-
-      //   enableMameButtons(true)
-      // }
-
-      // function buildControllers() {
-      //   // build visual controllers
-      //   //buildController(controller1Container, mamejs.ControllerMappings.player1, 0)
-      //   //buildController(controller2Container, mamejs.ControllerMappings.player1, 1)
-      // }
-
-      // function buildController(container, controllerMapping, gamepadIndex) {
-      //   var joystick = mamejs.JoystickHandler.getJoystick(controllerMapping)
-
-      //   let selectpicker = container.getElementsByClassName('selectpicker')[0]
-      //   $(selectpicker).change(function(evt) {
-      //     onSelectpickerChange(selectpicker, container)
-      //   })
-      //   if (gamepad) {
-      //     $(selectpicker).selectpicker('val', 'gamepad' + (gamepad.index + 1));
-      //   }
-
-      //   for (var controlName in controllerMapping) {
-      //     let button = document.createElement('button')
-      //     button.className = "btn btn-xs btn-default"
-
-      //     let mameKey = controllerMapping[controlName]
-
-      //     // the keyboard keyname , ex : shift, ctrl, space, a ...
-      //     let keyName = mamejs.KeyHandler.getKeyName(mameKey)
-
-      //     formatControlButton(button, controlName, keyName, !!gamepad)
-      //     initMameButton(button, mameKey)
-
-      //     container.appendChild(button)
-      //   }
-      // }
-
-      // function formatControlButton(button, controlName, keyName, useGamepad) {
-      //   keyName = keyName || button.dataset.keyName
-      //   controlName = controlName || button.dataset.controlName // coin, start, button1 ...
-
-      //   button.dataset.keyName = keyName
-      //   button.dataset.controlName = controlName
-
-      //   let content = button.getElementsByTagName('span')[0]
-      //   if (!content) {
-      //     content = document.createElement('span')
-      //     button.appendChild(content)
-      //   }
-
-      //   // remove game-button classes, and reput them
-      //   let classes = button.className.split(' ').filter(function(classItem) {
-      //     return classItem.indexOf('game-button') === -1
-      //   })
-      //   classes.push('game-button')
-      //   classes.push('game-button-' + keyName)
-      //   classes.push('game-button-' + controlName)
-
-      //   if (useGamepad) {
-      //     classes.push('game-button-gamepad')
-      //   }
-
-      //   button.className = classes.join(' ')
-
-      //   switch (controlName) {
-      //     case 'coin':
-      //     case 'start':
-      //       // this is just a hack to have 1, 2, 3 ... instead of digit1, digit2 ... when use game pad
-      //       content.innerHTML = controlName.replace('coin', 'insert coin') + ' (' + keyName.replace('digit', '') + ')'
-      //       break
-      //     default:
-      //       content.innerHTML = useGamepad ? controlName.replace('button', '') : keyName
-      //   }
-      // }
-
-      // function onSelectpickerChange(selectpicker, container) {
-      //   var playerId = container === player1controller ? 1 : 2
-
-      //   var val = $(selectpicker).val()
-
-      //   if (val === 'gamepad1' || val === 'gamepad2') {
-      //     let joystickId = val === 'gamepad1' ? 0 : 1
-      //     var joystick = mame.controls.joysticks[joystickId]
-      //     if (joystick) {
-      //       joystick.setControl(mame.controls['player' + playerId])
-
-      //       // change other controller
-      //       let otherId = playerId === 1 ? 2 : 1
-      //       let otherCnt = otherId === 1 ? controller1Container : controller2Container
-      //       let otherSp = otherCnt.getElementsByClassName('selectpicker')[0]
-      //       let otherJoystickId = joystickId === 0 ? 1 : 0
-      //       let otherJoystick = mame.controls.joysticks[otherJoystickId]
-
-      //       if ($(otherSp).val() === val) {
-      //         $(otherSp).selectpicker('val', otherJoystick ? 'gamepad' + (otherJoystickId + 1) : 'keyboard')
-      //         if (otherJoystick) {
-      //           otherJoystick.setControl(mame.controls['player' + otherId])
-      //         }
-      //       }
-      //     }
-      //   }
-
-      //   var buttons = container.getElementsByClassName('game-button')
-      //   for (var i = 0, l = buttons.length; i < l; i++) {
-      //     formatControlButton(buttons[i], null, null, val.indexOf('gamepad') === 0)
-      //   }
-      // }
-
-      // // return the player id, actually 1 or 2 attached to the Joystick object
-      // function getControllerId(joystick) {
-      //   return joystick.controller === mame.controls.player1Controller ? 1 : 2
-      // }
-
-      // // visual update for joystick plug / unplug
-      // function handleJoystickEvent(type, joystick) {
-      //   var controllerId = getControllerId(joystick)
-      //   var cnt = controllerId === 1 ? controller1Container : controller2Container
-
-      //   // also visual remap buttons visual, to display button number instead of key, and vice verca
-      //   var buttons = cnt.getElementsByClassName('game-button')
-
-      //   for (var i = 0, l = buttons.length; i < l; i++) {
-      //     formatControlButton(buttons[i], null, null, type === 'connected')
-      //   }
-
-      //   // activate selectpicker gamepad1/2 or keyboard if disconnected (if change during load)
-      //   $(cnt.getElementsByClassName('selectpicker')[0]).selectpicker(type === 'connect' ? 'gamepad' + controllerId : 'keyboard')
-      // }
-
-      // // evt : {type : keypress|keyrelease, data: keyName}
-      // function handleKeyboardEvent(type, mameKey) {
-      //   var key = mamejs.control.KeyHandler.getKeyName(mameKey)
-      //   // highlight pressed button
-      //   var button = document.getElementsByClassName('game-button-' + key)[0]
-      //   type === 'keypress' ? $(button).addClass('keypress') : $(button).removeClass('keypress')
-      // }
     </script>
   </body>
 </html>

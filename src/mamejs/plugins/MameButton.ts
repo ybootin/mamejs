@@ -21,15 +21,5 @@ namespace mamejs.plugins {
     public setValue(name: string): void {
       this.element.getElementsByTagName('span')[0].innerHTML = name
     }
-
-    public addClass(className: string): void {
-      this.element.className = this.element.className + (this.element.className.split(' ').indexOf(className) === -1 ? ' ' + className : '')
-    }
-
-    public removeClass(className: string): void {
-      this.element.className = this.element.className.split(' ').filter((item: string): boolean => {
-        return item !== className
-      }).join(' ')
-    }
   }
 }

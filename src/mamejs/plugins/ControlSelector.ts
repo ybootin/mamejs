@@ -48,7 +48,7 @@ namespace mamejs.plugins {
 
       // refresh UI
       this.empty()
-      this.mainContainer.appendChild(this.createSelectedOption(this.joystick))
+      this.mainContainer.appendChild(this.createOption(this.joystick, true))
 
       if (typeof this.onChange === 'function') {
         this.onChange(joystick)
@@ -99,23 +99,17 @@ namespace mamejs.plugins {
       }
     }
 
-    private createSelectedOption(joystick: IJoystick = null): HTMLElement {
-      let option = this.createOption(joystick)
+    private createOption(joystick: IJoystick = null, main?: boolean): HTMLElement {
+      let option = document.createElement('div')
+      option.className = this.baseClass + '-item ' + this.baseClass + '-' + (joystick ? 'gamepad' : 'keyboard')
+      option.innerHTML = joystick && joystick.getGamepad() ? String(joystick.getGamepad().index + 1) : ''
 
-      if (mamejs.controllers.getJoysticks().length > 0) {
+      if (main && mamejs.controllers.getJoysticks().length > 0) {
         helper.HTMLHelper.addClass(option, this.baseClass + '-expandable')
         option.addEventListener('click', (evt: Event) => {
           this.isOpened() ? this.close() : this.open()
         })
       }
-
-      return option
-    }
-
-    private createOption(joystick: IJoystick = null): HTMLElement {
-      let option = document.createElement('div')
-      option.className = this.baseClass + '-item ' + (joystick ? 'gamepad-icon' : 'keyboard-icon')
-      option.innerHTML = joystick && joystick.getGamepad() ? String(joystick.getGamepad().index + 1) : ''
 
       return option
     }
