@@ -43,8 +43,9 @@
     "name": "Legend Hero Tomna",
     "screenshot": "http://image.jeuxvideo.com/images-sm/tu/l/e/legend-of-hero-tonma-turbografx-pc-engine-003.jpg",
     "files" : {
-      "loht.zip": "https://cors.archive.org/cors/arcade_loht/loht.zip"
+      "loht.zip": "../roms/loht.zip"
     },
+    "emulator": "https://ia801201.us.archive.org/cors_get.php?path=%2F17%2Fitems%2Femularity_engine_v1%2Fmamem72.js.gz",
     "driver": "loht"
   },
   {

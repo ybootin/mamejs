@@ -28,9 +28,6 @@ namespace emloader {
 
     constructor(private module: IModule) {
       super()
-
-      // by default, we bind all keys
-      this.bindKeys()
     }
 
     public pressKey(key: string|number): void {
@@ -46,8 +43,8 @@ namespace emloader {
       this.releaseKey(key)
     }
 
-    public bindKeys(): void {
-      this.unbindKeys()
+    public bind(): void {
+      this.unbind()
 
       this._keyboardEventHandler = (evt: KeyboardEvent): void => {
         evt.type === 'keydown' ? this.pressKey(evt.keyCode) : this.releaseKey(evt.keyCode)
@@ -59,7 +56,7 @@ namespace emloader {
       document.addEventListener('keydown', this._keyboardEventHandler)
     }
 
-    public unbindKeys(): void {
+    public unbind(): void {
       document.removeEventListener('keyup', this._keyboardEventHandler)
       document.removeEventListener('keydown', this._keyboardEventHandler)
       this._keyboardEventHandler = null

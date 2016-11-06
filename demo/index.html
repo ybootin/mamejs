@@ -118,22 +118,26 @@
         // run mame is as simple as this !
         mamejs.run(cfg, gameCnt).then(function(mame) {
 
-        // handle mamejs and Mame
-        var haveError = false
-        var onStderr = function(text) {
-          if (!haveError) {
-            haveError = true
-            mameContainer.innerHTML = errorTemplate
+          // handle mamejs and Mame
+          var haveError = false
+          var onStderr = function(text) {
+            if (!haveError) {
+              haveError = true
+              mameContainer.innerHTML = errorTemplate
 
-            enableMameButtons(false)
+              // enableMameButtons(false)
+            }
+
+            var content = document.createElement('div')
+            content.innerHTML = text
+            mameContainer.getElementsByClassName('error-content')[0].appendChild(content)
           }
+          //mame.loader.on(emloader.ON_STDERR, onStderr)
+          //mame.loader.stderr.forEach(onStderr)
 
-          var content = document.createElement('div')
-          content.innerHTML = text
-          mameContainer.getElementsByClassName('error-content')[0].appendChild(content)
-        }
-        mame.loader.on(emloader.ON_STDERR, onStderr)
-        mame.loader.stderr.forEach(onStderr)
+          mame.loader.module.addOnExit(function() {
+            mame.loader.stderr.forEach(onStderr)
+          })
 
           console.log('running game ' + game.name, mame)
         }).catch(function(error) {

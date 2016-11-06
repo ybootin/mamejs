@@ -69,12 +69,12 @@ namespace mamejs.plugins {
       let keyName = mamejs.controllers.keyboard.getKeyName(button.mameKey)
       let classes = ['game-button', 'game-button-' + keyName, 'game-button-' + buttonId]
 
-      if (!!this.joystick) {
+      if (this.joystick) {
         classes.push('game-button-gamepad')
       }
 
       button.getElement().className = classes.join(' ')
-      console.log('buttonId', buttonId)
+
       switch (buttonId) {
         case 'coin':
         case 'start':
@@ -82,7 +82,7 @@ namespace mamejs.plugins {
           button.setValue(buttonId.replace('coin', 'insert coin') + ' (' + keyName.replace('digit', '') + ')')
           break
         default:
-          button.setValue(!!this.joystick ? buttonId.replace('button', '') : keyName)
+          button.setValue(this.joystick ? buttonId.replace('button', '') : keyName)
       }
     }
 

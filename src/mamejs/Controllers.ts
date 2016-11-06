@@ -31,7 +31,16 @@ namespace mamejs {
           joystick.on(Joystick.CONNECTED, () => this.emit(Controllers.JOYSTICKCONNECTED, joystick))
           joystick.on(Joystick.DISCONNECTED, () => this.emit(Controllers.JOYSTICKDISCONNECTED, joystick))
           joystick.on(Joystick.BUTTONMAPCHANGE, () => this.emit(Controllers.JOYSTICKBUTTONMAPCHANGE, joystick))
-          joystick.on(Joystick.CONTROLCHANGE, () => this.emit(Controllers.JOYSTICKCONTROLCHANGE, joystick))
+          joystick.on(Joystick.CONTROLCHANGE, () => {
+            this.emit(Controllers.JOYSTICKCONTROLCHANGE, joystick)
+
+            // prevent joystick use the same Controls
+            this.getJoysticks().forEach((j: Joystick): void => {
+              if (j !== joystick && j.getControlMapping() === joystick.getControlMapping()) {
+                j.setControlMapping(this.getAvailableMappings()[0])
+              }
+            })
+          })
 
           return joystick
         })()

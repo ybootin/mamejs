@@ -100,7 +100,7 @@ namespace mamejs {
     }
 
     public getGamepad(): Gamepad {
-      return navigator.getGamepads()[this.gamepad.index]
+      return this.gamepad ? navigator.getGamepads()[this.gamepad.index] : null
     }
 
     public getButtonMap(): Array<string> {

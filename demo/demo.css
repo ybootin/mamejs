@@ -124,6 +124,8 @@
   height: 40px;
   border-radius: 20px;
   position: absolute;
+  border: 1px solid #CCCCCC;
+  background-color: transparent;
 }
 
 .game-button-coin {
@@ -233,40 +235,44 @@
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAFZklEQVR42u2ZeYxdUxzHf4NBtY1UpkotnVrGVrGX2hJBKySWaKKWqVCqsRNFRDe79I8W84dd7HtrIpZaExRRjC2RjGqnWluVNoqWGcb34/e7mef13fveZOb15SXzS7559557zj2/77m/7ZxXY1UuNZVWoI9ApRXoI1BpBaqBwCHCbcLFwrvVSGCGMFWYItxQjQRmCZcIlwuzq5HAPGG0cJLwXLUR2F5oFTYQthF+qjYCLwrHCI8JZ5RjglIIbC0MNV/FH4WlQmcJ4443N5mfhT2FH0rUZzthSMzBmG+z5ksjMMzc8U6OFyb9OuOFDwgzhdUZyjxrbvelOO9AYbJwlrmp5c63XHheuF34vBQClwo3Cv3i/hehLV4GmS2j/SthTDwrJEuif4OwMEP5enNH3znu8ZOlcY0P1cX1P8IdwpVCexqBWUGAzk/G/YK8PqPiRfvG1/giRbGjhA2F14S/MwiMiFVvMU928ws8nyRMFGqFF4QThY58AmcL9wprzR1uTsakA4S3hH3ivtP+/9m7c22h/OHCbxlzHiw0xxe5Vbg6l8DmwtfCFkKj8KgVl0HC/hnPc5UtJh8KK0vod6jwprmF7CosTia50NxJXheOLuFFlZQHzRf5JuHahMDL5tlynPDUelZoR2F6XFM3LSzSjm+9Yv7VRiYE8HocqV74Jm+C6+N3SpkIYP97mZvcp8LeRdrxAUIr0bGuJjrgPITNzcydOJGNrMuxcNyOXlae5Lgq3o2sEfpntCdj/jKPbANQfmB0XpMzIJHaPALt1vtyi3lsR0iOVxVpR1aYB5zBECDrtpknnvrogNkcEGyPjDYcHO8nL6SZUzLO8vqltSeShOOWEtspEEl8DRAgIeEQH5uHRZT+HnYpSsJ+qyCTK7yLWqkup9+QuC7UXkp4TZP3hAOFUUxK9CGV49ljosMOwk7mPtAcbSeY+wAlxOKUFw+3rpIgt19aO9LdKISQjY8VjoPAaeaJ6/G4zpX14QO50eazuM5qRx42rxYaeXiR+aa7ybwWyRXMKSmDC5lNT4VaiQCSRJgk2qS1JzI7dL0MAtOFafE7o8AkmBP2mmY2PRXqmslxnRtt0tqRqaHrdRBg5S8w/xJNvaAQ76Qsachrb41VK+S83Y1ClD5UxE1Mhu2fIpwe1z0VzoHeTnlGxflOL8xxqrnfPgEBog8FHNHo1RIGn2/uQONt3Y0KmZxqcaRwj/meAhkrnGe+o6KWyd/cY9/XCC+VSJBoSf02DwIfmeeC/cxzQZagIHUTWZB6hM0PW8eOWN2Z8R6SIp9/VYwjgr0v7GEeFJrinnG7mZvwiFiQXax4sCApfiAsgADOSTYeHhNnCbuiO83DaW20cY1dbxz3i8xjdGveWJIXpxNHFJmDffjcIn3IEeSTRRD41fwTDorrNEmqQlaqMb4GzrR7PEPxR8y3oasz3oEJsdlnQ0KYXmZuuoPjC2JChxUhgAWQ0VfWWFdyoqhbmzGIlaMe+s78ayXj+oVif1jPBDNbEgt5kLmJpMmmySIlJlRvbrOfZAyaEytXlkPakJvN4z2bqnEZ/YaF3isgcLdwrnCX+e6/kLDi2DQ1OEcdy8tEYGgohl7kkbaUfkQsjn7m0hGbbolBOFBzgQGExHOEh4Qzy6R8IszRGHNOLPCcEP2GuQ+OTraU0wKENbIonxCbZuXHB7E/zcPtl2UmQFglnG8iPG1euPFVsHuOK68w9ztOByckBPhl08FZC4VU/hnO7+bHfs+UWflExoaC/W3dsyR+7zNPqO35J3MkoUnxS5xnYzM/BixbT8onsq0wwbw04YAZ6yCM329+qPaf9P3JV2npI1Bp6SNQafkXtH1Dpd3NkJUAAAAASUVORK5CYII=)
 }
 
-.game-controller .keyboard-icon, .game-controller .gamepad-icon, .controller-selection-item .keyboard-icon, .controller-selection-item .gamepad-icon, .filter-option .icon {
-  width: 26px;
-  height: 26px;
-  position: absolute;
-  left: 72px;
-  top: -7px;
-  background-size: 26px 26px;
-  background-repeat: no-repeat;
-}
-
-.controller-selection {
-  width: 80px;
-  height: 30px;
+.mamejs-control-selector {
   position: absolute;
   left: 0px;
+  border: 1px solid #CCCCCC;
+  border-radius: 5px;
+  background-color: white;
 }
 
-.controller-selection .btn {
-  padding: 4px 12px
+.mamejs-control-selector-item.mamejs-control-selector-expandable:before {
+  content: "";
+  position: absolute;
+  left: 58px;
+  top: 4px;
+  height: 20px;
+  width: 20px;
+  background-position: 0px 0px;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  z-index: 1;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAAIVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABt0UjBAAAACnRSTlMANzl8fX5/gKusOR4mYAAAAKZJREFUGBntwbsNg0AQBNCRk01dCiVQwpVAHVuJHXMQTJVGCCG+0t0iOZr3ICIiIiIiIn/1+t75vFHEeaNHGeONBoWcl3qUMl5qUMx5oUc544UGFZwnGTWMJy2qOA8y6hgPWlRy7mTUMu60qObcyKhn3EgIcK4GRBhXCSHOxYAY4yIhyDkbEGWcJYQ5JyPijJMODzg54gkjOzziI56xDiIiIiIiIjE/IMHxY2tgQRAAAAAASUVORK5CYII=)
 }
 
-.controller-selection-item {
-  position: relative;
-  width: 26px;
-  height: 26px;
-  box-shadow: none;
-  border-color: none;
-}
-.controller-selection-item .icon, .filter-option .icon {
-  left: 10px !important;
-  padding: 4px 0px 0px 35px;
-  top: 0px
+.mamejs-control-selector-item.mamejs-control-selector-expandable.mamejs-control-selector-expanded:before {
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
-
-
-
+.mamejs-control-selector-item {
+  width: 70px;
+  height: 30px;
+  background-size: 26px 26px;
+  background-repeat: no-repeat;
+  padding-left: 36px;
+  padding-top: 4px;
+  margin-left: 8px;
+  cursor: pointer;
+  user-select: none;
+}
