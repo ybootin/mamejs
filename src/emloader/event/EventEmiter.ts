@@ -20,5 +20,9 @@ namespace emloader.event {
         this.handlers[eventName].forEach((callback) => callback(data))
       }
     }
+
+    public clean(): void {
+      this.handlers = {}
+    }
   }
 }

@@ -3,63 +3,56 @@
 /// <reference path="../emloader/model/IEmloader.ts" />
 /// <reference path="../emloader/Emloader.ts" />
 /// <reference path="model/IResolution.ts" />
-/// <reference path="model/IConfig.ts" />
 /// <reference path="model/Window.ts" />
-/// <reference path="model/IControls.ts" />
-/// <reference path="control/Controls.ts" />
-
+/// <reference path="helper/Ctrlr.ts" />
+/// <reference path="mamejs.ts" />
+/// <reference path="MameKeyHandler.ts" />
 
 namespace mamejs {
 
-  export function load(url: string, container: HTMLElement): Promise<Mame> {
-    return emloader.load(url, container).then((loader: emloader.IEmloader): Mame => {
-      return new Mame(loader)
-    })
-  }
-
-  export function run(config: IConfig, container: HTMLElement): Promise<Mame> {
-    return load(config.emulator, container).then(function(mame: Mame): Promise<Mame> {
-      return mame.loadRoms(config.game.files).then(function() {
-        return mame.runGame(config.game.driver, config.resolution).then(function(): Mame {
-          return mame
-        })
-      })
-    })
-  }
-
-  /**
-   * Holds all mame instances, usefull for debug
-   */
-  export var instances: Array<Mame> = []
-
   // Main class
-  export class Mame {
+  export class Mame extends emloader.event.EventEmiter {
+    static EXIT: 'exit'
     static ROM_PATH: string = '/roms'
     static DEFAULT_RESOLUTION: IResolution = {
       width: 320,
       height: 224
     }
 
-    private _controls: IControls
+    private _keyHandler: IMameKeyHandler
 
     /**
      * Mame emulator must be loaded before instanciate this class
      */
     constructor(private _loader: emloader.IEmloader) {
-      instances.push(this);
+      super()
 
       // init the roms filesystem
       this.loader.addFS(Mame.ROM_PATH)
 
-      this._controls = new control.Controls(this)
+      this._keyHandler = new MameKeyHandler(this.loader.keyboard)
+
+      // generate .cfg controller keymaping file, and mount it into FS
+      // as this we have full controls on key
+      // TODO, this shouldn't be done here, but as we don't expose ctrlr, it do the job !
+      this.loader.addFS('/ctrlr')
+      this.loader.addFile({
+        url: '',
+        name: 'mamejs.cfg',
+        data: helper.StringHelper.toUint8Array(helper.Ctrlr.generateCfgFile()),
+      }, '/ctrlr')
+
+      // map controllers on this mame instance
+      controllers.setKeyHandler(this._keyHandler)
+      controllers.bind()
     }
 
     public get loader(): emloader.IEmloader {
       return this._loader
     }
 
-    public get controls(): IControls {
-      return this._controls
+    public get keyHandler(): IMameKeyHandler {
+      return this._keyHandler
     }
 
     public run(args: Array<string>): Promise<void> {
@@ -81,6 +74,8 @@ namespace mamejs {
         [resolution.width, resolution.height].join('x'),
         '-samplerate',
         '48000',
+        '-ctrlr',
+        'mamejs'
       ])
     }
 
@@ -94,6 +89,10 @@ namespace mamejs {
 
     public loadRoms(files: {[filename: string]: string}, handler?: {(evt: ProgressEvent): void}): Promise<void> {
       return this.loader.loadFiles(files, Mame.ROM_PATH, handler)
+    }
+
+    public exit() {
+
     }
   }
 }

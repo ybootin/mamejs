@@ -38,5 +38,23 @@
       "snowbros.zip": "../roms/snowbros.zip"
     },
     "driver": "snowbros"
+  },
+  {
+    "name": "Legend Hero Tomna",
+    "screenshot": "http://image.jeuxvideo.com/images-sm/tu/l/e/legend-of-hero-tonma-turbografx-pc-engine-003.jpg",
+    "files" : {
+      "loht.zip": "../roms/loht.zip"
+    },
+    "emulator": "https://ia801201.us.archive.org/cors_get.php?path=%2F17%2Fitems%2Femularity_engine_v1%2Fmamem72.js.gz",
+    "driver": "loht"
+  },
+  {
+    "name": "Marvel Super Hero",
+    "screenshot": "http://www.winkawaks.org/org/roms/msh/msh.jpg",
+    "files" : {
+      "msh.zip": "../roms/msh.zip",
+      "qsound.zip": "../roms/qsound.zip"
+    },
+    "driver": "msh"
   }
 ]
