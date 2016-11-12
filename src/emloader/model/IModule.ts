@@ -9,6 +9,7 @@ namespace emloader {
     callMain?: {(arguments: Array<string>): void}
     addOnExit?: Function
     requestAnimationFrame?: any
+    locateFile?: Function
   }
 
   export interface IModule_SDL_SendKeyboardKey {

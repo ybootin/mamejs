@@ -87,4 +87,6 @@ BUILD_PATH_FULL="$OUTPUT_PATH$OUTPUT_FILENAME"
 cp -f "$MAME_PATH""/mame""$SUBTARGET"".js" "$BUILD_PATH_FULL" && \
 gzip -c "$BUILD_PATH_FULL" > "$BUILD_PATH_FULL.gz"
 
+cp -f "$MAME_PATH""/mame""$SUBTARGET"".js.mem" "$BUILD_PATH_FULL"".mem"
+
 printf "All done, open http://rawgit.com/ybootin/mamejs/master/tools/gamelist-generator.html to test your build"

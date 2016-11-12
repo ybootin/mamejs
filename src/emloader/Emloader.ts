@@ -11,6 +11,12 @@
 namespace emloader {
   export function load(url: string, container: HTMLElement): Promise<Emloader> {
     let emloader = new Emloader(container)
+    emloader.scope.Module.locateFile = (file) => {
+      if (file.substr(-4) === '.mem') {
+        return url + '.mem'
+      }
+    }
+
     return helper.HTMLHelper.loadScript(emloader.scope.document, url).then((): Emloader => {
       return emloader
     })

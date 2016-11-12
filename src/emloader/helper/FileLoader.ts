@@ -29,10 +29,10 @@ namespace emloader.helper {
         }
 
         xhr.onload = function (e) {
-          if (xhr.status === 200) {
-            resolve(<ArrayBuffer>xhr.response);
-          } else {
+          if (xhr.status < 200 || xhr.status >= 400) {
             reject(errorMsg + ' : status code ' + xhr.status);
+          } else {
+            resolve(<ArrayBuffer>xhr.response);
           }
         }
         xhr.onerror = function (e) {
