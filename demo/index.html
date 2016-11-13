@@ -7,7 +7,7 @@
     <script src="../dist/mamejs.js"></script>
     <!-- Bootstrap-select for gamepad / keyboard selection -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
-    <link rel="stylesheet" type="text/css" href="../dist/mamejs-plugins.css">
+    <link rel="stylesheet" type="text/css" href="../dist/emloader-plugins.css">
     <link rel="stylesheet" type="text/css" href="demo.css">
   </head>
   <body>
@@ -174,8 +174,8 @@
       }
 
       function buildControllers() {
-        let controller1 = new mamejs.plugins.VirtualController(mamejs.controllers, mamejs.ControllersMapping.player1)
-        let controller2 = new mamejs.plugins.VirtualController(mamejs.controllers, mamejs.ControllersMapping.player2)
+        let controller1 = new emloader.plugins.VirtualController(mamejs.controllers, mamejs.ControllersMapping.player1)
+        let controller2 = new emloader.plugins.VirtualController(mamejs.controllers, mamejs.ControllersMapping.player2)
 
         controller1Container.appendChild(controller1.getElement())
         controller2Container.appendChild(controller2.getElement())
@@ -188,7 +188,7 @@
       function buildMameButtons() {
         // also init mame buttons
         mameButtons.forEach(function(item) {
-          let button = new mamejs.plugins.ControllerButton(mamejs.controllers, item.key)
+          let button = new emloader.plugins.ControllerButton(mamejs.controllers, item.key)
           button.setValue(item.name)
 
           let element = button.getElement()

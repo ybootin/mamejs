@@ -1,14 +1,13 @@
 /// <reference path="../model/IControls.ts" />
-/// <reference path="../mamejs.ts" />
 /// <reference path="../helper/HTMLHelper.ts" />
 
-namespace mamejs.plugins {
+namespace emloader.plugins {
 
   export class ControllerSelector {
     private mainContainer: HTMLElement
     private joystick: IJoystick
 
-    private baseClass: string = 'mamejs-control-selector'
+    private baseClass: string = 'emloader-control-selector'
 
     constructor(private controllers: Controllers, private mapping: IControlMapping, private onChange?: {(joystick?: IJoystick): void}) {
       this.mainContainer = document.createElement('div')

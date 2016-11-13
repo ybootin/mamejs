@@ -1,12 +1,13 @@
 /// <reference path="../../../node_modules/typescript/lib/lib.es6.d.ts" />
 /// <reference path="../../emloader/model/IFile.ts" />
 /// <reference path="../../emloader/model/IEmloader.ts" />
+/// <reference path="../../emloader/model/IControls.ts" />
 /// <reference path="../../emloader/Emloader.ts" />
+/// <reference path="../../emloader/helper/FileLoader.ts" />
 /// <reference path="../model/IResolution.ts" />
 /// <reference path="../model/Window.ts" />
 /// <reference path="../mamejs.ts" />
 /// <reference path="Ctrlr.ts" />
-/// <reference path="../helper/StringHelper.ts" />
 
 
 namespace mamejs {
@@ -20,7 +21,7 @@ namespace mamejs {
       height: 224
     }
 
-    private _keyHandler: IControlKeyHandler
+    private _keyHandler: emloader.IControlKeyHandler
 
     /**
      * Mame emulator must be loaded before instanciate this class
@@ -31,7 +32,7 @@ namespace mamejs {
       // init the roms filesystem
       this.loader.addFS(Mame.ROM_PATH)
 
-      this._keyHandler = this.loader.keyboard //new MameKeyHandler(this.loader.keyboard)
+      this._keyHandler = this.loader.keyHandler
 
       // generate .cfg controller keymaping file, and mount it into FS
       // as this we have full controls on key
@@ -40,7 +41,7 @@ namespace mamejs {
       this.loader.addFile({
         url: '',
         name: 'mamejs.cfg',
-        data: helper.StringHelper.toUint8Array(Ctrlr.generateCfgFile()),
+        data: emloader.helper.FileLoader.toUint8Array(Ctrlr.generateCfgFile()),
       }, '/ctrlr')
     }
 
@@ -48,7 +49,7 @@ namespace mamejs {
       return this._loader
     }
 
-    public get keyHandler(): IControlKeyHandler {
+    public get keyHandler(): emloader.IControlKeyHandler {
       return this._keyHandler
     }
 

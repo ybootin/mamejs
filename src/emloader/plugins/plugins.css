@@ -1,10 +1,10 @@
 
 /** Control selector plugin **/
-.mamejs-virtual-controller {
+.emloader-virtual-controller {
 
 }
 
-.mamejs-virtual-controller-button {
+.emloader-virtual-controller-button {
   display: inline;
   width: 40px;
   padding: 2px;
@@ -17,14 +17,14 @@
   background-color: transparent;
 }
 
-.mamejs-virtual-controller-button-coin {
+.emloader-virtual-controller-button-coin {
   border-radius: 5px;
   height: auto;
   width: auto;
   left: 142px;
   background-color: #f3ee33;
 }
-.mamejs-virtual-controller-button-start {
+.emloader-virtual-controller-button-start {
   border-radius: 5px;
   height: auto;
   width: auto;
@@ -32,65 +32,65 @@
   background-color: #6cff00;
 }
 
-.mamejs-virtual-controller-button-up, .mamejs-virtual-controller-button-down, .mamejs-virtual-controller-button-left, .mamejs-virtual-controller-button-right {
+.emloader-virtual-controller-button-up, .emloader-virtual-controller-button-down, .emloader-virtual-controller-button-left, .emloader-virtual-controller-button-right {
   background-color: black;
   color: white;
 }
 
-.mamejs-virtual-controller-button-up {
+.emloader-virtual-controller-button-up {
   top: 35px;
   left: 35px;
   border-radius: 5px 5px 20px 20px;
 }
-.mamejs-virtual-controller-button-down {
+.emloader-virtual-controller-button-down {
   top: 100px;
   left: 35px;
   border-radius: 20px 20px 5px 5px;
 }
-.mamejs-virtual-controller-button-left {
+.emloader-virtual-controller-button-left {
   top: 67px;
   left: 0px;
   border-radius: 5px 20px 20px 5px;
 }
-.mamejs-virtual-controller-button-right {
+.emloader-virtual-controller-button-right {
   top: 67px;
   left: 67px;
   border-radius: 20px 5px 5px 20px;
 }
 
-.mamejs-virtual-controller-button-button1 {
+.emloader-virtual-controller-button-button1 {
   top: 40px;
   left: 140px;
 }
-.mamejs-virtual-controller-button-button2 {
+.emloader-virtual-controller-button-button2 {
   top: 40px;
   left: 190px;
 }
-.mamejs-virtual-controller-button-button3 {
+.emloader-virtual-controller-button-button3 {
   top: 40px;
   left: 240px;
 }
-.mamejs-virtual-controller-button-button4 {
+.emloader-virtual-controller-button-button4 {
   top: 90px;
   left: 140px;
 }
-.mamejs-virtual-controller-button-button5 {
+.emloader-virtual-controller-button-button5 {
   top: 90px;
   left: 190px;
 }
-.mamejs-virtual-controller-button-button6 {
+.emloader-virtual-controller-button-button6 {
   top: 90px;
   left: 240px;
 }
 
-.mamejs-virtual-controller-button-uparrow:after,
-.mamejs-virtual-controller-button-downarrow:after,
-.mamejs-virtual-controller-button-leftarrow:after,
-.mamejs-virtual-controller-button-rightarrow:after,
-.mamejs-virtual-controller-button-up.mamejs-virtual-controller-button-gamepad:after,
-.mamejs-virtual-controller-button-down.mamejs-virtual-controller-button-gamepad:after,
-.mamejs-virtual-controller-button-left.mamejs-virtual-controller-button-gamepad:after,
-.mamejs-virtual-controller-button-right.mamejs-virtual-controller-button-gamepad:after {
+.emloader-virtual-controller-button-uparrow:after,
+.emloader-virtual-controller-button-downarrow:after,
+.emloader-virtual-controller-button-leftarrow:after,
+.emloader-virtual-controller-button-rightarrow:after,
+.emloader-virtual-controller-button-up.emloader-virtual-controller-button-gamepad:after,
+.emloader-virtual-controller-button-down.emloader-virtual-controller-button-gamepad:after,
+.emloader-virtual-controller-button-left.emloader-virtual-controller-button-gamepad:after,
+.emloader-virtual-controller-button-right.emloader-virtual-controller-button-gamepad:after {
   content: "";
   height: 20px;
   width: 20px;
@@ -105,47 +105,47 @@
   background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAUCAYAAACAl21KAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABAhpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNi1jMDY3IDc5LjE1Nzc0NywgMjAxNS8wMy8zMC0yMzo0MDo0MiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1wTU06T3JpZ2luYWxEb2N1bWVudElEPSJ1dWlkOjY1RTYzOTA2ODZDRjExREJBNkUyRDg4N0NFQUNCNDA3IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjUyQjkzM0I0ODUzNjExRTU4RTQwRkQwODFEOUZEMEE3IiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjRDRDhDN0EyODUzNjExRTU4RTQwRkQwODFEOUZEMEE3IiB4bXA6Q3JlYXRvclRvb2w9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE1IChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MTk5NzA1OGEtZDI3OC00NDZkLWE4ODgtNGM4MGQ4YWI1NzNmIiBzdFJlZjpkb2N1bWVudElEPSJhZG9iZTpkb2NpZDpwaG90b3Nob3A6YzRkZmQxMGMtY2NlNS0xMTc4LWE5OGQtY2NkZmM5ODk5YWYwIi8+IDxkYzp0aXRsZT4gPHJkZjpBbHQ+IDxyZGY6bGkgeG1sOmxhbmc9IngtZGVmYXVsdCI+Z2x5cGhpY29uczwvcmRmOmxpPiA8L3JkZjpBbHQ+IDwvZGM6dGl0bGU+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+in5QzAAAAJpJREFUeNrsk9EJwCAMBZtO0FEcxVEcxRE6iiM4ip0gTYopLWhQ26/SB4cQw4HBACJOWgAg8kl9Rm1kUQ2K55aMV3sVib1IBNslovAzUkHENdMkoixELEgEvltaRKsiEVZVRHENEsEVRXku2Im5ifJc0oAoybxEFAYkQpBP7R5IznlBbUVoNbCyCVCqz9NL+UVfE22NtSO7AAMACKc5gGIHGrMAAAAASUVORK5CYII=');
 }
 
-.mamejs-virtual-controller-button-uparrow span,
-.mamejs-virtual-controller-button-downarrow span,
-.mamejs-virtual-controller-button-leftarrow span,
-.mamejs-virtual-controller-button-rightarrow span,
-.mamejs-virtual-controller-button-up.mamejs-virtual-controller-button-gamepad span,
-.mamejs-virtual-controller-button-down.mamejs-virtual-controller-button-gamepad span,
-.mamejs-virtual-controller-button-left.mamejs-virtual-controller-button-gamepad span,
-.mamejs-virtual-controller-button-right.mamejs-virtual-controller-button-gamepad span {
+.emloader-virtual-controller-button-uparrow span,
+.emloader-virtual-controller-button-downarrow span,
+.emloader-virtual-controller-button-leftarrow span,
+.emloader-virtual-controller-button-rightarrow span,
+.emloader-virtual-controller-button-up.emloader-virtual-controller-button-gamepad span,
+.emloader-virtual-controller-button-down.emloader-virtual-controller-button-gamepad span,
+.emloader-virtual-controller-button-left.emloader-virtual-controller-button-gamepad span,
+.emloader-virtual-controller-button-right.emloader-virtual-controller-button-gamepad span {
   display: none
 }
 
-.mamejs-virtual-controller-button-downarrow:after,
-.mamejs-virtual-controller-button-down.mamejs-virtual-controller-button-gamepad:after {
+.emloader-virtual-controller-button-downarrow:after,
+.emloader-virtual-controller-button-down.emloader-virtual-controller-button-gamepad:after {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   -o-transform: rotate(180deg);
   transform: rotate(180deg);
 }
-.mamejs-virtual-controller-button-leftarrow:after,
-.mamejs-virtual-controller-button-left.mamejs-virtual-controller-button-gamepad:after {
+.emloader-virtual-controller-button-leftarrow:after,
+.emloader-virtual-controller-button-left.emloader-virtual-controller-button-gamepad:after {
   -webkit-transform: rotate(-90deg);
   -moz-transform: rotate(-90deg);
   -ms-transform: rotate(-90deg);
   -o-transform: rotate(-90deg);
   transform: rotate(-90deg);
 }
-.mamejs-virtual-controller-button-rightarrow:after,
-.mamejs-virtual-controller-button-right.mamejs-virtual-controller-button-gamepad:after {
+.emloader-virtual-controller-button-rightarrow:after,
+.emloader-virtual-controller-button-right.emloader-virtual-controller-button-gamepad:after {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
 }
-.mamejs-virtual-controller-button-pressed {
+.emloader-virtual-controller-button-pressed {
   background-color: #d4d4d4;
 }
 
 /** Control selector plugin **/
-.mamejs-control-selector {
+.emloader-control-selector {
   position: relative;
   left: 0px;
   width: 80px;
@@ -154,15 +154,15 @@
   background-color: white;
 }
 
-.mamejs-control-selector-keyboard {
+.emloader-control-selector-keyboard {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAD00lEQVR42u2ZWWxNURSGV4vWEDELQRsPRUVjSIwxtEFaIYRE0EgkYqoXhBheWvViCCkvpCF9IUoiqLFCUsODIClCDPFAzRGiIkprqP/PPjtdPXrbe697e+5pupIv93b1nL33f87ea629b5z43OK8HkBLEzAadAePwCs/CigGC0AOKPSjgAsgC8wFJX4TEA/egV5gKHjiNwGZoBS8BQPAHz8JSAGXQTLIA9uCvdErAZ3BIDAMpIP5oCO4DyaA77EoYDpYAiaCJFffnC5ctMvBp1AabQ4BfNpHwUzVXw145nAHnAUPwmm8OQScAPPAV1AATolJVD8j0Xi0BUwC18E3MA48jHQH0RbAbLoC7AEbotFBtAWUgxFgCrgRTQEMYcvAeNA1gu1PBe3ANQkhNDZhleAmOASqKKA3KAOpSlBtgO/679ogrg/me7j3PwYZdBwGi8FTsEvMgotl6wQ2gsHgCAVUgUSQJia8+cFY7DFvVNup8AN08HpUIRrXVGKLEMA6pFoJGAXOqwu5wLPBeqkfy3PBQVAEZig/sy6jxHPQ3vHxAQ0UE+VOqmsvgqViaiBdge4WkztYgmQoP8uRcrcA9xsY6wzArvhSZ4Asc7dKXTRYC/aJKQ3mqOvTpS5sJjp+2z7zwVXVxmkxu681YK9zP/+X70CBWcrPB3CrxQlwTyErwNolJSBP+de5BFjLcAkQ1T4FlKlrS5SAAuXXAjKVP6g3QF+CuokCWTm2AW2V/xf4LSbTxit/jdNmotS36gi23agAlhUp0rB9ELPx7g96KH+FmBSf6hqgrfHTXINgFmXJkqz83Mi8Bn3FVAcNGfcPVW4BTU0hbTvBFnAArFT+ReC4mMijB9XN+fzsEsuIxPOfYuVn5crzoO1gU4D+w1rEugbZ4RJg/QtdAqzfFoaVqp0XSsAx1YcWsLmBvsOOQjEvwD2FOI/3B3iFTCxMXoxAs5WfSajMmRJ9lH+W83lO+d6LmXKMVrnKf0ZMJGJSyw7Q/2ox66fRN+AXCyigp5iUbe0NuAKGi9ldWbvtPA0+yaQwB/FS6vYiY5T/npgzommgn/KzxPnoFhDpRBaKRSWR/W8pEcruKiZLCc/fQLLzdK3xmLvQaShL+TlwnvmwHNaZNhRjpmY5PtkRYq3UeXAM1UOUn2+poikBfrF6AjiFWAMFdSYfA8YCjzVRAgXY7MlzoSKvRxakcdryXKiCAlaJKQ34JrhdC+rXQQ+Nv95w28ux59iwxujC+sPuYWP9YItrlnVZvm6kCxgp/25EYs24Xu+CLyLN8/tAVK1VgNfWKsBr+wslEWQOHSbCvwAAAABJRU5ErkJggg==)
 }
 
-.mamejs-control-selector-gamepad {
+.emloader-control-selector-gamepad {
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAFZklEQVR42u2ZeYxdUxzHf4NBtY1UpkotnVrGVrGX2hJBKySWaKKWqVCqsRNFRDe79I8W84dd7HtrIpZaExRRjC2RjGqnWluVNoqWGcb34/e7mef13fveZOb15SXzS7559557zj2/77m/7ZxXY1UuNZVWoI9ApRXoI1BpBaqBwCHCbcLFwrvVSGCGMFWYItxQjQRmCZcIlwuzq5HAPGG0cJLwXLUR2F5oFTYQthF+qjYCLwrHCI8JZ5RjglIIbC0MNV/FH4WlQmcJ4443N5mfhT2FH0rUZzthSMzBmG+z5ksjMMzc8U6OFyb9OuOFDwgzhdUZyjxrbvelOO9AYbJwlrmp5c63XHheuF34vBQClwo3Cv3i/hehLV4GmS2j/SthTDwrJEuif4OwMEP5enNH3znu8ZOlcY0P1cX1P8IdwpVCexqBWUGAzk/G/YK8PqPiRfvG1/giRbGjhA2F14S/MwiMiFVvMU928ws8nyRMFGqFF4QThY58AmcL9wprzR1uTsakA4S3hH3ivtP+/9m7c22h/OHCbxlzHiw0xxe5Vbg6l8DmwtfCFkKj8KgVl0HC/hnPc5UtJh8KK0vod6jwprmF7CosTia50NxJXheOLuFFlZQHzRf5JuHahMDL5tlynPDUelZoR2F6XFM3LSzSjm+9Yv7VRiYE8HocqV74Jm+C6+N3SpkIYP97mZvcp8LeRdrxAUIr0bGuJjrgPITNzcydOJGNrMuxcNyOXlae5Lgq3o2sEfpntCdj/jKPbANQfmB0XpMzIJHaPALt1vtyi3lsR0iOVxVpR1aYB5zBECDrtpknnvrogNkcEGyPjDYcHO8nL6SZUzLO8vqltSeShOOWEtspEEl8DRAgIeEQH5uHRZT+HnYpSsJ+qyCTK7yLWqkup9+QuC7UXkp4TZP3hAOFUUxK9CGV49ljosMOwk7mPtAcbSeY+wAlxOKUFw+3rpIgt19aO9LdKISQjY8VjoPAaeaJ6/G4zpX14QO50eazuM5qRx42rxYaeXiR+aa7ybwWyRXMKSmDC5lNT4VaiQCSRJgk2qS1JzI7dL0MAtOFafE7o8AkmBP2mmY2PRXqmslxnRtt0tqRqaHrdRBg5S8w/xJNvaAQ76Qsachrb41VK+S83Y1ClD5UxE1Mhu2fIpwe1z0VzoHeTnlGxflOL8xxqrnfPgEBog8FHNHo1RIGn2/uQONt3Y0KmZxqcaRwj/meAhkrnGe+o6KWyd/cY9/XCC+VSJBoSf02DwIfmeeC/cxzQZagIHUTWZB6hM0PW8eOWN2Z8R6SIp9/VYwjgr0v7GEeFJrinnG7mZvwiFiQXax4sCApfiAsgADOSTYeHhNnCbuiO83DaW20cY1dbxz3i8xjdGveWJIXpxNHFJmDffjcIn3IEeSTRRD41fwTDorrNEmqQlaqMb4GzrR7PEPxR8y3oasz3oEJsdlnQ0KYXmZuuoPjC2JChxUhgAWQ0VfWWFdyoqhbmzGIlaMe+s78ayXj+oVif1jPBDNbEgt5kLmJpMmmySIlJlRvbrOfZAyaEytXlkPakJvN4z2bqnEZ/YaF3isgcLdwrnCX+e6/kLDi2DQ1OEcdy8tEYGgohl7kkbaUfkQsjn7m0hGbbolBOFBzgQGExHOEh4Qzy6R8IszRGHNOLPCcEP2GuQ+OTraU0wKENbIonxCbZuXHB7E/zcPtl2UmQFglnG8iPG1euPFVsHuOK68w9ztOByckBPhl08FZC4VU/hnO7+bHfs+UWflExoaC/W3dsyR+7zNPqO35J3MkoUnxS5xnYzM/BixbT8onsq0wwbw04YAZ6yCM329+qPaf9P3JV2npI1Bp6SNQafkXtH1Dpd3NkJUAAAAASUVORK5CYII=)
 }
 
-.mamejs-control-selector-item.mamejs-control-selector-expandable:before {
+.emloader-control-selector-item.emloader-control-selector-expandable:before {
   content: "";
   position: absolute;
   left: 58px;
@@ -176,7 +176,7 @@
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACABAMAAAAxEHz4AAAAIVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABt0UjBAAAACnRSTlMANzl8fX5/gKusOR4mYAAAAKZJREFUGBntwbsNg0AQBNCRk01dCiVQwpVAHVuJHXMQTJVGCCG+0t0iOZr3ICIiIiIiIn/1+t75vFHEeaNHGeONBoWcl3qUMl5qUMx5oUc544UGFZwnGTWMJy2qOA8y6hgPWlRy7mTUMu60qObcyKhn3EgIcK4GRBhXCSHOxYAY4yIhyDkbEGWcJYQ5JyPijJMODzg54gkjOzziI56xDiIiIiIiIjE/IMHxY2tgQRAAAAAASUVORK5CYII=)
 }
 
-.mamejs-control-selector-item.mamejs-control-selector-expandable.mamejs-control-selector-expanded:before {
+.emloader-control-selector-item.emloader-control-selector-expandable.emloader-control-selector-expanded:before {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
@@ -184,7 +184,7 @@
   transform: rotate(180deg);
 }
 
-.mamejs-control-selector-item {
+.emloader-control-selector-item {
   width: 70px;
   height: 30px;
   background-size: 26px 26px;

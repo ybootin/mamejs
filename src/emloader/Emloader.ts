@@ -6,7 +6,8 @@
 /// <reference path="event/EventEmiter.ts" />
 /// <reference path="helper/HTMLHelper.ts" />
 /// <reference path="helper/FileLoader.ts" />
-/// <reference path="Keyboard.ts" />
+/// <reference path="KeyHandler.ts" />
+/// <reference path="plugins/VirtualController.ts" />
 
 namespace emloader {
   export function load(url: string, container: HTMLElement): Promise<Emloader> {
@@ -50,7 +51,7 @@ namespace emloader {
 
     private _files: Array<IFile> = []
 
-    private _keyboard: Keyboard
+    private _keyHandler: KeyHandler
 
     protected _canvas: HTMLCanvasElement
 
@@ -84,11 +85,11 @@ namespace emloader {
         })
       })
 
-      this._keyboard = new Keyboard(this.module)
+      this._keyHandler = new KeyHandler(this.module)
     }
 
-    public get keyboard(): Keyboard {
-      return this._keyboard
+    public get keyHandler(): KeyHandler {
+      return this._keyHandler
     }
 
     public get canvas(): HTMLCanvasElement {

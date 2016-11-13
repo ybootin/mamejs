@@ -12,7 +12,7 @@
     "prepublish": "npm run build",
     "build": "npm run buildts && npm run buildcss",
     "buildts": "node_modules/typescript/bin/tsc -d  --target es6 --sourceMap --outFile dist/mamejs.js src/mamejs/mamejs.ts",
-    "buildcss": "cp src/mamejs/plugins/plugins.css dist/mamejs-plugins.css",
+    "buildcss": "cp src/emloader/plugins/plugins.css dist/emloader-plugins.css",
     "buildmame": "./mame-compiler.sh cps1,cps2,segas16a,segas16b,bublbobl,segaorun,twincobr,snowbros,m72,segas18"
   }
 }

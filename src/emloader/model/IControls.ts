@@ -1,4 +1,4 @@
-namespace mamejs {
+namespace emloader {
   export interface IControlMapping {
     start: number
     coin: number

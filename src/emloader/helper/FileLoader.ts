@@ -1,5 +1,13 @@
 namespace emloader.helper {
   export class FileLoader {
+    static toUint8Array = (str: string):Uint8Array => {
+      var len = str.length;
+      var bytes = new Uint8Array( len );
+      for (var i = 0; i < len; i++)        {
+          bytes[i] = str.charCodeAt(i);
+      }
+      return bytes;
+    }
 
     static loadFile(url: string, name: string, handler?: {(evt: ProgressEvent): void}): Promise<IFile> {
       // fetch file, and update game data

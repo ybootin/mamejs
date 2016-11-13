@@ -1,10 +1,10 @@
 /// <reference path="../emloader/model/IEmloader.ts" />
-/// <reference path="../emloader/Emloader.ts" />
+/// <reference path="../emloader/model/IControls.ts" />
 /// <reference path="model/IConfig.ts" />
-/// <reference path="mame/Mame.ts" />
-/// <reference path="controllers/Controllers.ts" />
+/// <reference path="../emloader/controllers/Controllers.ts" />
+/// <reference path="../emloader/Emloader.ts" />
 /// <reference path="mame/ControllersMapping.ts" />
-/// <reference path="plugins/VirtualController.ts" />
+/// <reference path="mame/Mame.ts" />
 
 namespace mamejs {
 
@@ -28,15 +28,15 @@ namespace mamejs {
   }
 
   // register available controllers
-  let controlsMapping: Array<IControlMapping> = Object.keys(ControllersMapping).map((mappingName: string) => {
-    let mapping: IControlMapping = <IControlMapping><any>{}
+  let controlsMapping: Array<emloader.IControlMapping> = Object.keys(ControllersMapping).map((mappingName: string) => {
+    let mapping: emloader.IControlMapping = <emloader.IControlMapping><any>{}
     Object.keys(ControllersMapping[mappingName]).forEach((controlName: string): void => {
       mapping[controlName] = MameKey[ControllersMapping[mappingName][controlName]]
     })
     return mapping
   })
 
-  export var controllers: Controllers = new Controllers(controlsMapping)
+  export var controllers: emloader.Controllers = new emloader.Controllers(controlsMapping)
 
   // let emiter = new emloader.event.EventEmiter()
 

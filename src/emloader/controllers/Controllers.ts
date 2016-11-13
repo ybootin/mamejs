@@ -2,7 +2,7 @@
 /// <reference path="Joystick.ts" />
 /// <reference path="Keyboard.ts" />
 
-namespace mamejs {
+namespace emloader {
 
   export class Controllers extends emloader.event.EventEmiter {
 

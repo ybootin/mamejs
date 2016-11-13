@@ -1,10 +1,10 @@
 /// <reference path="IModule.ts" />
 /// <reference path="FS.d.ts" />
-/// <reference path="../Keyboard.ts" />
+/// <reference path="../KeyHandler.ts" />
 
 namespace emloader {
   export interface IEmloader {
-    keyboard: Keyboard
+    keyHandler: KeyHandler
     scope: Window
     canvas: HTMLCanvasElement
     module: IModule

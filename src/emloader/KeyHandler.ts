@@ -1,10 +1,11 @@
 /// <reference path="model/IModule.ts" />
+/// <reference path="model/IControls.ts" />
 /// <reference path="event/EventEmiter.ts" />
 /// <reference path="helper/KeyCode.ts" />
 /// <reference path="Emloader.ts" />
 
 namespace emloader {
-  export class Keyboard extends event.EventEmiter {
+  export class KeyHandler extends event.EventEmiter implements IControlKeyHandler {
     static KEYPRESS: string = 'keypress'
     static KEYRELEASE: string = 'keyrelease'
 
@@ -29,22 +30,22 @@ namespace emloader {
     }
 
     public pressKey(keyCode: number): void {
-      Keyboard.triggerKeyEvent(this.module, 'keydown', keyCode, 0)
-      this.emit(Keyboard.KEYPRESS, keyCode)
+      KeyHandler.triggerKeyEvent(this.module, 'keydown', keyCode, 0)
+      this.emit(KeyHandler.KEYPRESS, keyCode)
     }
 
     public releaseKey(keyCode: number): void {
-      Keyboard.triggerKeyEvent(this.module, 'keyup', keyCode, 0)
-      this.emit(Keyboard.KEYRELEASE, keyCode)
+      KeyHandler.triggerKeyEvent(this.module, 'keyup', keyCode, 0)
+      this.emit(KeyHandler.KEYRELEASE, keyCode)
     }
   }
 
   export class FakeKeyHandler extends event.EventEmiter {
     public pressKey(keyCode: string): void {
-      this.emit(Keyboard.KEYPRESS, keyCode)
+      this.emit(KeyHandler.KEYPRESS, keyCode)
     }
     public releaseKey(keyCode: string): void {
-      this.emit(Keyboard.KEYRELEASE, keyCode)
+      this.emit(KeyHandler.KEYRELEASE, keyCode)
     }
   }
 }

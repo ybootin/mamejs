@@ -1,6 +1,5 @@
-/// <reference path="../../emloader/Keyboard.ts" />
 
-namespace mamejs {
+namespace emloader {
   export class Keyboard {
     static KEYMAPPINGCHANGE: string = 'keymappingchange'
 

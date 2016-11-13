@@ -1,4 +1,4 @@
-/// <reference path="../model/IControls.ts" />
+/// <reference path="MameKey.ts" />
 
 namespace mamejs {
   export class ControllersMapping {

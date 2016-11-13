@@ -1,6 +1,7 @@
 /// <reference path="../model/IControls.ts" />
+/// <reference path="../controllers/Controllers.ts" />
 
-namespace mamejs.plugins {
+namespace emloader.plugins {
   export class ControllerButton {
     private element: HTMLElement
 

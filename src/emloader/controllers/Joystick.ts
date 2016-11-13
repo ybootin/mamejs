@@ -1,6 +1,6 @@
 /// <reference path="../model/IControls.ts" />
 
-namespace mamejs {
+namespace emloader {
   export class Joystick extends emloader.event.EventEmiter implements IJoystick {
     static axes = [['left', 'right'], ['up', 'down']]
 
