@@ -24,42 +24,27 @@ namespace emloader {
       })
     }
 
-    private _keyboardEventHandler: {(evt: KeyboardEvent): void}
-
     constructor(private module: IModule) {
       super()
     }
 
-    public pressKey(key: string|number): void {
-      Keyboard.triggerKeyEvent(this.module, 'keydown', (typeof key === 'string' ? Keyboard.getKeyCode(key) : key), 0)
+    public pressKey(keyCode: number): void {
+      Keyboard.triggerKeyEvent(this.module, 'keydown', keyCode, 0)
+      this.emit(Keyboard.KEYPRESS, keyCode)
     }
 
-    public releaseKey(key: string|number): void {
-      Keyboard.triggerKeyEvent(this.module, 'keyup', (typeof key === 'string' ? Keyboard.getKeyCode(key) : key), 0)
+    public releaseKey(keyCode: number): void {
+      Keyboard.triggerKeyEvent(this.module, 'keyup', keyCode, 0)
+      this.emit(Keyboard.KEYRELEASE, keyCode)
     }
+  }
 
-    public pressAndReleaseKey(key: string|number): void {
-      this.pressKey(key)
-      this.releaseKey(key)
+  export class FakeKeyHandler extends event.EventEmiter {
+    public pressKey(keyCode: string): void {
+      this.emit(Keyboard.KEYPRESS, keyCode)
     }
-
-    public bind(): void {
-      this.unbind()
-
-      this._keyboardEventHandler = (evt: KeyboardEvent): void => {
-        evt.type === 'keydown' ? this.pressKey(evt.keyCode) : this.releaseKey(evt.keyCode)
-        this.emit(evt.type === 'keydown' ? Keyboard.KEYPRESS : Keyboard.KEYRELEASE, Keyboard.getKey(evt.keyCode))
-      }
-
-      // Must be attached to the main scope, in order to redispatch them to the emScope
-      document.addEventListener('keyup', this._keyboardEventHandler)
-      document.addEventListener('keydown', this._keyboardEventHandler)
-    }
-
-    public unbind(): void {
-      document.removeEventListener('keyup', this._keyboardEventHandler)
-      document.removeEventListener('keydown', this._keyboardEventHandler)
-      this._keyboardEventHandler = null
+    public releaseKey(keyCode: string): void {
+      this.emit(Keyboard.KEYRELEASE, keyCode)
     }
   }
 }

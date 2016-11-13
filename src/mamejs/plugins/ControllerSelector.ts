@@ -4,27 +4,27 @@
 
 namespace mamejs.plugins {
 
-  export class ControlSelector {
+  export class ControllerSelector {
     private mainContainer: HTMLElement
     private joystick: IJoystick
 
     private baseClass: string = 'mamejs-control-selector'
 
-    constructor(private mapping: IControlMapping, private onChange?: {(joystick?: IJoystick): void}) {
+    constructor(private controllers: Controllers, private mapping: IControlMapping, private onChange?: {(joystick?: IJoystick): void}) {
       this.mainContainer = document.createElement('div')
       this.mainContainer.className = this.baseClass
 
-      this.setJoystick(mamejs.controllers.getJoystick(mapping))
+      this.setJoystick(controllers.getJoystick(mapping))
 
-      mamejs.controllers.on(Controllers.JOYSTICKCONNECTED, (joystick: IJoystick) => {
+      controllers.on(Controllers.JOYSTICKCONNECTED, (joystick: IJoystick) => {
         this.setJoystick(joystick.getControlMapping() === mapping ? joystick : this.joystick)
       })
 
-      mamejs.controllers.on(Controllers.JOYSTICKDISCONNECTED, (joystick: IJoystick) => {
+      controllers.on(Controllers.JOYSTICKDISCONNECTED, (joystick: IJoystick) => {
         this.setJoystick(this.joystick && !this.joystick.isConnected() ? null : this.joystick)
       })
 
-      mamejs.controllers.on(Controllers.JOYSTICKCONTROLCHANGE, (joystick: IJoystick) => {
+      controllers.on(Controllers.JOYSTICKCONTROLCHANGE, (joystick: IJoystick) => {
         if (joystick === this.joystick && joystick.getControlMapping() !== mapping) {
           this.setJoystick(null)
         } else if (joystick !== this.joystick && joystick.getControlMapping() === mapping) {
@@ -69,7 +69,7 @@ namespace mamejs.plugins {
         this.mainContainer.appendChild(option)
       }
 
-      mamejs.controllers.getJoysticks().forEach((joystick: IJoystick) => {
+      this.controllers.getJoysticks().forEach((joystick: IJoystick) => {
         if (joystick && joystick !== this.joystick) {
           addOptionClick(joystick)
         }
@@ -104,7 +104,7 @@ namespace mamejs.plugins {
       option.className = this.baseClass + '-item ' + this.baseClass + '-' + (joystick ? 'gamepad' : 'keyboard')
       option.innerHTML = joystick && joystick.getGamepad() ? String(joystick.getGamepad().index + 1) : ''
 
-      if (main && mamejs.controllers.getJoysticks().length > 0) {
+      if (main && this.controllers.getJoysticks().length > 0) {
         helper.HTMLHelper.addClass(option, this.baseClass + '-expandable')
         option.addEventListener('click', (evt: Event) => {
           this.isOpened() ? this.close() : this.open()

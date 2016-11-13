@@ -6,7 +6,6 @@
 /// <reference path="model/Window.ts" />
 /// <reference path="helper/Ctrlr.ts" />
 /// <reference path="mamejs.ts" />
-/// <reference path="MameKeyHandler.ts" />
 
 namespace mamejs {
 
@@ -19,7 +18,7 @@ namespace mamejs {
       height: 224
     }
 
-    private _keyHandler: IMameKeyHandler
+    private _keyHandler: IControlKeyHandler
 
     /**
      * Mame emulator must be loaded before instanciate this class
@@ -30,7 +29,7 @@ namespace mamejs {
       // init the roms filesystem
       this.loader.addFS(Mame.ROM_PATH)
 
-      this._keyHandler = new MameKeyHandler(this.loader.keyboard)
+      this._keyHandler = this.loader.keyboard //new MameKeyHandler(this.loader.keyboard)
 
       // generate .cfg controller keymaping file, and mount it into FS
       // as this we have full controls on key
@@ -51,7 +50,7 @@ namespace mamejs {
       return this._loader
     }
 
-    public get keyHandler(): IMameKeyHandler {
+    public get keyHandler(): IControlKeyHandler {
       return this._keyHandler
     }
 

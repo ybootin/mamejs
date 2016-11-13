@@ -1,3 +1,5 @@
+/// <reference path="../MameKey.ts" />
+
 namespace mamejs.helper {
   export class Ctrlr {
     static generateCfgFile(): string {

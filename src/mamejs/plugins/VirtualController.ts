@@ -1,38 +1,34 @@
 /// <reference path="../model/IJoystick.ts" />
-/// <reference path="../mamejs.ts" />
-/// <reference path="MameButton.ts" />
-/// <reference path="ControlSelector.ts" />
+/// <reference path="ControllerButton.ts" />
+/// <reference path="ControllerSelector.ts" />
 
 namespace mamejs.plugins {
   export class VirtualController {
     public joystick: Joystick
-    public buttons: {[mameKey: string]: MameButton} = {}
-    public keyHandler: IMameKeyHandler
+    public buttons: Array<ControllerButton> = new Array(222) //{[mameKey: string]: MameButton} = {}
+    public keyHandler: IControlKeyHandler
 
     private mainContainer: HTMLElement
-    private selector: ControlSelector
+    private selector: ControllerSelector
 
     private baseClass: string = 'mamejs-virtual-controller'
 
-    private mameKeyButtonsMapping: {[mameKey: string]: string} = {}
+    private keyCodeId: Array<string> = new Array(222)
 
-    constructor(public mapping: IControlMapping) {
+    constructor(public controllers: Controllers, public mapping: IControlMapping) {
       this.mainContainer = document.createElement('div')
       this.mainContainer.className = this.baseClass
 
-      this.setJoystick(mamejs.controllers.getJoystick(mapping))
+      this.setJoystick(controllers.getJoystick(mapping))
 
       for (var controllerButton in mapping) {
-        let mameKey: string = mapping[controllerButton]
-        let button = new MameButton(mameKey)
-        this.buttons[mameKey] = button
-
-        this.mainContainer.appendChild(button.getElement())
-
-        this.mameKeyButtonsMapping[mameKey] = controllerButton
+        let keyCode: number = mapping[controllerButton]
+        this.buttons[keyCode] = new ControllerButton(controllers, keyCode)
+        this.keyCodeId[keyCode] = controllerButton
+        this.mainContainer.appendChild(this.buttons[keyCode].getElement())
       }
 
-      this.selector = new ControlSelector(mapping, (joystick?: Joystick): void => {
+      this.selector = new ControllerSelector(controllers, mapping, (joystick?: Joystick): void => {
         this.setJoystick(joystick)
       })
 
@@ -41,19 +37,19 @@ namespace mamejs.plugins {
       this.updateButtons()
 
       // Handle keychange visually
-      mamejs.controllers.on(mamejs.Controllers.MAMEKEYPRESS, (mameKey: string) => this.onKeyEvent(mamejs.Controllers.MAMEKEYPRESS, mameKey))
-      mamejs.controllers.on(mamejs.Controllers.MAMEKEYRELEASE, (mameKey: string) => this.onKeyEvent(mamejs.Controllers.MAMEKEYRELEASE, mameKey))
+      this.controllers.on(mamejs.Controllers.KEYPRESS, (keyCode: number) => this.onKeyEvent(mamejs.Controllers.KEYPRESS, keyCode))
+      this.controllers.on(mamejs.Controllers.KEYRELEASE, (keyCode: number) => this.onKeyEvent(mamejs.Controllers.KEYRELEASE, keyCode))
     }
 
     public getElement(): HTMLElement {
       return this.mainContainer
     }
 
-    public setKeyHandler(keyHandler: IMameKeyHandler) {
+    public setKeyHandler(keyHandler: IControlKeyHandler) {
       this.keyHandler = keyHandler
     }
 
-    public getKeyHandler(): IMameKeyHandler {
+    public getKeyHandler(): IControlKeyHandler {
       return this.keyHandler
     }
 
@@ -63,13 +59,13 @@ namespace mamejs.plugins {
     }
 
     public updateButtons() {
-      for (var mameKey in this.buttons) {
-        this.updateButton(this.buttons[mameKey], this.mameKeyButtonsMapping[mameKey])
+      for (var keyCode in this.buttons) {
+        this.updateButton(this.buttons[keyCode], this.keyCodeId[keyCode])
       }
     }
 
-    public updateButton(button: MameButton, buttonId: string): void {
-      let keyName = mamejs.controllers.keyboard.getKeyName(button.mameKey)
+    public updateButton(button: ControllerButton, buttonId: string): void {
+      let keyName = emloader.Keyboard.getKey(this.mapping[buttonId])
       let buttonClass = this.baseClass + '-button'
       let classes = [buttonClass, buttonClass + '-' + keyName, buttonClass + '-' + buttonId]
 
@@ -90,10 +86,10 @@ namespace mamejs.plugins {
       }
     }
 
-    private onKeyEvent(eventName: string, mameKey: string) {
-      if (this.buttons[mameKey]) {
+    private onKeyEvent(eventName: string, keyCode: number) {
+      if (this.buttons[keyCode]) {
         // Lazy button.addClass/removeClass(className)
-        helper.HTMLHelper[(eventName === mamejs.Controllers.MAMEKEYPRESS ? 'add' : 'remove') + 'Class'](this.buttons[mameKey].getElement(), this.baseClass + '-button-pressed')
+        helper.HTMLHelper[(eventName === mamejs.Controllers.KEYPRESS ? 'add' : 'remove') + 'Class'](this.buttons[keyCode].getElement(), this.baseClass + '-button-pressed')
       }
     }
   }

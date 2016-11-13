@@ -82,9 +82,9 @@
 
       // Custom mame button, for available keys @see src/mamejs/control/MameKey.ts
       var mameButtons = [
-        {key: 'UI_PAUSE', name: 'game', glyphicon: 'pause'},
-        {key: 'UI_SHOW_FPS', name: 'Show FPS', glyphicon: 'film'},
-        {key: 'UI_CONFIGURE', name: 'Menu', glyphicon: 'list-alt'},
+        {key: mamejs.MameKey.UI_PAUSE, name: 'game', glyphicon: 'pause'},
+        {key: mamejs.MameKey.UI_SHOW_FPS, name: 'Show FPS', glyphicon: 'film'},
+        {key: mamejs.MameKey.UI_CONFIGURE, name: 'Menu', glyphicon: 'list-alt'},
       ]
 
       // mamejs.run config file
@@ -174,21 +174,21 @@
       }
 
       function buildControllers() {
-        let controller1 = new mamejs.plugins.VirtualController(mamejs.ControllersMapping.player1)
-        let controller2 = new mamejs.plugins.VirtualController(mamejs.ControllersMapping.player2)
+        let controller1 = new mamejs.plugins.VirtualController(mamejs.controllers, mamejs.ControllersMapping.player1)
+        let controller2 = new mamejs.plugins.VirtualController(mamejs.controllers, mamejs.ControllersMapping.player2)
 
         controller1Container.appendChild(controller1.getElement())
         controller2Container.appendChild(controller2.getElement())
 
         // allow controllers to work before a mamejs instance launched
-        mamejs.controllers.setKeyHandler(new mamejs.FakeKeyHandler())
+        mamejs.controllers.setKeyHandler(new emloader.FakeKeyHandler())
         mamejs.controllers.bind()
       }
 
       function buildMameButtons() {
         // also init mame buttons
         mameButtons.forEach(function(item) {
-          let button = new mamejs.plugins.MameButton(item.key)
+          let button = new mamejs.plugins.ControllerButton(mamejs.controllers, item.key)
           button.setValue(item.name)
 
           let element = button.getElement()

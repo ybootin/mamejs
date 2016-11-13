@@ -1,6 +1,4 @@
 /// <reference path="model/IControls.ts" />
-/// <reference path="MameKeyHandler.ts" />
-/// <reference path="model/IMameKeyHandler.ts" />
 /// <reference path="model/IJoystick.ts" />
 
 namespace mamejs {
@@ -22,7 +20,7 @@ namespace mamejs {
 
     private customButtonMap: Array<string>
 
-    private handler: IMameKeyHandler
+    private handler: IControlKeyHandler
 
     private gamepad: Gamepad
 
@@ -39,11 +37,11 @@ namespace mamejs {
       return this.controlMapping
     }
 
-    public setKeyHandler(handler: IMameKeyHandler) {
+    public setKeyHandler(handler: IControlKeyHandler) {
       this.handler = handler
     }
 
-    public getKeyHandler(): IMameKeyHandler {
+    public getKeyHandler(): IControlKeyHandler {
       return this.handler
     }
 
@@ -117,14 +115,14 @@ namespace mamejs {
     private keyPress(key: string) {
       if (this.handler) {
         this.pressed[key] = true
-        this.handler.pressMameKey(this.controlMapping[key])
+        this.handler.pressKey(this.controlMapping[key])
       }
     }
 
     private keyRelease(key: string) {
       if (this.handler) {
         this.pressed[key] = false
-        this.handler.releaseMameKey(this.controlMapping[key])
+        this.handler.releaseKey(this.controlMapping[key])
       }
     }
   }

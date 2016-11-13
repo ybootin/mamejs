@@ -1,8 +1,6 @@
 /// <reference path="model/IControls.ts" />
 /// <reference path="Joystick.ts" />
 /// <reference path="Keyboard.ts" />
-/// <reference path="MameKeyHandler.ts" />
-/// <reference path="ControllersMapping.ts" />
 
 namespace mamejs {
 
@@ -12,8 +10,8 @@ namespace mamejs {
     static JOYSTICKDISCONNECTED: string = 'joystickdisconnected'
     static JOYSTICKBUTTONMAPCHANGE: string = 'joystickbuttonmapchange'
     static JOYSTICKCONTROLCHANGE: string = 'joystickcontrolchange'
-    static MAMEKEYPRESS: string = 'mamekeypress'
-    static MAMEKEYRELEASE: string = 'mamekeyrelease'
+    static KEYPRESS: string = 'keypress'
+    static KEYRELEASE: string = 'keyrelease'
 
     public keyboard = new Keyboard()
 
@@ -21,9 +19,9 @@ namespace mamejs {
 
     private gamepadChecker: number
 
-    private keyHandler: IMameKeyHandler
+    private keyHandler: IControlKeyHandler
 
-    constructor() {
+    constructor(private mappings: Array<IControlMapping>) {
       super()
       for (var i = 0; i < 4; i++) {
         this._joysticks[i] = ((): Joystick => {
@@ -47,12 +45,12 @@ namespace mamejs {
       }
     }
 
-    public setKeyHandler(keyHandler: IMameKeyHandler): void {
+    public setKeyHandler(keyHandler: IControlKeyHandler): void {
       this.keyHandler = keyHandler
 
       // redispatch key events
-      this.keyHandler.on(MameKeyHandler.KEYPRESS, (mameKey: string) => this.emit(Controllers.MAMEKEYPRESS, mameKey))
-      this.keyHandler.on(MameKeyHandler.KEYRELEASE, (mameKey: string) => this.emit(Controllers.MAMEKEYRELEASE, mameKey))
+      this.keyHandler.on('keypress', (keyCode: number) => this.emit(Controllers.KEYPRESS, keyCode))
+      this.keyHandler.on('keyrelease', (keyCode: number) => this.emit(Controllers.KEYRELEASE, keyCode))
 
       this.getJoysticks().forEach((joystick: Joystick): void => {
         if (joystick) {
@@ -63,7 +61,7 @@ namespace mamejs {
       this.keyboard.setKeyHandler(keyHandler)
     }
 
-    public getKeyHandler(): IMameKeyHandler {
+    public getKeyHandler(): IControlKeyHandler {
       return this.keyHandler
     }
 
@@ -83,9 +81,7 @@ namespace mamejs {
     }
 
     public getAvailableMappings(): Array<IControlMapping> {
-      return Object.keys(ControllersMapping).map((key: string): IControlMapping => {
-        return ControllersMapping[key]
-      }).filter((mapping: IControlMapping): boolean => !this.getJoystick(mapping))
+      return this.mappings.filter((mapping: IControlMapping): boolean => !this.getJoystick(mapping))
     }
 
     public checkGamepads(): void {
