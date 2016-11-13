@@ -1,4 +1,4 @@
-/// <reference path="../model/IJoystick.ts" />
+/// <reference path="../model/IControls.ts" />
 /// <reference path="../mamejs.ts" />
 /// <reference path="../helper/HTMLHelper.ts" />
 

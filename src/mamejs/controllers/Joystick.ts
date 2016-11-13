@@ -1,5 +1,4 @@
-/// <reference path="model/IControls.ts" />
-/// <reference path="model/IJoystick.ts" />
+/// <reference path="../model/IControls.ts" />
 
 namespace mamejs {
   export class Joystick extends emloader.event.EventEmiter implements IJoystick {

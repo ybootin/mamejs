@@ -1,11 +1,13 @@
-/// <reference path="../../node_modules/typescript/lib/lib.es6.d.ts" />
-/// <reference path="../emloader/model/IFile.ts" />
-/// <reference path="../emloader/model/IEmloader.ts" />
-/// <reference path="../emloader/Emloader.ts" />
-/// <reference path="model/IResolution.ts" />
-/// <reference path="model/Window.ts" />
-/// <reference path="helper/Ctrlr.ts" />
-/// <reference path="mamejs.ts" />
+/// <reference path="../../../node_modules/typescript/lib/lib.es6.d.ts" />
+/// <reference path="../../emloader/model/IFile.ts" />
+/// <reference path="../../emloader/model/IEmloader.ts" />
+/// <reference path="../../emloader/Emloader.ts" />
+/// <reference path="../model/IResolution.ts" />
+/// <reference path="../model/Window.ts" />
+/// <reference path="../mamejs.ts" />
+/// <reference path="Ctrlr.ts" />
+/// <reference path="../helper/StringHelper.ts" />
+
 
 namespace mamejs {
 
@@ -38,12 +40,8 @@ namespace mamejs {
       this.loader.addFile({
         url: '',
         name: 'mamejs.cfg',
-        data: helper.StringHelper.toUint8Array(helper.Ctrlr.generateCfgFile()),
+        data: helper.StringHelper.toUint8Array(Ctrlr.generateCfgFile()),
       }, '/ctrlr')
-
-      // map controllers on this mame instance
-      controllers.setKeyHandler(this._keyHandler)
-      controllers.bind()
     }
 
     public get loader(): emloader.IEmloader {

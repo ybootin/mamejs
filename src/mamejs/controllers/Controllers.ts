@@ -1,4 +1,4 @@
-/// <reference path="model/IControls.ts" />
+/// <reference path="../model/IControls.ts" />
 /// <reference path="Joystick.ts" />
 /// <reference path="Keyboard.ts" />
 

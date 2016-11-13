@@ -1,6 +1,7 @@
-/// <reference path="../model/IJoystick.ts" />
+/// <reference path="../model/IControls.ts" />
 /// <reference path="ControllerButton.ts" />
 /// <reference path="ControllerSelector.ts" />
+/// <reference path="../controllers/Controllers.ts" />
 
 namespace mamejs.plugins {
   export class VirtualController {
