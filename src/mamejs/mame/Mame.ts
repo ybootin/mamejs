@@ -14,14 +14,11 @@ namespace mamejs {
 
   // Main class
   export class Mame extends emloader.event.EventEmiter {
-    static EXIT: 'exit'
     static ROM_PATH: string = '/roms'
     static DEFAULT_RESOLUTION: IResolution = {
       width: 320,
       height: 224
     }
-
-    private _keyHandler: emloader.IControlKeyHandler
 
     /**
      * Mame emulator must be loaded before instanciate this class
@@ -31,8 +28,6 @@ namespace mamejs {
 
       // init the roms filesystem
       this.loader.addFS(Mame.ROM_PATH)
-
-      this._keyHandler = this.loader.keyHandler
 
       // generate .cfg controller keymaping file, and mount it into FS
       // as this we have full controls on key
@@ -50,7 +45,7 @@ namespace mamejs {
     }
 
     public get keyHandler(): emloader.IControlKeyHandler {
-      return this._keyHandler
+      return this.loader.keyHandler
     }
 
     public run(args: Array<string>): Promise<void> {
@@ -85,10 +80,6 @@ namespace mamejs {
 
     public loadRoms(files: {[filename: string]: string}, handler?: {(evt: ProgressEvent): void}): Promise<void> {
       return this.loader.loadFiles(files, Mame.ROM_PATH, handler)
-    }
-
-    public exit() {
-
     }
   }
 }

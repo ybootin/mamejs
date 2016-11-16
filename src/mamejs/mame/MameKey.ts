@@ -170,27 +170,4 @@ namespace mamejs {
     // static EXIT_FROM_GAME: number = emloader.helper.KeyCode.escape
     // static RUN_FULL_THROTTLE: number = emloader.helper.KeyCode.insert
   }
-
-
-
-  // export var MameKeyCodeKey = {}
-  // for (var mameKeyCode in MameKeyCode) {
-  //   if (MameKeyCode[mameKeyCode]) {
-  //     MameKeyCodeKey[MameKeyCode[mameKeyCode]] = mameKeyCode
-  //   }
-  // }
-
-  // // This is the default map for the user keyboard, by default we don't map multiple key touch
-  // // userkey -> MameKeyMapping <-> MameKey -> Mame
-  // export var DefaultKeyMapping = {}
-  // export var DefaultKeyMappingKey = {}
-  // export var MameKeyMameKeyCode: { [mameKey: string]: string; } = {}
-  // for (var mameKey in MameKey) {
-  //   if (typeof MameKey[mameKey] === 'number') {
-  //     DefaultKeyMapping[mameKey] = MameKey[mameKey]
-  //     DefaultKeyMappingKey[MameKey[mameKey]] = mameKey
-
-  //     MameKeyMameKeyCode[mameKey] = MameKeyCodeKey[MameKey[mameKey]]
-  //   }
-  // }
 }

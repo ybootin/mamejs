@@ -28,29 +28,10 @@ namespace mamejs {
   }
 
   // register available controllers
+  // need to transform them into array for emloader.Controllers constructor
   let controlsMapping: Array<emloader.IControlMapping> = Object.keys(ControllersMapping).map((mappingName: string) => {
-    let mapping: emloader.IControlMapping = <emloader.IControlMapping><any>{}
-    Object.keys(ControllersMapping[mappingName]).forEach((controlName: string): void => {
-      mapping[controlName] = MameKey[ControllersMapping[mappingName][controlName]]
-    })
-    return mapping
+    return ControllersMapping[mappingName]
   })
 
   export var controllers: emloader.Controllers = new emloader.Controllers(controlsMapping)
-
-  // let emiter = new emloader.event.EventEmiter()
-
-  // export function on(eventName: string, callback: Function): void {
-  //   emiter.on(eventName, callback)
-  // }
-  // export function off(eventName: string, callback: Function): void {
-  //   emiter.on(eventName, callback)
-  // }
-
-  // controllers.on(Controllers.KEYPRESS, (keyCode: number) => {
-  //   emiter.emit('mamekeypress', MameKeyMameKeyCode[keyCode])
-  // })
-  // controllers.on(Controllers.KEYRELEASE, (keyCode: number) => {
-  //   emiter.emit('mamekeyrelease', MameKeyMameKeyCode[keyCode])
-  // })
 }
