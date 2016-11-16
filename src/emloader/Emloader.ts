@@ -14,13 +14,17 @@ interface CSSStyleDeclaration {
 }
 
 namespace emloader {
-  export function load(url: string, container: HTMLElement): Promise<Emloader> {
-    let emloader = new Emloader(container)
-    emloader.scope.Module.locateFile = (file) => {
+  export function load(url: string, container: HTMLElement, emModule?: any): Promise<Emloader> {
+    emModule = emModule || {}
+    // By default, if not function specified, we try to locate the file at the same level than the url
+    emModule.locateFile = emModule.locateFile || function(file: string): string {
       if (file.substr(-4) === '.mem') {
         return url + '.mem'
       }
+      return file
     }
+
+    let emloader = new Emloader(container, emModule)
 
     return helper.HTMLHelper.loadScript(emloader.scope.document, url).then((): Emloader => {
       return emloader
@@ -32,8 +36,8 @@ namespace emloader {
     static ON_STDERROR: 'onstderror'
     static ON_STDOUT: 'onstdout'
 
-    static triggerEvent(module: IModule, eventType: string, data: any = {}) {
-      let scope = helper.HTMLHelper.getWindow(module.canvas)
+    static triggerEvent(emModule: IModule, eventType: string, data: any = {}) {
+      let scope = helper.HTMLHelper.getWindow(emModule.canvas)
       let e = (<any>scope).document.createEventObject ? (<any>scope).document.createEventObject() : scope.document.createEvent("Events");
       if (e.initEvent) e.initEvent(eventType, true, true);
 
@@ -44,7 +48,7 @@ namespace emloader {
       }
 
       // Dispatch to browser for real (use this if page uses SDL or something else for event handling):
-      module.canvas.dispatchEvent ? module.canvas.dispatchEvent(e) : (<any>module).canvas.fireEvent("on" + eventType, e);
+      emModule.canvas.dispatchEvent ? emModule.canvas.dispatchEvent(e) : (<any>emModule).canvas.fireEvent("on" + eventType, e);
     }
 
     private _stdout: Array<string> = []
@@ -59,7 +63,7 @@ namespace emloader {
 
     protected _canvas: HTMLCanvasElement
 
-    constructor(private _container: HTMLElement) {
+    constructor(private _container: HTMLElement, defaultModule: any) {
       super()
 
       // Iframe Mame prevent from loading the emscriptem app in the main scope
@@ -80,21 +84,23 @@ namespace emloader {
       this._canvas = this._scope.document.getElementsByTagName('canvas')[0];
 
       //  Emscripten module
-      this._scope.Module = <IModule> {
-        arguments: [],
-        screenIsReadOnly: false,
-        print: (text: string): void => this.print(text),
-        printErr: (err: string): void => this.printErr(err),
-        canvas: this.canvas,
-        noInitialRun: true,
+      this._scope.Module = defaultModule
+      this._scope.Module.arguments = []
+      this._scope.Module.screenIsReadOnly = false
+      this._scope.Module.print = (text: string): void => {
+        this.print(text)
+        if (typeof defaultModule.print === 'function') {
+          defaultModule.print(text)
+        }
       }
-
-      var events = ['keyup', 'keydown']
-      events.forEach((evtName: string): void => {
-        this._canvas.addEventListener(evtName, (evt: Event) => {
-          this.emit(evtName, evt)
-        })
-      })
+      this._scope.Module.printErr = (err: string): void => {
+        this.printErr(err)
+        if (typeof defaultModule.printErr === 'function') {
+          defaultModule.printErr(err)
+        }
+      }
+      this._scope.Module.canvas = this.canvas
+      this._scope.Module.noInitialRun = true
 
       this._keyHandler = new KeyHandler(this.module)
     }

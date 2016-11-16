@@ -1,7 +1,6 @@
 /// <reference path="../../../node_modules/typescript/lib/lib.es6.d.ts" />
 /// <reference path="../../emloader/model/IFile.ts" />
 /// <reference path="../../emloader/model/IEmloader.ts" />
-/// <reference path="../../emloader/model/IControls.ts" />
 /// <reference path="../../emloader/Emloader.ts" />
 /// <reference path="../../emloader/helper/FileLoader.ts" />
 /// <reference path="../model/IResolution.ts" />
@@ -13,7 +12,7 @@
 namespace mamejs {
 
   // Main class
-  export class Mame extends emloader.event.EventEmiter {
+  export class Mame {
     static ROM_PATH: string = '/roms'
     static DEFAULT_RESOLUTION: IResolution = {
       width: 320,
@@ -24,8 +23,6 @@ namespace mamejs {
      * Mame emulator must be loaded before instanciate this class
      */
     constructor(private _loader: emloader.IEmloader) {
-      super()
-
       // init the roms filesystem
       this.loader.addFS(Mame.ROM_PATH)
 
