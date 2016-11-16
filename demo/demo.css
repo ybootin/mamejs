@@ -113,4 +113,6 @@
 .game-container {
   z-index: 1;
   position: absolute;
+  width: 320px;
+  height: 320px;
 }

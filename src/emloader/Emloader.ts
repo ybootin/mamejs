@@ -9,6 +9,10 @@
 /// <reference path="KeyHandler.ts" />
 /// <reference path="plugins/VirtualController.ts" />
 
+interface CSSStyleDeclaration {
+  imageRendering: string
+}
+
 namespace emloader {
   export function load(url: string, container: HTMLElement): Promise<Emloader> {
     let emloader = new Emloader(container)
@@ -62,11 +66,18 @@ namespace emloader {
       this._iframe = helper.HTMLHelper.createIframe(helper.HTMLHelper.getWindow(this._container).document)
       this._container.appendChild(this._iframe)
 
-      this._iframe.contentWindow.document.write('<!doctype html><html><head></head><body style="margin:0px;padding:0px"><canvas/></body></html>')
+      // default css redering options for canvas
+      // canvas will always fit to the container width/height
+      let canvaCSS = 'width:100%;height:100%;';
+      ['-moz-crisp-edges', '-o-crisp-edges', '-webkit-optimize-contrast', 'optimize-contrast', 'crisp-edges', 'pixelated', 'optimizeSpeed'].forEach((value) => {
+        canvaCSS += 'image-rendering:' + value + ';'
+      })
+
+      this._iframe.contentWindow.document.write('<!doctype html><html><head><style>canvas {' + canvaCSS + '}</style></head><body style="margin:0px;padding:0px"><canvas/></body></html>')
       this._iframe.contentWindow.document.close()
 
       this._scope = this._iframe.contentWindow
-      this._canvas = this._scope.document.getElementsByTagName('canvas')[0]
+      this._canvas = this._scope.document.getElementsByTagName('canvas')[0];
 
       //  Emscripten module
       this._scope.Module = <IModule> {
@@ -128,13 +139,6 @@ namespace emloader {
     public printErr(error: string): void {
       this.emit(Emloader.ON_STDERROR)
       this._stderr.push(error)
-    }
-
-    public resize(width: number, height: number): void {
-      this._iframe.style.width = width + 'px'
-      this._iframe.style.height = height + 'px'
-
-      helper.HTMLHelper.resizeCanvas(this.canvas, width, height)
     }
 
     public addFS(basepath: string, fs?: FS.IFileSystem): void {

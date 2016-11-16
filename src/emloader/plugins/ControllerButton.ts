@@ -12,6 +12,13 @@ namespace emloader.plugins {
 
       this.element.addEventListener('mousedown', (evt: MouseEvent) => this.controllers.getKeyHandler().pressKey(keyCode))
       this.element.addEventListener('mouseup',(evt: MouseEvent) => this.controllers.getKeyHandler().releaseKey(keyCode))
+
+      this.element.addEventListener('touchstart',(evt: TouchEvent) => {
+        this.controllers.getKeyHandler().pressKey(keyCode)
+      })
+      this.element.addEventListener('touchend',(evt: MouseEvent) => {
+        this.controllers.getKeyHandler().releaseKey(keyCode)
+      })
     }
 
     public getElement(): HTMLElement {

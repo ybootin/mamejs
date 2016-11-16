@@ -115,6 +115,8 @@
 
         // run mame is as simple as this !
         mamejs.run(cfg, gameCnt).then(function(mame) {
+          // for debug
+          window.mame = mame
 
           // handle sterr
           handleMameError(mame)

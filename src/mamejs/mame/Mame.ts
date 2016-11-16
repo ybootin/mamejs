@@ -60,8 +60,6 @@ namespace mamejs {
     public runGame(driver: string, resolution?: IResolution): Promise<void> {
       resolution = resolution || Mame.DEFAULT_RESOLUTION
 
-      this.loader.resize(resolution.width, resolution.height)
-
       return this.run([
         driver,
         '-verbose',

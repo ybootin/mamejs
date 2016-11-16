@@ -32,6 +32,7 @@ namespace emloader {
       if (this.keyboardEventHandler) {
         document.removeEventListener('keyup', this.keyboardEventHandler)
         document.removeEventListener('keydown', this.keyboardEventHandler)
+        this.keyboardEventHandler = null
       }
     }
   }

@@ -17,6 +17,10 @@
   background-color: transparent;
 }
 
+.emloader-virtual-controller-button:focus{
+  outline:0px;
+}
+
 .emloader-virtual-controller-button-coin {
   border-radius: 5px;
   height: auto;
