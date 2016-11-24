@@ -31,6 +31,15 @@ namespace emloader {
     })
   }
 
+  export function loadHeadless(url: string, emModule?: any): Promise<Emloader> {
+    let container = document.createElement('div')
+    container.style.display = 'none'
+
+    document.body.appendChild(container)
+
+    return load(url, container, emModule)
+  }
+
   export class Emloader extends event.EventEmiter implements IEmloader {
 
     static ON_STDERROR: 'onstderror'
@@ -85,8 +94,8 @@ namespace emloader {
 
       //  Emscripten module
       this._scope.Module = defaultModule
-      this._scope.Module.arguments = []
-      this._scope.Module.screenIsReadOnly = false
+      this._scope.Module.arguments = defaultModule.arguments || []
+      this._scope.Module.screenIsReadOnly = defaultModule.screenIsReadOnly || false
       this._scope.Module.print = (text: string): void => {
         this.print(text)
         if (typeof defaultModule.print === 'function') {
@@ -100,7 +109,7 @@ namespace emloader {
         }
       }
       this._scope.Module.canvas = this.canvas
-      this._scope.Module.noInitialRun = true
+      this._scope.Module.noInitialRun = defaultModule.noInitialRun || true
 
       this._keyHandler = new KeyHandler(this.module)
     }
