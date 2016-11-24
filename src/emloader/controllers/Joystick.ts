@@ -48,8 +48,6 @@ namespace emloader {
       if (!this.isConnected()) {
         this.gamepad = gamepad
 
-        this.emit(Joystick.CONNECTED)
-
         let loop = () => {
           let gamepad = this.getGamepad()
 
@@ -81,6 +79,9 @@ namespace emloader {
         }
 
         loop()
+
+        // must be emit AFTER loop(), to have loopId setted
+        this.emit(Joystick.CONNECTED)
       }
     }
 
