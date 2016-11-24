@@ -8,6 +8,7 @@ namespace emloader {
     scope: Window
     canvas: HTMLCanvasElement
     module: IModule
+    FS: any
     stdout: Array<string>
     stderr: Array<string>
     print: {(text: string): void}

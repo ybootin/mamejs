@@ -13,7 +13,6 @@ namespace emloader.helper {
       // fetch file, and update game data
       return FileLoader.fetchFile(url, 'arraybuffer', handler).then(function(data: ArrayBuffer): IFile {
         return {
-          url: url,
           name: name,
           data: new Uint8Array(data)
         }

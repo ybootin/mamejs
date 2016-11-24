@@ -103,7 +103,7 @@
         var cfg = JSON.parse(JSON.stringify(config)) // lazy clone
         cfg.game = game
 
-        // special trick to use custom emulator
+        // special trick to use custom emulator for a game
         cfg.emulator = game.emulator || cfg.emulator
 
         // loading screen

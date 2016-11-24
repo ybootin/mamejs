@@ -23,15 +23,13 @@ namespace mamejs {
      * Mame emulator must be loaded before instanciate this class
      */
     constructor(private _loader: emloader.IEmloader) {
-      // init the roms filesystem
-      this.loader.addFS(Mame.ROM_PATH)
+      // init the roms folder
+      this.loader.FS.mkdir(Mame.ROM_PATH)
 
       // generate .cfg controller keymaping file, and mount it into FS
       // as this we have full controls on key
-      // TODO, this shouldn't be done here, but as we don't expose ctrlr, it do the job !
-      this.loader.addFS('/ctrlr')
+      this.loader.FS.mkdir('/ctrlr')
       this.loader.addFile({
-        url: '',
         name: 'mamejs.cfg',
         data: emloader.helper.FileLoader.toUint8Array(Ctrlr.generateCfgFile()),
       }, '/ctrlr')
