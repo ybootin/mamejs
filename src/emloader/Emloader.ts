@@ -16,7 +16,7 @@ interface CSSStyleDeclaration {
 namespace emloader {
   export function load(url: string, container: HTMLElement, emModule?: any): Promise<Emloader> {
     emModule = emModule || {}
-    // By default, if not function specified, we try to locate the file at the same level than the url
+    // By default, if no function specified, we try to locate the file at the same level than the url
     emModule.locateFile = emModule.locateFile || function(file: string): string {
       if (file.substr(-4) === '.mem') {
         return url + '.mem'
@@ -93,20 +93,30 @@ namespace emloader {
       this._canvas = this._scope.document.getElementsByTagName('canvas')[0];
 
       //  Emscripten module
-      this._scope.Module = defaultModule
+      this._scope.Module = <IModule><any>{}
+      for (var att in defaultModule) {
+        if (defaultModule.hasOwnProperty(att)) {
+          this._scope.Module[att] = defaultModule[att]
+        }
+      }
+
       this._scope.Module.arguments = defaultModule.arguments || []
       this._scope.Module.screenIsReadOnly = defaultModule.screenIsReadOnly || false
       this._scope.Module.print = (text: string): void => {
-        this.print(text)
+        this._stdout.push(text)
         if (typeof defaultModule.print === 'function') {
           defaultModule.print(text)
         }
+
+        this.emit(Emloader.ON_STDOUT)
       }
       this._scope.Module.printErr = (err: string): void => {
-        this.printErr(err)
+        this._stderr.push(err)
         if (typeof defaultModule.printErr === 'function') {
           defaultModule.printErr(err)
         }
+
+        this.emit(Emloader.ON_STDERROR)
       }
       this._scope.Module.canvas = this.canvas
       this._scope.Module.noInitialRun = defaultModule.noInitialRun || true
@@ -146,18 +156,7 @@ namespace emloader {
       return (<any>this.scope).FS
     }
 
-    public print(text: string): void {
-      this.emit(Emloader.ON_STDOUT)
-      this._stdout.push(text)
-    }
-
-    public printErr(error: string): void {
-      this.emit(Emloader.ON_STDERROR)
-      this._stderr.push(error)
-    }
-
     public addFS(basepath: string, fs?: FS.IFileSystem): void {
-      this.FS.mkdir(basepath);
       this.FS.mount(fs || (<any>this.scope).MEMFS, {root: '/'}, basepath);
     }
 
