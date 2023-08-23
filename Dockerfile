@@ -4,9 +4,9 @@
 #   docker build -t mamejs-compiler:latest .
 #
 # Usage :
-#   docker run --rm -v $(pwd)/mame:/mame -w /mame mamejs-compiler:latest /emsdk_portable/emscripten/master/emmake make SUBTARGET="buildname" SOURCES=src/mame/drivers/cps1.cpp,src/mame/drivers/cps2.cpp
+#   docker run --rm -v $(pwd)/mame:/mame -w /mame mamejs-compiler:latest /emsdk-portable/emscripten/master/emmake make SUBTARGET="buildname" SOURCES=src/mame/drivers/cps1.cpp,src/mame/drivers/cps2.cpp
 #
-FROM debian:latest
+FROM emscripten/emsdk:latest
 
 MAINTAINER Yohan Boutin <yohan@comewithus.fr>
 
@@ -14,31 +14,16 @@ MAINTAINER Yohan Boutin <yohan@comewithus.fr>
 # http://stackoverflow.com/questions/20635472/using-the-run-instruction-in-a-dockerfile-with-source-does-not-work
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
+# download a version of mame, do it soon in the docker file in case of failure
+RUN wget https://github.com/mamedev/mame/archive/mame0197.tar.gz && tar xzvf mame0197.tar.gz
+
 RUN apt-get update
 RUN apt-get -y upgrade
 
 # http://docs.mamedev.org/initialsetup/compilingmame.html#debian-and-ubuntu-including-raspberry-pi-and-odroid-devices
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install git build-essential cmake python2.7 nodejs default-jre libsdl2-dev libsdl2-ttf-dev libfontconfig-dev qt5-default wget
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install git build-essential cmake 2to3 python2-minimal python2 dh-python nodejs default-jre libsdl2-dev libsdl2-ttf-dev libfontconfig-dev qtbase5-dev wget
 
-# emscripten installation, latest
-RUN wget https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-portable.tar.gz
-
-RUN tar -xzvf emsdk-portable.tar.gz
-
-# Fetch the latest registry of available tools.
-RUN emsdk_portable/emsdk update
-
-# Download and install the latest SDK tools.
-RUN emsdk_portable/emsdk install latest
-
-# Set up the compiler configuration to point to the "latest" SDK.
-RUN emsdk_portable/emsdk activate latest
-
-# Linux/Mac OS X only: Set the current Emscripten path
-# seems not working
-RUN /bin/bash -c "source /emsdk_portable/emsdk_env.sh"
+RUN ln -s /usr/bin/python2 /usr/bin/python
 
 # Precompile a mame emulator to prebuild all libs like sdl2, and avoid fetch and build them at each run
-RUN wget https://github.com/mamedev/mame/archive/mame0178.tar.gz && tar xzvf mame0178.tar.gz && cd mame-mame0178 && /emsdk_portable/emscripten/master/emmake make SUBTARGET=test SOURCES=src/mame/drivers/cps1.cpp && cd ../ && rm -Rf mame-mame0178*
-
-
+RUN cd mame-mame0197 && emmake make SUBTARGET=test SOURCES=src/mame/drivers/cps1.cpp -j5 REGENIE=1 && cd ../ && rm -Rf mame-mame0197*
